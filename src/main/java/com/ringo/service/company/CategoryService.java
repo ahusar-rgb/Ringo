@@ -1,4 +1,4 @@
-package com.ringo.service;
+package com.ringo.service.company;
 
 import com.ringo.dto.company.CategoryDto;
 import com.ringo.exception.IllegalInsertException;

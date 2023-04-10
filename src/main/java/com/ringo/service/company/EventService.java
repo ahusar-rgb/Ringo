@@ -1,4 +1,4 @@
-package com.ringo.service;
+package com.ringo.service.company;
 
 import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.*;
@@ -88,6 +88,16 @@ public class EventService {
                 repository.findAllByDistance(latitude, longitude, distance)
         );
         return groupMapper.toDtos(groupEvents(groups, distance / MERGE_DISTANCE_FACTOR));
+    }
+
+    public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {
+        List<EventGroup> groups = mapper.toGroups(
+                repository.findAllInArea(latMin, latMax, lonMin, lonMax)
+        );
+        return groupMapper.toDtos(groupEvents(groups, getDistance(
+                new Coordinates(latMin, lonMin),
+                new Coordinates(latMax, lonMax)
+        ) / MERGE_DISTANCE_FACTOR));
     }
 
 

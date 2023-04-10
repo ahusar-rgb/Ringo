@@ -1,4 +1,4 @@
-package com.ringo.dto.common;
+package com.ringo.dto.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +11,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
-public class UserRequestDto extends AbstractEntityDto {
+public class UserResponseDto {
     private String name;
     private String username;
-    private String password;
-    private String email;
     private byte[] photo;
+    private String role;
 }

@@ -2,8 +2,8 @@ package com.ringo.mapper.company;
 
 import com.ringo.dto.company.EventGroup;
 import com.ringo.dto.company.EventGroupDto;
-import com.ringo.service.EventPhotoService;
-import com.ringo.service.EventPhotoStorage;
+import com.ringo.service.company.EventPhotoService;
+import com.ringo.service.company.EventPhotoStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

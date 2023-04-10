@@ -1,7 +1,7 @@
 package com.ringo.controller;
 
 import com.ringo.dto.company.CategoryDto;
-import com.ringo.service.CategoryService;
+import com.ringo.service.company.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

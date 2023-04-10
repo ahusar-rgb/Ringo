@@ -1,5 +1,6 @@
 package com.ringo.model.company;
 
+import com.ringo.model.security.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,6 @@
 package com.ringo.model.company;
 
+import com.ringo.model.security.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -17,7 +18,7 @@ import java.util.Set;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class Organisation extends User{
+public class Organisation extends User {
     @Column(name = "description")
     private String description;
 

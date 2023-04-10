@@ -1,5 +1,6 @@
 package com.ringo.model.company;
 
+import com.ringo.model.security.User;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

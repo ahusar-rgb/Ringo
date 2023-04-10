@@ -7,10 +7,10 @@ import com.ringo.dto.company.EventResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.model.company.Event;
 import com.ringo.repository.OrganisationRepository;
-import com.ringo.service.CategoryService;
-import com.ringo.service.CurrencyService;
-import com.ringo.service.EventPhotoService;
-import com.ringo.service.EventPhotoStorage;
+import com.ringo.service.company.CategoryService;
+import com.ringo.service.company.CurrencyService;
+import com.ringo.service.company.EventPhotoService;
+import com.ringo.service.company.EventPhotoStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

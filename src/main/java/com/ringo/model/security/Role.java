@@ -1,4 +1,4 @@
-package com.ringo.model.enums;
+package com.ringo.model.security;
 
 public enum Role {
     ROLE_PARTICIPANT,

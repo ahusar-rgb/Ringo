@@ -15,4 +15,10 @@ public interface EventRepository extends ActiveEntityRepository<Event> {
             "WHERE e.isActive " +
             "AND get_distance(e.latitude, e.longitude, :lat, :lon) < :distance")
     List<Event> findAllByDistance(double lat, double lon, double distance);
+
+    @Query("SELECT e FROM Event e " +
+            "WHERE e.isActive " +
+            "AND e.latitude < :latMax AND e.latitude > :latMin " +
+            "AND e.longitude < :lonMax AND e.longitude > :lonMin")
+    List<Event> findAllInArea(double latMin, double latMax, double lonMin, double lonMax);
 }

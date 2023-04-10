@@ -4,7 +4,7 @@ import com.ringo.dto.company.AddEventPhotoRequest;
 import com.ringo.dto.company.EventGroupDto;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
-import com.ringo.service.EventService;
+import com.ringo.service.company.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -48,13 +48,31 @@ public class EventController {
                                 array = @ArraySchema(schema = @Schema(implementation = EventGroupDto.class))))
             }
     )
-    @GetMapping(produces = {"application/json"})
+    @GetMapping(value = "geo/near", produces = {"application/json"})
     public ResponseEntity<List<EventGroupDto>> findEventsByDistance(
             @Parameter(description = "latitude") @RequestParam Double lat,
             @Parameter(description = "longitude") @RequestParam Double lon,
             @Parameter(description = "max distance to an event") @RequestParam Integer distance) {
         return ResponseEntity.ok()
                 .body(eventService.findEventsByDistance(lat, lon, distance));
+    }
+
+    @Operation(summary = "Find all events in the given area")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Found the events",
+                        content = @Content(mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = EventGroupDto.class))))
+            }
+    )
+    @GetMapping(value = "geo/area", produces = {"application/json"})
+    public ResponseEntity<List<EventGroupDto>> findEventsInArea(
+            @Parameter(description = "min latitude") @RequestParam Double latMin,
+            @Parameter(description = "max latitude") @RequestParam Double latMax,
+            @Parameter(description = "min longitude") @RequestParam Double lonMin,
+            @Parameter(description = "max longitude") @RequestParam Double lonMax) {
+        return ResponseEntity.ok()
+                .body(eventService.findEventsInArea(latMin, latMax, lonMin, lonMax));
     }
 
     @Operation(summary = "Create a new event")

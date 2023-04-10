@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class ActiveEntity extends AbstractEntity {
+public class AbstractActiveEntity extends AbstractEntity {
 
     @Builder.Default
     @Column(name = "is_active", nullable = false)

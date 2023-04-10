@@ -1,7 +1,6 @@
-package com.ringo.model.company;
+package com.ringo.model.security;
 
-import com.ringo.model.common.AbstractEntity;
-import com.ringo.model.enums.Role;
+import com.ringo.model.common.AbstractActiveEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User extends AbstractEntity implements UserDetails {
+public class User extends AbstractActiveEntity implements UserDetails {
 
     @Column(name = "name", nullable = false)
     private String name;

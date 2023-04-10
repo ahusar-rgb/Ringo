@@ -2,7 +2,7 @@ package com.ringo.controller;
 
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.service.OrganisationService;
+import com.ringo.service.company.OrganisationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

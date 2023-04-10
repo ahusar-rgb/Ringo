@@ -1,4 +1,4 @@
-package com.ringo.service;
+package com.ringo.service.company;
 
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
@@ -6,7 +6,7 @@ import com.ringo.exception.IllegalInsertException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.model.company.Organisation;
-import com.ringo.model.enums.Role;
+import com.ringo.model.security.Role;
 import com.ringo.repository.OrganisationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
