@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -23,7 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().contains("/api/login") || request.getServletPath().contains("/api/sign-up")) {
+        if(Arrays.stream(Constants.PUBLIC_URLS).anyMatch(url -> request.getServletPath().contains(url))) {
             filterChain.doFilter(request, response);
             return;
         }

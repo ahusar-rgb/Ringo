@@ -1,5 +1,6 @@
 package com.ringo.service.company;
 
+import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.*;
 import com.ringo.exception.IllegalInsertException;
@@ -22,14 +23,12 @@ import static com.ringo.utils.Geography.getDistance;
 @RequiredArgsConstructor
 @Slf4j
 public class EventService {
-    private static final int MERGE_DISTANCE_FACTOR = 3;
+    private final ApplicationProperties config;
     private final EventRepository repository;
     private final EventMapper mapper;
     private final EventGroupMapper groupMapper;
     private final EventPhotoStorage eventPhotoStorage;
     private final EventPhotoService eventPhotoService;
-
-    private final int MAX_PHOTOS = 10;
 
     public EventResponseDto findEventById(Long id) {
         log.info("findEventById: {}", id);
@@ -47,8 +46,8 @@ public class EventService {
     public EventResponseDto saveEvent(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
         Event event = mapper.toEntity(eventDto);
-        if(event.getPhotoCount() > MAX_PHOTOS)
-            throw new IllegalInsertException("Max photos count reached: %d/%d".formatted(event.getPhotoCount(), MAX_PHOTOS));
+        if(event.getPhotoCount() > config.getMaxPhotoCount())
+            throw new IllegalInsertException("Max photos count reached: %d/%d".formatted(event.getPhotoCount(), config.getMaxPhotoCount()));
         return mapper.toDto(repository.save(event));
     }
 
@@ -87,7 +86,7 @@ public class EventService {
         List<EventGroup> groups = mapper.toGroups(
                 repository.findAllByDistance(latitude, longitude, distance)
         );
-        return groupMapper.toDtos(groupEvents(groups, distance / MERGE_DISTANCE_FACTOR));
+        return groupMapper.toDtos(groupEvents(groups, distance / config.getMergeDistanceFactor()));
     }
 
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {
@@ -97,7 +96,7 @@ public class EventService {
         return groupMapper.toDtos(groupEvents(groups, getDistance(
                 new Coordinates(latMin, lonMin),
                 new Coordinates(latMax, lonMax)
-        ) / MERGE_DISTANCE_FACTOR));
+        ) / config.getMergeDistanceFactor()));
     }
 
 

@@ -9,6 +9,7 @@ import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,7 +31,7 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public UserResponseDto saveUser(UserRequestDto userRequestDto) {
+    public UserResponseDto save(UserRequestDto userRequestDto) {
         if(userRepository.findByUsername(userRequestDto.getUsername()).isPresent())
             throw new IllegalInsertException("User with [username: %s] already exists".formatted(userRequestDto.getUsername()));
         if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent())
@@ -42,5 +43,29 @@ public class UserService implements UserDetailsService {
         user.setIsActive(true);
 
         return userMapper.toDto(userRepository.save(user));
+    }
+
+    public UserResponseDto delete(Long id) {
+        User user = userRepository.findActiveById(id).orElseThrow(
+                () -> new NotFoundException("User#" + id + " not found"));
+        user.setIsActive(false);
+
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    public UserResponseDto update(UserRequestDto userRequestDto) {
+        if(userRepository.findActiveById(userRequestDto.getId()).isEmpty())
+            throw new NotFoundException("User#" + userRequestDto.getId() + " not found");
+
+        User user = userMapper.toEntity(userRequestDto);
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    public User getCurrentUserAsEntity() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public UserResponseDto getCurrentUserAsDto() {
+        return userMapper.toDto(getCurrentUserAsEntity());
     }
 }
