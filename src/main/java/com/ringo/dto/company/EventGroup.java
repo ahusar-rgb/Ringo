@@ -15,4 +15,5 @@ public class EventGroup {
     private Coordinates coordinates;
     private Integer count;
     private EventPhoto mainPhoto;
+    private Long id;
 }

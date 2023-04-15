@@ -59,7 +59,7 @@ public class EventController {
             value = {
                     @ApiResponse(responseCode = "200", description = "Found the events",
                         content = @Content(mediaType = "application/json",
-                                array = @ArraySchema(schema = @Schema(implementation = EventGroup.class))))
+                                array = @ArraySchema(schema = @Schema(implementation = EventGroupDto.class))))
             }
     )
     @GetMapping(value = "geo/area", produces = {"application/json"})
@@ -92,7 +92,7 @@ public class EventController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Photo added to event",
-                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
                     @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
             }
     )

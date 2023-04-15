@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,6 +26,11 @@ public class CurrencyService {
                     repository.findById(id).orElseThrow(
                             () -> new NotFoundException("Currency [id: %d] not found".formatted(id)))
             );
+        }
+
+        public List<CurrencyDto> findAll() {
+            log.info("findAll currencies");
+            return mapper.toDtos(repository.findAll());
         }
 
         public CurrencyDto saveCurrency(CurrencyDto currencyDto) {

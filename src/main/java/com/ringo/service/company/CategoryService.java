@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,6 +26,11 @@ public class CategoryService {
                     repository.findById(id).orElseThrow(
                             () -> new NotFoundException("Category [id: %d] not found".formatted(id)))
             );
+        }
+
+        public List<CategoryDto> findAll() {
+            log.info("findAll categories");
+            return mapper.toDtos(repository.findAll());
         }
 
         public CategoryDto saveCategory(CategoryDto categoryDto) {

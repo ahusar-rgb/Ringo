@@ -24,6 +24,7 @@ public class EventGroupMapper {
                                 ? eventPhotoService.findBytes(eventGroup.getMainPhoto())
                                 : null
                 )
+                .id(eventGroup.getId())
                 .build();
     }
 

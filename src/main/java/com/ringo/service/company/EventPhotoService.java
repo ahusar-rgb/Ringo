@@ -21,14 +21,17 @@ public class EventPhotoService {
     private final ApplicationProperties config;
     private final EventPhotoRepository eventPhotoRepository;
 
+    private final AwsFileManager awsFileManager;
+
     public byte[] findBytes(EventPhoto eventPhoto) {
         log.info("findPhoto: {}", eventPhoto);
 
         String path = eventPhoto.getPath();
         try {
-            return Files.readAllBytes(new File(config.getPhotoFolderPath() + path).toPath());
+            //return Files.readAllBytes(new File(config.getPhotoFolderPath() + path).toPath());
+            return awsFileManager.getFile(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to read file", e);
         }
     }
 
@@ -47,14 +50,15 @@ public class EventPhotoService {
                 ordinal = 0;
             else
                 ordinal = event.getPhotos().size();
-            String path = "event#" + event.getId() + "/" + ordinal + "." + photo.getContentType().split("/")[1];
-            File file = new File(config.getPhotoFolderPath() + path);
-            Files.createDirectories(file.getParentFile().toPath());
-            Files.createFile(file.toPath());
-            photo.transferTo(file);
+            String path = "event#" + event.getId() + "_" + ordinal + "." + photo.getContentType().split("/")[1];
+//            File file = new File(config.getPhotoFolderPath() + path);
+//            Files.createDirectories(file.getParentFile().toPath());
+//            Files.createFile(file.toPath());
+//            photo.transferTo(file);
             eventPhoto.setPath(path);
+            awsFileManager.uploadFile(path, photo.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to upload the photo", e);
         }
         return eventPhotoRepository.save(eventPhoto);
     }
@@ -64,10 +68,11 @@ public class EventPhotoService {
 
         eventPhotoRepository.deleteById(eventPhoto.getId());
 
-        File file = new File(config.getPhotoFolderPath() + eventPhoto.getPath());
-        if(!file.delete()) {
-            log.error("File {} not deleted", eventPhoto.getPath());
-            throw new RuntimeException("File not deleted");
-        }
+//        File file = new File(config.getPhotoFolderPath() + eventPhoto.getPath());
+//        if(!file.delete()) {
+//            log.error("File {} not deleted", eventPhoto.getPath());
+//            throw new RuntimeException("File not deleted");
+//        }
+        awsFileManager.deleteFile(eventPhoto.getPath());
     }
 }

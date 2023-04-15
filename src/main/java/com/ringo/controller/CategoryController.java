@@ -1,9 +1,11 @@
 package com.ringo.controller;
 
 import com.ringo.dto.company.CategoryDto;
+import com.ringo.dto.company.EventGroup;
 import com.ringo.service.company.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -47,5 +51,20 @@ public class CategoryController {
         return ResponseEntity
                 .ok()
                 .body(categoryService.saveCategory(dto));
+    }
+
+    @Operation(summary = "Get all categories")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Success",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = CategoryDto.class))))
+            }
+    )
+    @GetMapping(produces = {"application/json"})
+    public ResponseEntity<List<CategoryDto>> listAll() {
+        return ResponseEntity
+                .ok()
+                .body(categoryService.findAll());
     }
 }

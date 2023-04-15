@@ -29,6 +29,8 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'com.auth0:java-jwt:4.4.0'
 
+    implementation 'com.amazonaws:aws-java-sdk:1.12.449'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'

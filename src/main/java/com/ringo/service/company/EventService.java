@@ -125,6 +125,7 @@ public class EventService {
                         .count(1)
                         .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
                         .mainPhoto(event.getMainPhoto())
+                        .id(event.getId())
                         .build()
         ).collect(Collectors.toList());
 
@@ -150,6 +151,7 @@ public class EventService {
                             new Coordinates((group.getCoordinates().latitude() + other.getCoordinates().latitude()) / 2,
                                     (group.getCoordinates().longitude() + other.getCoordinates().longitude()) / 2),
                             group.getCount() + other.getCount(),
+                            null,
                             null
                     ));
                     i = 0;

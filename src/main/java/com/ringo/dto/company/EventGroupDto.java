@@ -10,4 +10,5 @@ public class EventGroupDto {
     private Coordinates coordinates;
     private Integer count;
     private byte[] mainPhoto;
+    private Long id;
 }
