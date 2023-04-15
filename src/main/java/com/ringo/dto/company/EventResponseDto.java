@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,5 +25,7 @@ public class EventResponseDto extends AbstractEntityDto {
     private String startTime;
     private String endTime;
     private List<CategoryDto> categories;
-    private OrganisationResponseDto organisation;
+    private OrganisationResponseDto host;
+    private Integer peopleCount;
+    private Double distance;
 }

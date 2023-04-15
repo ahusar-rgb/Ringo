@@ -1,56 +1,73 @@
 package com.ringo.service.company;
 
-import com.ringo.dto.company.EventPhotoDto;
-import com.ringo.exception.NotFoundException;
-import com.ringo.mapper.company.EventPhotoMapper;
+import com.ringo.config.ApplicationProperties;
+import com.ringo.model.company.Event;
+import com.ringo.model.company.EventPhoto;
 import com.ringo.repository.EventPhotoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class EventPhotoService {
-    private final EventPhotoRepository repository;
-    private final EventPhotoMapper mapper;
 
-    public EventPhotoDto findPhotoById(Long id) {
-        log.info("findPhotoById: {}", id);
-        return mapper.toDto(repository.findById(id).orElseThrow(
-                () -> new NotFoundException("Photo [id: %d] not found".formatted(id))
-            )
-        );
+    private final ApplicationProperties config;
+    private final EventPhotoRepository eventPhotoRepository;
+
+    public byte[] findBytes(EventPhoto eventPhoto) {
+        log.info("findPhoto: {}", eventPhoto);
+
+        String path = eventPhoto.getPath();
+        try {
+            return Files.readAllBytes(new File(config.getPhotoFolderPath() + path).toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public List<EventPhotoDto> findPhotosByEventId(Long eventId) {
-        log.info("findPhotosByEventId: {}", eventId);
-        return mapper.toDtos(repository.findAllByEventId(eventId));
+    public EventPhoto savePhoto(Event event, MultipartFile photo) {
+        log.info("savePhoto: {}, {}", event, photo.getOriginalFilename());
+
+        EventPhoto eventPhoto = new EventPhoto();
+        eventPhoto.setEvent(event);
+
+        try {
+            if(photo.getContentType() == null) {
+                throw new RuntimeException("Null file type");
+            }
+            int ordinal;
+            if(event.getPhotos() == null)
+                ordinal = 0;
+            else
+                ordinal = event.getPhotos().size();
+            String path = "event#" + event.getId() + "/" + ordinal + "." + photo.getContentType().split("/")[1];
+            File file = new File(config.getPhotoFolderPath() + path);
+            Files.createDirectories(file.getParentFile().toPath());
+            Files.createFile(file.toPath());
+            photo.transferTo(file);
+            eventPhoto.setPath(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return eventPhotoRepository.save(eventPhoto);
     }
 
-    public EventPhotoDto findPhotoByPath(String path) {
-        log.info("findPhotoByPath: {}", path);
-        return mapper.toDto(repository.findByPath(path).orElseThrow(
-                () -> new NotFoundException("Photo [path: %s] not found".formatted(path))
-            )
-        );
-    }
+    public void deletePhoto(EventPhoto eventPhoto) {
+        log.info("deletePhoto: {}", eventPhoto);
 
-    public EventPhotoDto savePhoto(EventPhotoDto photoDto) {
-        return mapper.toDto(repository.save(mapper.toEntity(photoDto)));
-    }
+        eventPhotoRepository.deleteById(eventPhoto.getId());
 
-    public EventPhotoDto updatePhoto(EventPhotoDto photoDto) {
-        if(repository.findById(photoDto.getId()).isEmpty())
-            throw new NotFoundException("Photo [id: %d] not found".formatted(photoDto.getId()));
-        return mapper.toDto(repository.save(mapper.toEntity(photoDto)));
-    }
-
-    public void deletePhoto(Long id) {
-        if(repository.findById(id).isEmpty())
-            throw new NotFoundException("Photo [id: %d] not found".formatted(id));
-        repository.deleteById(id);
+        File file = new File(config.getPhotoFolderPath() + eventPhoto.getPath());
+        if(!file.delete()) {
+            log.error("File {} not deleted", eventPhoto.getPath());
+            throw new RuntimeException("File not deleted");
+        }
     }
 }

@@ -3,24 +3,19 @@ package com.ringo.model.company;
 import com.ringo.model.common.Photo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.Getter;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "org_photo")
-@Getter
-@Setter
+@SuperBuilder
+@AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class OrgPhoto extends Photo {
-    @OneToOne
-    @JoinColumn(name = "org_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "organisation_id")
     private Organisation organisation;
-
-    public OrgPhoto(String path, Organisation organisation) {
-        super(path);
-        this.organisation = organisation;
-    }
 }

@@ -6,5 +6,5 @@ import com.ringo.model.company.Currency;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface CurrencyMapper extends EntityMapper<CurrencyDto, Currency> {
+public interface CurrencyMapper extends EntityMapper<CurrencyDto, CurrencyDto, Currency> {
 }

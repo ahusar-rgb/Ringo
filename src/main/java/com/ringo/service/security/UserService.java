@@ -1,7 +1,7 @@
 package com.ringo.service.security;
 
-import com.ringo.dto.security.UserRequestDto;
-import com.ringo.dto.security.UserResponseDto;
+import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.IllegalInsertException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.mapper.company.UserMapper;

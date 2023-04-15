@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 
 
 @Mapper(componentModel = "spring")
-public interface CategoryMapper extends EntityMapper<CategoryDto, Category> {
+public interface CategoryMapper extends EntityMapper<CategoryDto, CategoryDto, Category> {
 }

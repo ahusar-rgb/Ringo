@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TicketDto extends AbstractEntityDto {
-    private ParticipantRequestDto user;
-    private EventRequestDto event;
+    private ParticipantResponseDto user;
+    private EventResponseDto event;
     private String timeOfSubmission;
     private String expiryDate;
     private Boolean isValidated;

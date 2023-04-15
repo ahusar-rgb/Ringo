@@ -1,17 +1,14 @@
 package com.ringo.mapper.common;
 
-import com.ringo.dto.common.AbstractEntityDto;
-import com.ringo.model.common.AbstractEntity;
-
 import java.util.List;
 
-public interface EntityMapper<E extends AbstractEntityDto, T extends AbstractEntity> {
+public interface EntityMapper<RequestDto, ResponseDto,  T> {
 
-    E toDto(T entity);
+    ResponseDto toDto(T entity);
 
-    List<E> toDtos(List<T> entities);
+    List<ResponseDto> toDtos(List<T> entities);
 
-    T toEntity(E entityDto);
+    T toEntity(RequestDto entityDto);
 
-    List<T> toEntities(List<E> entityDtos);
+    List<T> toEntities(List<RequestDto> entityDtos);
 }

@@ -1,6 +1,5 @@
 package com.ringo.dto.company;
 
-import com.ringo.dto.security.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

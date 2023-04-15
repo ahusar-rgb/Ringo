@@ -7,8 +7,11 @@ import com.ringo.exception.IllegalInsertException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
-import com.ringo.model.company.Event;
+import com.ringo.model.company.*;
+import com.ringo.repository.CategoryRepository;
+import com.ringo.repository.CurrencyRepository;
 import com.ringo.repository.EventRepository;
+import com.ringo.repository.OrganisationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ringo.utils.Geography.getDistance;
 
@@ -27,76 +31,107 @@ public class EventService {
     private final EventRepository repository;
     private final EventMapper mapper;
     private final EventGroupMapper groupMapper;
-    private final EventPhotoStorage eventPhotoStorage;
     private final EventPhotoService eventPhotoService;
+    private final OrganisationRepository organisationRepository;
+    private final CurrencyRepository currencyRepository;
+    private final CategoryRepository categoryRepository;
 
     public EventResponseDto findEventById(Long id) {
         log.info("findEventById: {}", id);
-        return mapper.toDto(
-                repository.findActiveById(id).orElseThrow(
-                        () -> new NotFoundException("Event [id: %d] not found".formatted(id)))
-        );
-    }
 
-    public List<EventResponseDto> findAllEvents() {
-        log.info("findAllEvents");
-        return mapper.toDtos(repository.findAllActive());
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        EventResponseDto dto = mapper.toDto(event);
+        dto.setPhotos(new ArrayList<>());
+        dto.setMainPhoto(eventPhotoService.findBytes(event.getMainPhoto()));
+
+        event.getPhotos().forEach(
+                photo -> {
+                    if(!photo.getId().equals(event.getMainPhoto().getId()))
+                        dto.getPhotos().add(eventPhotoService.findBytes(photo));
+                }
+        );
+
+        return dto;
     }
 
     public EventResponseDto saveEvent(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
+
+        Organisation organisation = organisationRepository.findActiveById(eventDto.getOrganisationId()).orElseThrow(
+                () -> new NotFoundException("Organisation [id: %d] not found".formatted(eventDto.getOrganisationId()))
+        );
+        Currency currency = currencyRepository.findById(eventDto.getCurrencyId()).orElseThrow(
+                () -> new NotFoundException("Currency [id: %d] not found".formatted(eventDto.getCurrencyId()))
+        );
+        List<Category> categories = eventDto.getCategoryIds().stream()
+                .map(id -> categoryRepository.findById(id).orElseThrow(
+                        () -> new NotFoundException("Category [id: %d] not found".formatted(id))
+                )).toList();
+
+
         Event event = mapper.toEntity(eventDto);
-        if(event.getPhotoCount() > config.getMaxPhotoCount())
-            throw new IllegalInsertException("Max photos count reached: %d/%d".formatted(event.getPhotoCount(), config.getMaxPhotoCount()));
+        event.setHost(organisation);
+        event.setCurrency(currency);
+        event.setCategories(categories);
+        event.setIsActive(false);
+
+        if(event.getTotalPhotoCount() > config.getMaxPhotoCount())
+            throw new IllegalInsertException("Max photos count reached: %d/%d".formatted(event.getTotalPhotoCount(), config.getMaxPhotoCount()));
+
         return mapper.toDto(repository.save(event));
     }
 
-    public EventResponseDto addPhotoToEvent(AddEventPhotoRequest addEventPhotoDto, MultipartFile photo) {
-        log.info("addPhotoToEvent: {}", addEventPhotoDto);
+    public void addPhotoToEvent(AddEventPhotoRequest addEventPhotoRequest, MultipartFile photo) {
+        log.info("addPhotoToEvent: {}, {}", addEventPhotoRequest.getEventId(), photo.getOriginalFilename());
         log.info("photo type: {}", photo.getContentType());
-        Event event = repository.findById(addEventPhotoDto.getEventId()).orElseThrow(
-                () -> new NotFoundException("Event [id: %d] not found".formatted(addEventPhotoDto.getEventId()))
+
+        Event event = repository.findById(addEventPhotoRequest.getEventId()).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(addEventPhotoRequest.getEventId()))
         );
 
-        List<EventPhotoDto> photos = eventPhotoService.findPhotosByEventId(addEventPhotoDto.getEventId());
-        if(photos.size() >= event.getPhotoCount())
-            throw new IllegalInsertException("Max photos count reached: %d/%d".formatted(photos.size(), event.getPhotoCount()));
+        if(event.getPhotos().size() >= event.getTotalPhotoCount())
+            throw new IllegalInsertException("All photos for event [id: %d] have been uploaded".formatted(event.getId()));
 
-        String path = "event#" + event.getId();
+        EventPhoto newPhoto = eventPhotoService.savePhoto(event, photo);
 
-        EventPhotoDto eventPhotoDto = EventPhotoDto.builder()
-                .eventId(addEventPhotoDto.getEventId())
-                .path(path + "/" + eventPhotoService.findPhotosByEventId(addEventPhotoDto.getEventId()).size() + "." + photo.getContentType().split("/")[1])
-                .isMain(addEventPhotoDto.getIsMain())
-                .build();
+        if(event.getMainPhoto() == null || addEventPhotoRequest.getIsMain()) {
+            event.setMainPhoto(newPhoto);
+        }
+        event.getPhotos().add(newPhoto);
 
-        if(addEventPhotoDto.getIsMain())
-            event.setMainPhoto(eventPhotoDto.getPath());
-        eventPhotoStorage.savePhoto(eventPhotoDto, photo);
 
-        if(photos.size() == event.getPhotoCount() - 1) {
+        if(event.getPhotos().size() == event.getTotalPhotoCount()) {
             event.setIsActive(true);
-            repository.save(event);
         }
 
-        return mapper.toDto(event);
+        repository.save(event);
     }
 
-    public List<EventGroupDto> findEventsByDistance(double latitude, double longitude, int distance) {
-        List<EventGroup> groups = mapper.toGroups(
-                repository.findAllByDistance(latitude, longitude, distance)
-        );
-        return groupMapper.toDtos(groupEvents(groups, distance / config.getMergeDistanceFactor()));
-    }
+//    public List<EventResponseDto> findEventsByDistance(double latitude, double longitude, double distance) {
+//
+//        if(distance >= config.getMaxDistanceForRequest())
+//            throw new IllegalInsertException("Max distance for request exceeded: %f/%f".formatted(distance, config.getMaxDistanceForRequest()));
+//
+//        List<EventResponseDto> result = mapper.toDtos(repository.findAllByDistance(latitude, longitude, distance));
+//
+//    }
 
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {
-        List<EventGroup> groups = mapper.toGroups(
-                repository.findAllInArea(latMin, latMax, lonMin, lonMax)
-        );
-        return groupMapper.toDtos(groupEvents(groups, getDistance(
-                new Coordinates(latMin, lonMin),
-                new Coordinates(latMax, lonMax)
-        ) / config.getMergeDistanceFactor()));
+        List<EventGroup> groups = repository.findAllInArea(latMin, latMax, latMin, latMax).stream().map(event ->
+                EventGroup.builder()
+                        .count(1)
+                        .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
+                        .mainPhoto(event.getMainPhoto())
+                        .build()
+        ).collect(Collectors.toList());
+
+        return groupMapper.toDtos(groupEvents(groups,
+                getDistance(
+                        new Coordinates(latMin, lonMin),
+                        new Coordinates(latMax, lonMax)) / config.getMergeDistanceFactor()));
     }
 
 

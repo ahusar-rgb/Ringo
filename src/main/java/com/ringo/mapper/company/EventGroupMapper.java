@@ -3,30 +3,33 @@ package com.ringo.mapper.company;
 import com.ringo.dto.company.EventGroup;
 import com.ringo.dto.company.EventGroupDto;
 import com.ringo.service.company.EventPhotoService;
-import com.ringo.service.company.EventPhotoStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
 @RequiredArgsConstructor
+@Component
 public class EventGroupMapper {
-    private final EventPhotoStorage eventPhotoStorage;
+
     private final EventPhotoService eventPhotoService;
 
     public EventGroupDto toDto(EventGroup eventGroup) {
         return EventGroupDto.builder()
                 .coordinates(eventGroup.getCoordinates())
                 .count(eventGroup.getCount())
-                .mainPhoto(eventGroup.getMainPhotoPath() == null ?
-                        null : eventPhotoStorage.findPhoto(eventPhotoService.findPhotoByPath(eventGroup.getMainPhotoPath())))
+                .mainPhoto(
+                        eventGroup.getMainPhoto() != null
+                                ? eventPhotoService.findBytes(eventGroup.getMainPhoto())
+                                : null
+                )
                 .build();
     }
 
     public List<EventGroupDto> toDtos(List<EventGroup> eventGroups) {
         return eventGroups.stream()
                 .map(this::toDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 }

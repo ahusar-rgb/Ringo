@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,8 +25,9 @@ public class Event extends AbstractActiveEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "main_photo")
-    private String mainPhoto;
+    @OneToOne
+    @JoinColumn(name = "main_photo_id")
+    private EventPhoto mainPhoto;
 
     @Column(name = "address")
     private String address;
@@ -68,5 +70,11 @@ public class Event extends AbstractActiveEntity {
     private List<Category> categories;
 
     @Column(name = "photo_count", nullable = false)
-    private Integer photoCount;
+    private Integer totalPhotoCount;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EventPhoto> photos = new ArrayList<>();
+
+    @Column(name = "people_count", columnDefinition = "INT DEFAULT 0")
+    private Integer peopleCount = 0;
 }

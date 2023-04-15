@@ -2,9 +2,9 @@ package com.ringo.controller;
 
 import com.ringo.auth.JwtService;
 import com.ringo.config.Constants;
-import com.ringo.dto.auth.TokenDto;
-import com.ringo.dto.security.UserRequestDto;
-import com.ringo.dto.security.UserResponseDto;
+import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.company.UserResponseDto;
+import com.ringo.dto.security.TokenDto;
 import com.ringo.exception.AuthenticationException;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;

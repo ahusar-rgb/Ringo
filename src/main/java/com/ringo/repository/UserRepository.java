@@ -9,9 +9,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends ActiveEntityRepository<User> {
 
-    @Query("SELECT u FROM User u WHERE u.username = :username AND u.isActive = true")
+    @Query("SELECT u FROM User u WHERE u.username = :username AND u.isActive")
     Optional<User> findByUsername(String username);
 
-    @Query("SELECT u FROM User u WHERE u.email = :email AND u.isActive = true")
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.isActive")
     Optional<User> findByEmail(String email);
 }

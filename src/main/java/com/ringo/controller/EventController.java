@@ -1,9 +1,6 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.AddEventPhotoRequest;
-import com.ringo.dto.company.EventGroupDto;
-import com.ringo.dto.company.EventRequestDto;
-import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.*;
 import com.ringo.service.company.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,29 +37,29 @@ public class EventController {
                 .body(eventService.findEventById(id));
     }
 
-    @Operation(summary = "Find all events near the given coordinates")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Found the events",
-                        content = @Content(mediaType = "application/json",
-                                array = @ArraySchema(schema = @Schema(implementation = EventGroupDto.class))))
-            }
-    )
-    @GetMapping(value = "geo/near", produces = {"application/json"})
-    public ResponseEntity<List<EventGroupDto>> findEventsByDistance(
-            @Parameter(description = "latitude") @RequestParam Double lat,
-            @Parameter(description = "longitude") @RequestParam Double lon,
-            @Parameter(description = "max distance to an event") @RequestParam Integer distance) {
-        return ResponseEntity.ok()
-                .body(eventService.findEventsByDistance(lat, lon, distance));
-    }
+//    @Operation(summary = "Find all events near the given coordinates")
+//    @ApiResponses(
+//            value = {
+//                    @ApiResponse(responseCode = "200", description = "Found the events",
+//                        content = @Content(mediaType = "application/json",
+//                                array = @ArraySchema(schema = @Schema(implementation = EventGroupDto.class))))
+//            }
+//    )
+//    @GetMapping(value = "geo/near", produces = {"application/json"})
+//    public ResponseEntity<List<EventResponseDto>> findEventsByDistance(
+//            @Parameter(description = "latitude") @RequestParam Double lat,
+//            @Parameter(description = "longitude") @RequestParam Double lon,
+//            @Parameter(description = "distance") @RequestParam Double distance) {
+//        return ResponseEntity.ok()
+//                .body(eventService.findEventsByDistance(lat, lon, distance));
+//    }
 
     @Operation(summary = "Find all events in the given area")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Found the events",
                         content = @Content(mediaType = "application/json",
-                                array = @ArraySchema(schema = @Schema(implementation = EventGroupDto.class))))
+                                array = @ArraySchema(schema = @Schema(implementation = EventGroup.class))))
             }
     )
     @GetMapping(value = "geo/area", produces = {"application/json"})
@@ -79,11 +76,13 @@ public class EventController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Event created",
-                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class)))
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
             }
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<EventResponseDto> saveEvent(@Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto) {
+    public ResponseEntity<EventResponseDto> saveEvent(
+            @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
+    ) {
         return ResponseEntity
                 .ok()
                 .body(eventService.saveEvent(eventDto));
@@ -98,11 +97,12 @@ public class EventController {
             }
     )
     @PutMapping(value = "/add-photo", produces = {"application/json"}, consumes = {"multipart/form-data"})
-    public ResponseEntity<EventResponseDto> addPhotoToEvent(
-            @Parameter(description = "data about the event") @RequestPart("data") AddEventPhotoRequest addEventPhotoDto,
+    public ResponseEntity<String> addPhotoToEvent(
+            @Parameter(description = "Data about the request") @RequestPart("data") AddEventPhotoRequest request,
             @Parameter(description = "photo") @RequestPart("file") MultipartFile photo) {
+
+        eventService.addPhotoToEvent(request, photo);
         return ResponseEntity
-                .ok()
-                .body(eventService.addPhotoToEvent(addEventPhotoDto, photo));
+                .ok("Success");
     }
 }
