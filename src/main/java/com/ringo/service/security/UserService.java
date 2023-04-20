@@ -2,8 +2,8 @@ package com.ringo.service.security;
 
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
-import com.ringo.exception.IllegalInsertException;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.mapper.company.UserMapper;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
@@ -33,9 +33,9 @@ public class UserService implements UserDetailsService {
 
     public UserResponseDto save(UserRequestDto userRequestDto) {
         if(userRepository.findByUsername(userRequestDto.getUsername()).isPresent())
-            throw new IllegalInsertException("User with [username: %s] already exists".formatted(userRequestDto.getUsername()));
+            throw new UserException("User with [username: %s] already exists".formatted(userRequestDto.getUsername()));
         if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent())
-            throw new IllegalInsertException("User with [email: %s] already exists".formatted(userRequestDto.getEmail()));
+            throw new UserException("User with [email: %s] already exists".formatted(userRequestDto.getEmail()));
 
         User user = userMapper.toEntity(userRequestDto);
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));

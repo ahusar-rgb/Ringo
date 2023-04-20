@@ -1,6 +1,5 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.CategoryDto;
 import com.ringo.dto.company.CurrencyDto;
 import com.ringo.service.company.CurrencyService;
 import io.swagger.v3.oas.annotations.Operation;

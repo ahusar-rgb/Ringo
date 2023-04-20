@@ -1,8 +1,8 @@
 package com.ringo.service.company;
 
 import com.ringo.dto.company.CategoryDto;
-import com.ringo.exception.IllegalInsertException;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.mapper.company.CategoryMapper;
 import com.ringo.model.company.Category;
 import com.ringo.repository.CategoryRepository;
@@ -36,7 +36,7 @@ public class CategoryService {
         public CategoryDto saveCategory(CategoryDto categoryDto) {
             log.info("saveCategory: {}", categoryDto);
             if(repository.findByName(categoryDto.getName()).isPresent())
-                throw new IllegalInsertException("Category [name: %s] already exists".formatted(categoryDto.getName()));
+                throw new UserException("Category [name: %s] already exists".formatted(categoryDto.getName()));
             Category category = mapper.toEntity(categoryDto);
             return mapper.toDto(repository.save(category));
         }
@@ -46,7 +46,7 @@ public class CategoryService {
             if(repository.findById(categoryDto.getId()).isEmpty())
                 throw new NotFoundException("Category [id: %d] not found".formatted(categoryDto.getId()));
             if(repository.findByName(categoryDto.getName()).isPresent())
-                throw new IllegalInsertException("Category [name: %s] already exists".formatted(categoryDto.getName()));
+                throw new UserException("Category [name: %s] already exists".formatted(categoryDto.getName()));
 
             Category category = mapper.toEntity(categoryDto);
             return mapper.toDto(repository.save(category));

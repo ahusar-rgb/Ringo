@@ -4,14 +4,13 @@ import com.ringo.config.ApplicationProperties;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.EventPhoto;
 import com.ringo.repository.EventPhotoRepository;
+import com.ringo.service.aws.s3.AwsFileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 @Service
 @RequiredArgsConstructor

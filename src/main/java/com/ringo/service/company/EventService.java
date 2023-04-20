@@ -3,8 +3,9 @@ package com.ringo.service.company;
 import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.*;
-import com.ringo.exception.IllegalInsertException;
+import com.ringo.dto.search.EventSearchDto;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
 import com.ringo.model.company.*;
@@ -14,6 +15,8 @@ import com.ringo.repository.EventRepository;
 import com.ringo.repository.OrganisationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,18 +46,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        EventResponseDto dto = mapper.toDto(event);
-        dto.setPhotos(new ArrayList<>());
-        dto.setMainPhoto(eventPhotoService.findBytes(event.getMainPhoto()));
-
-        event.getPhotos().forEach(
-                photo -> {
-                    if(!photo.getId().equals(event.getMainPhoto().getId()))
-                        dto.getPhotos().add(eventPhotoService.findBytes(photo));
-                }
-        );
-
-        return dto;
+        return mapper.toDto(event);
     }
 
     public EventResponseDto saveEvent(EventRequestDto eventDto) {
@@ -79,7 +71,7 @@ public class EventService {
         event.setIsActive(false);
 
         if(event.getTotalPhotoCount() > config.getMaxPhotoCount())
-            throw new IllegalInsertException("Max photos count reached: %d/%d".formatted(event.getTotalPhotoCount(), config.getMaxPhotoCount()));
+            throw new UserException("Max photos count reached: %d/%d".formatted(event.getTotalPhotoCount(), config.getMaxPhotoCount()));
 
         return mapper.toDto(repository.save(event));
     }
@@ -93,7 +85,7 @@ public class EventService {
         );
 
         if(event.getPhotos().size() >= event.getTotalPhotoCount())
-            throw new IllegalInsertException("All photos for event [id: %d] have been uploaded".formatted(event.getId()));
+            throw new UserException("All photos for event [id: %d] have been uploaded".formatted(event.getId()));
 
         EventPhoto newPhoto = eventPhotoService.savePhoto(event, photo);
 
@@ -110,17 +102,27 @@ public class EventService {
         repository.save(event);
     }
 
-//    public List<EventResponseDto> findEventsByDistance(double latitude, double longitude, double distance) {
-//
-//        if(distance >= config.getMaxDistanceForRequest())
-//            throw new IllegalInsertException("Max distance for request exceeded: %f/%f".formatted(distance, config.getMaxDistanceForRequest()));
-//
-//        List<EventResponseDto> result = mapper.toDtos(repository.findAllByDistance(latitude, longitude, distance));
-//
-//    }
+    public List<EventSmallDto> findTopByDistance(double latitude, double longitude, int limit) {
+
+        if(limit > 100)
+            throw new RuntimeException("Limit can't be more than 100");
+
+        Pageable pageable = PageRequest.of(0, limit);
+        return repository.findTopByDistance(latitude, longitude, pageable).getContent().stream().map(
+                event -> {
+                    EventSmallDto dto = mapper.toSmallDto(event);
+                    dto.setDistance(getDistance(new Coordinates(latitude, longitude), dto.getCoordinates()));
+                    return dto;
+                }
+        ).collect(Collectors.toList());
+    }
 
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {
-        List<EventGroup> groups = repository.findAllInArea(latMin, latMax, latMin, latMax).stream().map(event ->
+
+        log.info("findEventsInArea: {}, {}, {}, {}", latMin, latMax, lonMin, lonMax);
+        List<Event> events = repository.findAllInArea(latMin, latMax, lonMin, lonMax);
+
+        List<EventGroup> groups = events.stream().map(event ->
                 EventGroup.builder()
                         .count(1)
                         .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
@@ -161,4 +163,22 @@ public class EventService {
         }
         return result;
     }
+
+    public List<EventSmallDto> searchEvents(EventSearchDto searchDto) {
+        log.info("searchEvents: {}", searchDto);
+
+        List<Event> events = repository.findAll(searchDto.getSpecification(), searchDto.getPageable()).getContent();
+
+        return events.stream()
+                .map(event -> {
+                    EventSmallDto dto = mapper.toSmallDto(event);
+                    if(searchDto.getLatitude() != null && searchDto.getLongitude() != null)
+                        dto.setDistance(
+                                getDistance(new Coordinates(searchDto.getLatitude(), searchDto.getLongitude()),
+                                dto.getCoordinates())
+                        );
+                    return dto;
+        }).collect(Collectors.toList());
+    }
+
 }

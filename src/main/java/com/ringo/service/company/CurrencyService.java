@@ -1,8 +1,8 @@
 package com.ringo.service.company;
 
 import com.ringo.dto.company.CurrencyDto;
-import com.ringo.exception.IllegalInsertException;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.mapper.company.CurrencyMapper;
 import com.ringo.model.company.Currency;
 import com.ringo.repository.CurrencyRepository;
@@ -36,9 +36,9 @@ public class CurrencyService {
         public CurrencyDto saveCurrency(CurrencyDto currencyDto) {
             log.info("saveCurrency: {}", currencyDto);
             if(repository.findByName(currencyDto.getName()).isPresent())
-                throw new IllegalInsertException("Currency [name: %s] already exists".formatted(currencyDto.getName()));
+                throw new UserException("Currency [name: %s] already exists".formatted(currencyDto.getName()));
             if(repository.findBySymbol(currencyDto.getSymbol()).isPresent())
-                throw new IllegalInsertException("Currency [symbol: %s] already exists".formatted(currencyDto.getSymbol()));
+                throw new UserException("Currency [symbol: %s] already exists".formatted(currencyDto.getSymbol()));
 
             Currency currency = mapper.toEntity(currencyDto);
             return mapper.toDto(repository.save(currency));
@@ -49,9 +49,9 @@ public class CurrencyService {
             if(repository.findById(currencyDto.getId()).isEmpty())
                 throw new NotFoundException("Currency [id: %d] not found".formatted(currencyDto.getId()));
             if(repository.findByName(currencyDto.getName()).isPresent())
-                throw new IllegalInsertException("Currency [name: %s] already exists".formatted(currencyDto.getName()));
+                throw new UserException("Currency [name: %s] already exists".formatted(currencyDto.getName()));
             if(repository.findBySymbol(currencyDto.getSymbol()).isPresent())
-                throw new IllegalInsertException("Currency [symbol: %s] already exists".formatted(currencyDto.getSymbol()));
+                throw new UserException("Currency [symbol: %s] already exists".formatted(currencyDto.getSymbol()));
 
             Currency currency = mapper.toEntity(currencyDto);
             return mapper.toDto(repository.save(currency));

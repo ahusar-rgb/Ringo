@@ -2,8 +2,8 @@ package com.ringo.service.company;
 
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.exception.IllegalInsertException;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
@@ -33,10 +33,10 @@ public class OrganisationService {
         Organisation organisation = organisationMapper.toEntity(dto);
 
         if (organisationRepository.findByEmail(organisation.getEmail()).isPresent()) {
-            throw new IllegalInsertException("Organisation with [email: " + organisation.getEmail() + "] already exists");
+            throw new UserException("Organisation with [email: " + organisation.getEmail() + "] already exists");
         }
         if (organisationRepository.findByUsername(organisation.getUsername()).isPresent()) {
-            throw new IllegalInsertException("Organisation with [username: " + organisation.getUsername() + "] already exists");
+            throw new UserException("Organisation with [username: " + organisation.getUsername() + "] already exists");
         }
 
         organisation.setRole(Role.ROLE_ORGANISATION);

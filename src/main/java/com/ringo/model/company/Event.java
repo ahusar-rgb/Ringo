@@ -2,6 +2,7 @@ package com.ringo.model.company;
 
 import com.ringo.model.common.AbstractActiveEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -73,8 +74,10 @@ public class Event extends AbstractActiveEntity {
     private Integer totalPhotoCount;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<EventPhoto> photos = new ArrayList<>();
 
     @Column(name = "people_count", columnDefinition = "INT DEFAULT 0")
+    @Builder.Default
     private Integer peopleCount = 0;
 }

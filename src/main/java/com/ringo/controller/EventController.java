@@ -1,6 +1,7 @@
 package com.ringo.controller;
 
 import com.ringo.dto.company.*;
+import com.ringo.dto.search.EventSearchDto;
 import com.ringo.service.company.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,22 +38,22 @@ public class EventController {
                 .body(eventService.findEventById(id));
     }
 
-//    @Operation(summary = "Find all events near the given coordinates")
-//    @ApiResponses(
-//            value = {
-//                    @ApiResponse(responseCode = "200", description = "Found the events",
-//                        content = @Content(mediaType = "application/json",
-//                                array = @ArraySchema(schema = @Schema(implementation = EventGroupDto.class))))
-//            }
-//    )
-//    @GetMapping(value = "geo/near", produces = {"application/json"})
-//    public ResponseEntity<List<EventResponseDto>> findEventsByDistance(
-//            @Parameter(description = "latitude") @RequestParam Double lat,
-//            @Parameter(description = "longitude") @RequestParam Double lon,
-//            @Parameter(description = "distance") @RequestParam Double distance) {
-//        return ResponseEntity.ok()
-//                .body(eventService.findEventsByDistance(lat, lon, distance));
-//    }
+    @Operation(summary = "Find all events near the given coordinates")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Found the events",
+                        content = @Content(mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = EventSmallDto.class))))
+            }
+    )
+    @GetMapping(value = "geo/near", produces = {"application/json"})
+    public ResponseEntity<List<EventSmallDto>> findEventsByDistance(
+            @Parameter(description = "latitude") @RequestParam Double lat,
+            @Parameter(description = "longitude") @RequestParam Double lon,
+            @Parameter(description = "distance") @RequestParam Integer limit) {
+        return ResponseEntity.ok()
+                .body(eventService.findTopByDistance(lat, lon, limit));
+    }
 
     @Operation(summary = "Find all events in the given area")
     @ApiResponses(
@@ -105,4 +106,19 @@ public class EventController {
         return ResponseEntity
                 .ok("Success");
     }
+
+    @Operation(summary = "Search events")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Found the events",
+                        content = @Content(mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = EventSmallDto.class))))
+            }
+    )
+    @GetMapping(produces = {"application/json"})
+    public ResponseEntity<List<EventSmallDto>> searchEvent(EventSearchDto searchDto) {
+        return ResponseEntity.ok()
+                .body(eventService.searchEvents(searchDto));
+    }
+
 }

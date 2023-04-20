@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalInsertException.class)
-    public ResponseEntity<String> handleIllegalInsertException(IllegalInsertException e) {
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<String> handleIllegalInsertException(UserException e) {
         String error = e.getMessage();
         log.warn(error);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
