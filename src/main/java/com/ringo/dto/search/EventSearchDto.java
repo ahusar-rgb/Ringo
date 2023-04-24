@@ -1,13 +1,17 @@
 package com.ringo.dto.search;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ringo.exception.UserException;
 import com.ringo.model.company.Category;
 import com.ringo.model.company.Event;
 import jakarta.persistence.criteria.*;
 import lombok.Data;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 public class EventSearchDto extends GenericSearchDto<Event>{
@@ -22,26 +26,29 @@ public class EventSearchDto extends GenericSearchDto<Event>{
     private Double latitude;
     private Double longitude;
     private Integer maxDistance;
-    private String startTime;
-    private String endTime;
+    private String startTimeMin;
+    private String startTimeMax;
+    private String endTimeMin;
+    private String endTimeMax;
 
-//    @Override
-//    @JsonIgnore
-//    public Sort getSortSpec() {
-//        if(Objects.equals(sort, "distance")) {
-//            return Sort.unsorted();
-//        }
-//        return super.getSortSpec();
-//    }
+    @Override
+    @JsonIgnore
+    public Sort getSortSpec() {
+        if(Objects.equals(sort, "distance")) {
+            return Sort.unsorted();
+        }
+        return super.getSortSpec();
+    }
 
-//    @Override
-//    public Specification<Event> getSpecification() {
-//        return (root, query, criteriaBuilder) -> {
-//            Specification<Event> specification = super.getSpecification();
-//            addOrderByDistance(root, query, criteriaBuilder);
-//            return specification.toPredicate(root, query, criteriaBuilder);
-//        };
-//    }
+    @Override
+    @JsonIgnore
+    public Specification<Event> getSpecification() {
+        return (root, query, criteriaBuilder) -> {
+            Specification<Event> specification = super.getSpecification();
+            addOrderByDistance(root, query, criteriaBuilder);
+            return specification.toPredicate(root, query, criteriaBuilder);
+        };
+    }
 
     @Override
     protected void addFilters(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, List<Predicate> filters) {
@@ -83,6 +90,7 @@ public class EventSearchDto extends GenericSearchDto<Event>{
         if(maxDistance != null) {
             if(latitude == null || longitude == null)
                 throw new UserException("Latitude and longitude are required when filtering by distance");
+            query.where(criteriaBuilder.isNotNull(root.get("latitude")), criteriaBuilder.isNotNull(root.get("longitude")));
 
             filters.add(criteriaBuilder.lessThanOrEqualTo(
                     criteriaBuilder.function(
@@ -96,32 +104,39 @@ public class EventSearchDto extends GenericSearchDto<Event>{
                 )
             );
         }
-        if(startTime != null) {
-            filters.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startTime"), LocalDateTime.parse(startTime)));
+        if(startTimeMin != null) {
+            filters.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startTime"), LocalDateTime.parse(startTimeMin)));
         }
-        if(endTime != null) {
-            filters.add(criteriaBuilder.lessThanOrEqualTo(root.get("endTime"), LocalDateTime.parse(endTime)));
+        if(startTimeMax != null) {
+            filters.add(criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), LocalDateTime.parse(startTimeMax)));
+        }
+        if(endTimeMin != null) {
+            filters.add(criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), LocalDateTime.parse(endTimeMin)));
+        }
+        if(endTimeMax != null) {
+            filters.add(criteriaBuilder.lessThanOrEqualTo(root.get("endTime"), LocalDateTime.parse(endTimeMax)));
         }
     }
 
-//    private void addOrderByDistance(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-//        if(Objects.equals(sort, "distance")) {
-//
-//            if(latitude == null || longitude == null)
-//                throw new UserException("Latitude and longitude are required when filtering by distance");
-//
-//            Expression<Double> byDistance = criteriaBuilder.function(
-//                    "get_distance",
-//                    Double.class,
-//                    criteriaBuilder.literal(latitude),
-//                    root.get("latitude"),
-//                    criteriaBuilder.literal(longitude),
-//                    root.get("longitude")
-//            );
-//            if(dir == Sort.Direction.ASC)
-//                criteriaBuilder.asc(byDistance);
-//            else
-//                criteriaBuilder.desc(byDistance);
-//        }
-//    }
+    private void addOrderByDistance(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        if(Objects.equals(sort, "distance")) {
+
+            if(latitude == null || longitude == null)
+                throw new UserException("Latitude and longitude are required when filtering by distance");
+
+            Expression<Double> byDistance = criteriaBuilder.function(
+                    "get_distance",
+                    Double.class,
+                    criteriaBuilder.literal(latitude),
+                    criteriaBuilder.literal(longitude),
+                    root.get("latitude"),
+                    root.get("longitude")
+            );
+            query.where(criteriaBuilder.isNotNull(root.get("latitude")), criteriaBuilder.isNotNull(root.get("longitude")));
+            if(dir == Sort.Direction.ASC)
+                query.orderBy(criteriaBuilder.asc(byDistance));
+            else
+                query.orderBy(criteriaBuilder.desc(byDistance));
+        }
+    }
 }

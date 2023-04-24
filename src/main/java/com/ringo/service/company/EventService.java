@@ -172,7 +172,10 @@ public class EventService {
         return events.stream()
                 .map(event -> {
                     EventSmallDto dto = mapper.toSmallDto(event);
-                    if(searchDto.getLatitude() != null && searchDto.getLongitude() != null)
+                    if(searchDto.getLatitude() != null
+                            && searchDto.getLongitude() != null
+                            && dto.getCoordinates().longitude() != null
+                            && dto.getCoordinates().latitude() != null)
                         dto.setDistance(
                                 getDistance(new Coordinates(searchDto.getLatitude(), searchDto.getLongitude()),
                                 dto.getCoordinates())

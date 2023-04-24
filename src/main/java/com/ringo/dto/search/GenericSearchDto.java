@@ -40,7 +40,6 @@ public class GenericSearchDto<T>{
     @JsonIgnore
     public Specification<T> getSpecification() {
         return (root, query, criteriaBuilder) -> {
-            query.distinct(true);
             Predicate noFiltersApplied = criteriaBuilder.conjunction();
             List<Predicate> filters = new ArrayList<>();
             filters.add(noFiltersApplied);
