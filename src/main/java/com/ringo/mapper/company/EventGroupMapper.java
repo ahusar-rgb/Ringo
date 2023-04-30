@@ -14,18 +14,19 @@ import java.util.stream.Collectors;
 public class EventGroupMapper {
 
     private final EventPhotoService eventPhotoService;
+    private final PhotoMapper photoMapper;
 
     public EventGroupDto toDto(EventGroup eventGroup) {
-        return EventGroupDto.builder()
+        EventGroupDto dto = EventGroupDto.builder()
                 .coordinates(eventGroup.getCoordinates())
                 .count(eventGroup.getCount())
-                .mainPhoto(
-                        eventGroup.getMainPhoto() != null
-                                ? eventPhotoService.findBytes(eventGroup.getMainPhoto())
-                                : null
-                )
                 .id(eventGroup.getId())
                 .build();
+
+        if(eventGroup.getMainPhoto() != null)
+            dto.setMainPhotoId(eventGroup.getMainPhoto().getLowQualityPhoto().getId());
+
+        return dto;
     }
 
     public List<EventGroupDto> toDtos(List<EventGroup> eventGroups) {

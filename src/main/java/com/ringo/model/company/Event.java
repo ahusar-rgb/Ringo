@@ -1,6 +1,8 @@
 package com.ringo.model.company;
 
 import com.ringo.model.common.AbstractActiveEntity;
+import com.ringo.model.photo.EventMainPhoto;
+import com.ringo.model.photo.EventPhoto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +30,7 @@ public class Event extends AbstractActiveEntity {
 
     @OneToOne
     @JoinColumn(name = "main_photo_id")
-    private EventPhoto mainPhoto;
+    private EventMainPhoto mainPhoto;
 
     @Column(name = "address")
     private String address;

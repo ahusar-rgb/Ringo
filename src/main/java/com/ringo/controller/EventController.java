@@ -1,6 +1,9 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.*;
+import com.ringo.dto.company.EventGroupDto;
+import com.ringo.dto.company.EventRequestDto;
+import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.service.company.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,24 +38,7 @@ public class EventController {
     public ResponseEntity<EventResponseDto> findEventById(@Parameter(description = "Event id") @PathVariable Long id) {
         return ResponseEntity
                 .ok()
-                .body(eventService.findEventById(id));
-    }
-
-    @Operation(summary = "Find all events near the given coordinates")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Found the events",
-                        content = @Content(mediaType = "application/json",
-                                array = @ArraySchema(schema = @Schema(implementation = EventSmallDto.class))))
-            }
-    )
-    @GetMapping(value = "geo/near", produces = {"application/json"})
-    public ResponseEntity<List<EventSmallDto>> findEventsByDistance(
-            @Parameter(description = "latitude") @RequestParam Double lat,
-            @Parameter(description = "longitude") @RequestParam Double lon,
-            @Parameter(description = "distance") @RequestParam Integer limit) {
-        return ResponseEntity.ok()
-                .body(eventService.findTopByDistance(lat, lon, limit));
+                .body(eventService.findById(id));
     }
 
     @Operation(summary = "Find all events in the given area")
@@ -81,12 +67,28 @@ public class EventController {
             }
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<EventResponseDto> saveEvent(
+    public ResponseEntity<Long> saveEvent(
             @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
     ) {
         return ResponseEntity
                 .ok()
-                .body(eventService.saveEvent(eventDto));
+                .body(eventService.save(eventDto));
+    }
+
+    @Operation(summary = "Delete event by id")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Event deleted",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+            }
+    )
+    @DeleteMapping(value = "/{id}", produces = {"application/json"})
+    public ResponseEntity<String> deleteEventById(@Parameter(description = "Event id") @PathVariable("id") Long id) {
+        eventService.delete(id);
+        return ResponseEntity
+                .ok()
+                .body("Event#%s deleted".formatted(id));
     }
 
     @Operation(summary = "Add photo to event")
@@ -97,14 +99,52 @@ public class EventController {
                     @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
             }
     )
-    @PutMapping(value = "/add-photo", produces = {"application/json"}, consumes = {"multipart/form-data"})
+    @PutMapping(value = "/{id}/add-photo", produces = {"application/json"}, consumes = {"multipart/form-data"})
     public ResponseEntity<String> addPhotoToEvent(
-            @Parameter(description = "Data about the request") @RequestPart("data") AddEventPhotoRequest request,
-            @Parameter(description = "photo") @RequestPart("file") MultipartFile photo) {
+            @Parameter(description = "Id of the event") @PathVariable("id") Long id,
+            @Parameter(description = "Photo") @RequestPart("file") MultipartFile photo) {
 
-        eventService.addPhotoToEvent(request, photo);
+        eventService.addPhoto(id, photo);
         return ResponseEntity
-                .ok("Success");
+                .ok("Photo %s added to event %s".formatted(photo.getOriginalFilename(), id));
+    }
+
+    @Operation(summary = "Remove photo from event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Photo removed from event",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Photo not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Photo not owned by the event", content = @Content)
+            }
+    )
+    @PutMapping(value = "{id}/remove-photo", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<String> removePhotoFromEvent(
+            @Parameter(description = "Id of the event") @PathVariable("id") Long id,
+            @Parameter(description = "Id of the photo") Long photoId) {
+
+        eventService.removePhoto(id, photoId);
+        return ResponseEntity
+                .ok("Photo %s removed from event %s".formatted(photoId, id));
+    }
+
+    @Operation(summary = "Set main photo of event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Main photo changed",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Photo not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Photo not owned by the event", content = @Content)
+            }
+    )
+    @PutMapping(value = "{id}/change-main-photo", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<String> changeMainPhoto(@Parameter(description = "Event id") @PathVariable("id") Long id,
+                                @Parameter(description = "Photo id") @RequestBody Long photoId) {
+        eventService.setMainPhoto(id, photoId);
+        return ResponseEntity
+                .ok("Main photo of event %s changed to %s".formatted(id, photoId));
     }
 
     @Operation(summary = "Search events")
@@ -118,7 +158,7 @@ public class EventController {
     @GetMapping(produces = {"application/json"})
     public ResponseEntity<List<EventSmallDto>> searchEvent(EventSearchDto searchDto) {
         return ResponseEntity.ok()
-                .body(eventService.searchEvents(searchDto));
+                .body(eventService.search(searchDto));
     }
 
 }

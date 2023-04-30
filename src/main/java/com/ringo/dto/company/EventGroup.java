@@ -1,7 +1,7 @@
 package com.ringo.dto.company;
 
 import com.ringo.dto.common.Coordinates;
-import com.ringo.model.company.EventPhoto;
+import com.ringo.model.photo.EventMainPhoto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class EventGroup {
     private Coordinates coordinates;
     private Integer count;
-    private EventPhoto mainPhoto;
+    private EventMainPhoto mainPhoto;
     private Long id;
 }

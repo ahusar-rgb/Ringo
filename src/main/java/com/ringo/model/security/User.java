@@ -33,9 +33,6 @@ public class User extends AbstractActiveEntity implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "photo")
-    private String pathToPhoto;
-
     @Column(name = "email", nullable = false)
     private String email;
 

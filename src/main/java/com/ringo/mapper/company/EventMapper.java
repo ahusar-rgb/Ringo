@@ -4,14 +4,15 @@ import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.model.company.Event;
-import com.ringo.service.company.EventPhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +21,9 @@ public class EventMapper {
     private final CurrencyMapper currencyMapper;
     private final CategoryMapper categoryMapper;
     private final OrganisationMapper organisationMapper;
-    private final EventPhotoService eventPhotoService;
+    private final EventMainPhotoMapper eventMainPhotoMapper;
+    private final EventPhotoMapper eventPhotoMapper;
+    private final PhotoMapper photoMapper;
 
     public EventResponseDto toDto(Event event) {
         EventResponseDto dto = EventResponseDto.builder()
@@ -40,22 +43,27 @@ public class EventMapper {
                 .capacity(event.getCapacity())
                 .build();
 
-        dto.setPhotos(new ArrayList<>());
         if(event.getMainPhoto() != null)
-            dto.setMainPhoto(eventPhotoService.findBytes(event.getMainPhoto()));
+            dto.setMainPhoto(eventMainPhotoMapper.toDto(event.getMainPhoto()));
 
-        event.getPhotos().forEach(
-                photo -> {
-                    if(!photo.getId().equals(event.getMainPhoto().getId()))
-                        dto.getPhotos().add(eventPhotoService.findBytes(photo));
-                }
-        );
+        List<EventPhotoDto> photos = new ArrayList<>();
+        if(event.getPhotos() != null)
+            event.getPhotos().forEach(
+                    photo -> {
+                        if(Objects.equals(photo.getId(), event.getMainPhoto().getId()))
+                            return;
+
+                       photos.add(eventPhotoMapper.toDto(photo));
+                    }
+            );
+
+        dto.setPhotos(photos);
 
         return dto;
     }
 
     public EventSmallDto toSmallDto(Event event) {
-        return EventSmallDto.builder()
+        EventSmallDto dto = EventSmallDto.builder()
                 .id(event.getId())
                 .name(event.getName())
                 .description(event.getDescription())
@@ -67,11 +75,15 @@ public class EventMapper {
                 .startTime(event.getStartTime().toString())
                 .endTime(event.getEndTime().toString())
                 .categories(categoryMapper.toDtos(event.getCategories()))
-                .hostPhoto(null)
                 .hostId(event.getHost().getId())
                 .peopleCount(event.getPeopleCount())
                 .capacity(event.getCapacity())
                 .build();
+
+        if(event.getMainPhoto() != null)
+           dto.setMainPhotoId(event.getMainPhoto().getMediumQualityPhoto().getId());
+
+        return dto;
     }
 
     public List<EventSmallDto> toSmallDtos(List<Event> events) {

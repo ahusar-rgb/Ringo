@@ -8,16 +8,22 @@ import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
-import com.ringo.model.company.*;
+import com.ringo.model.common.AbstractEntity;
+import com.ringo.model.company.Category;
+import com.ringo.model.company.Currency;
+import com.ringo.model.company.Event;
+import com.ringo.model.company.Organisation;
+import com.ringo.model.photo.EventMainPhoto;
+import com.ringo.model.photo.EventPhoto;
 import com.ringo.repository.CategoryRepository;
 import com.ringo.repository.CurrencyRepository;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.OrganisationRepository;
+import com.ringo.repository.photo.EventPhotoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -28,6 +34,7 @@ import static com.ringo.utils.Geography.getDistance;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class EventService {
     private final ApplicationProperties config;
@@ -35,11 +42,12 @@ public class EventService {
     private final EventMapper mapper;
     private final EventGroupMapper groupMapper;
     private final EventPhotoService eventPhotoService;
+    private final EventPhotoRepository eventPhotoRepository;
     private final OrganisationRepository organisationRepository;
     private final CurrencyRepository currencyRepository;
     private final CategoryRepository categoryRepository;
 
-    public EventResponseDto findEventById(Long id) {
+    public EventResponseDto findById(Long id) {
         log.info("findEventById: {}", id);
 
         Event event = repository.findById(id).orElseThrow(
@@ -49,7 +57,7 @@ public class EventService {
         return mapper.toDto(event);
     }
 
-    public EventResponseDto saveEvent(EventRequestDto eventDto) {
+    public Long save(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
         Organisation organisation = organisationRepository.findActiveById(eventDto.getOrganisationId()).orElseThrow(
@@ -73,48 +81,73 @@ public class EventService {
         if(event.getTotalPhotoCount() > config.getMaxPhotoCount())
             throw new UserException("Max photos count reached: %d/%d".formatted(event.getTotalPhotoCount(), config.getMaxPhotoCount()));
 
-        return mapper.toDto(repository.save(event));
+        return repository.save(event).getId();
     }
 
-    public void addPhotoToEvent(AddEventPhotoRequest addEventPhotoRequest, MultipartFile photo) {
-        log.info("addPhotoToEvent: {}, {}", addEventPhotoRequest.getEventId(), photo.getOriginalFilename());
+    public void partialUpdate(EventRequestDto update) {
+
+    }
+
+    public void delete(Long id) {
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        eventPhotoService.removeMainPhoto(event);
+        event.getPhotos().stream().map(AbstractEntity::getId).forEach(eventPhotoService::delete);
+
+        repository.deleteById(id);
+    }
+
+    public void addPhoto(Long eventId, MultipartFile photo) {
+        log.info("addPhotoToEvent: {}, {}", eventId, photo.getOriginalFilename());
         log.info("photo type: {}", photo.getContentType());
 
-        Event event = repository.findById(addEventPhotoRequest.getEventId()).orElseThrow(
-                () -> new NotFoundException("Event [id: %d] not found".formatted(addEventPhotoRequest.getEventId()))
+        Event event = repository.findById(eventId).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
         if(event.getPhotos().size() >= event.getTotalPhotoCount())
             throw new UserException("All photos for event [id: %d] have been uploaded".formatted(event.getId()));
 
-        EventPhoto newPhoto = eventPhotoService.savePhoto(event, photo);
-
-        if(event.getMainPhoto() == null || addEventPhotoRequest.getIsMain()) {
-            event.setMainPhoto(newPhoto);
-        }
-        event.getPhotos().add(newPhoto);
-
+        eventPhotoService.save(event, photo);
 
         if(event.getPhotos().size() == event.getTotalPhotoCount()) {
             event.setIsActive(true);
+            if(event.getMainPhoto() == null) {
+                setMainPhoto(event.getId(), event.getPhotos().get(0).getId());
+            }
+            repository.save(event);
         }
+    }
 
+    public void removePhoto(Long eventId, Long photoId) {
+        log.info("removePhotoFromEvent: {}, {}", eventId, photoId);
+
+        Event event = repository.findById(eventId).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
+        );
+
+        EventPhoto photo = eventPhotoRepository.findById(photoId).orElseThrow(
+                () -> new NotFoundException("Photo [id: %d] not found".formatted(photoId))
+        );
+
+        if(!event.getPhotos().remove(photo))
+            throw new UserException("Photo [id: %d] was not owned by this event".formatted(photoId));
+
+        eventPhotoService.delete(photo.getId());
         repository.save(event);
     }
 
-    public List<EventSmallDto> findTopByDistance(double latitude, double longitude, int limit) {
+    public void setMainPhoto(Long eventId, Long photoId) {
+        log.info("setMainPhoto: {}", photoId);
 
-        if(limit > 100)
-            throw new RuntimeException("Limit can't be more than 100");
+        Event event = repository.findById(eventId).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
+        );
 
-        Pageable pageable = PageRequest.of(0, limit);
-        return repository.findTopByDistance(latitude, longitude, pageable).getContent().stream().map(
-                event -> {
-                    EventSmallDto dto = mapper.toSmallDto(event);
-                    dto.setDistance(getDistance(new Coordinates(latitude, longitude), dto.getCoordinates()));
-                    return dto;
-                }
-        ).collect(Collectors.toList());
+        EventMainPhoto eventMainPhoto = eventPhotoService.prepareMainPhoto(event, photoId);
+        event.setMainPhoto(eventMainPhoto);
     }
 
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {
@@ -164,7 +197,7 @@ public class EventService {
         return result;
     }
 
-    public List<EventSmallDto> searchEvents(EventSearchDto searchDto) {
+    public List<EventSmallDto> search(EventSearchDto searchDto) {
         log.info("searchEvents: {}", searchDto);
 
         List<Event> events = repository.findAll(searchDto.getSpecification(), searchDto.getPageable()).getContent();
@@ -183,5 +216,4 @@ public class EventService {
                     return dto;
         }).collect(Collectors.toList());
     }
-
 }

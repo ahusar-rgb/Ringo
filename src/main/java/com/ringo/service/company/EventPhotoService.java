@@ -1,10 +1,15 @@
 package com.ringo.service.company;
 
-import com.ringo.config.ApplicationProperties;
+import com.ringo.exception.InternalException;
+import com.ringo.exception.UserException;
 import com.ringo.model.company.Event;
-import com.ringo.model.company.EventPhoto;
-import com.ringo.repository.EventPhotoRepository;
-import com.ringo.service.aws.s3.AwsFileManager;
+import com.ringo.model.photo.EventMainPhoto;
+import com.ringo.model.photo.EventPhoto;
+import com.ringo.model.photo.Photo;
+import com.ringo.repository.photo.EventMainPhotoRepository;
+import com.ringo.repository.photo.EventPhotoRepository;
+import com.ringo.service.common.PhotoCompressor;
+import com.ringo.service.common.PhotoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,65 +18,119 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class EventPhotoService {
 
-    private final ApplicationProperties config;
+    private static final float HIGH_QUALITY = 0.75f;
+    private static final float MEDIUM_QUALITY = 0.5f;
+    private static final float LOW_QUALITY = 0.25f;
+
+    private final PhotoService photoService;
+    private final PhotoCompressor photoCompressor;
     private final EventPhotoRepository eventPhotoRepository;
+    private final EventMainPhotoRepository eventMainPhotoRepository;
 
-    private final AwsFileManager awsFileManager;
+    public EventPhoto save(Event event, MultipartFile file) {
+        EventPhoto eventPhoto = EventPhoto.builder()
+                .event(event)
+                .build();
 
-    public byte[] findBytes(EventPhoto eventPhoto) {
-        log.info("findPhoto: {}", eventPhoto);
-
-        String path = eventPhoto.getPath();
-        try {
-            //return Files.readAllBytes(new File(config.getPhotoFolderPath() + path).toPath());
-            return awsFileManager.getFile(path);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read file", e);
-        }
-    }
-
-    public EventPhoto savePhoto(Event event, MultipartFile photo) {
-        log.info("savePhoto: {}, {}", event, photo.getOriginalFilename());
-
-        EventPhoto eventPhoto = new EventPhoto();
-        eventPhoto.setEvent(event);
+        String contentType = file.getContentType().split("/")[1];
+        int ordinal = event.getPhotos() == null ? 0 : event.getPhotos().size();
 
         try {
-            if(photo.getContentType() == null) {
-                throw new RuntimeException("Null file type");
-            }
-            int ordinal;
-            if(event.getPhotos() == null)
-                ordinal = 0;
-            else
-                ordinal = event.getPhotos().size();
-            String path = "event#" + event.getId() + "_" + ordinal + "." + photo.getContentType().split("/")[1];
-//            File file = new File(config.getPhotoFolderPath() + path);
-//            Files.createDirectories(file.getParentFile().toPath());
-//            Files.createFile(file.toPath());
-//            photo.transferTo(file);
-            eventPhoto.setPath(path);
-            awsFileManager.uploadFile(path, photo.getBytes());
+            Photo highQualityPhoto = photoService.save(
+                    "event#" + event.getId() +"/" + ordinal + "/normal." + contentType,
+                    contentType,
+                    photoCompressor.compressImage(file.getBytes(), contentType, HIGH_QUALITY)
+            );
+            eventPhoto.setPhoto(highQualityPhoto);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload the photo", e);
+            throw new InternalException("Error while compressing photo");
         }
+
+        try {
+            Photo lazyPhoto = photoService.save(
+                    "event#" + event.getId() +"/" + ordinal + "/lazy." + contentType,
+                    contentType,
+                    photoCompressor.createLazyPhoto(file.getBytes(), contentType)
+            );
+            eventPhoto.setLazyPhoto(lazyPhoto);
+        }  catch (IOException e) {
+            throw new InternalException("Error while creating lazy photo");
+        }
+
+        event.getPhotos().add(eventPhoto);
         return eventPhotoRepository.save(eventPhoto);
     }
 
-    public void deletePhoto(EventPhoto eventPhoto) {
-        log.info("deletePhoto: {}", eventPhoto);
+    public void delete(Long photoId) {
 
-        eventPhotoRepository.deleteById(eventPhoto.getId());
+        EventPhoto eventPhoto = eventPhotoRepository.findById(photoId)
+                .orElseThrow(() -> new UserException("Photo not found"));
 
-//        File file = new File(config.getPhotoFolderPath() + eventPhoto.getPath());
-//        if(!file.delete()) {
-//            log.error("File {} not deleted", eventPhoto.getPath());
-//            throw new RuntimeException("File not deleted");
-//        }
-        awsFileManager.deleteFile(eventPhoto.getPath());
+        eventPhotoRepository.delete(eventPhoto);
+        photoService.delete(eventPhoto.getPhoto().getId());
+        photoService.delete(eventPhoto.getLazyPhoto().getId());
+    }
+
+    public EventMainPhoto prepareMainPhoto(Event event, Long photoId) {
+        EventPhoto eventPhoto = eventPhotoRepository.findById(photoId)
+                .orElseThrow(() -> new UserException("Photo not found"));
+        if(event.getPhotos() == null || !event.getPhotos().contains(eventPhoto)) {
+            throw new UserException("Photo not found");
+        }
+
+        if(event.getMainPhoto() != null) {
+            removeMainPhoto(event);
+        }
+
+        EventMainPhoto eventMainPhoto = EventMainPhoto.builder()
+                .event(event)
+                .highQualityPhoto(eventPhoto.getPhoto())
+                .lazyPhoto(eventPhoto.getLazyPhoto())
+                .build();
+
+        byte[] bytes = photoService.findBytes(eventPhoto.getPhoto().getId());
+
+        eventMainPhoto.setMediumQualityPhoto(saveCompressedPhoto(
+                "event#" + event.getId() +"/main_photo/medium_quality." + eventPhoto.getPhoto().getContentType(),
+                eventPhoto.getPhoto().getContentType(),
+                bytes,
+                MEDIUM_QUALITY));
+
+        eventMainPhoto.setLowQualityPhoto(saveCompressedPhoto(
+                "event#" + event.getId() +"/main_photo/low_quality." + eventPhoto.getPhoto().getContentType(),
+                eventPhoto.getPhoto().getContentType(),
+                bytes,
+                LOW_QUALITY)
+        );
+
+        return eventMainPhotoRepository.save(eventMainPhoto);
+    }
+
+    public void removeMainPhoto(Event event) {
+        EventMainPhoto eventMainPhoto = eventMainPhotoRepository.findById(event.getMainPhoto().getId())
+                .orElseThrow(() -> new UserException("Main photo not found"));
+
+        photoService.delete(eventMainPhoto.getHighQualityPhoto().getId());
+        photoService.delete(eventMainPhoto.getMediumQualityPhoto().getId());
+        photoService.delete(eventMainPhoto.getLowQualityPhoto().getId());
+        photoService.delete(eventMainPhoto.getLazyPhoto().getId());
+
+        eventMainPhotoRepository.delete(eventMainPhoto);
+    }
+
+    private Photo saveCompressedPhoto(String path, String contentType, byte[] bytes, float quality) {
+        try {
+            return photoService.save(
+                    path,
+                    contentType,
+                    photoCompressor.compressImage(bytes, contentType, quality)
+            );
+        } catch (IOException e) {
+            throw new InternalException("Error while compressing photo");
+        }
     }
 }

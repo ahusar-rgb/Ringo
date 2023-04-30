@@ -14,6 +14,7 @@ public class EventSmallDto extends AbstractEntityDto {
     private String description;
     private String address;
     private Coordinates coordinates;
+    private Long mainPhotoId;
     private Integer distance;
     private Boolean isTicketNeeded;
     private Float price;
@@ -21,7 +22,6 @@ public class EventSmallDto extends AbstractEntityDto {
     private String startTime;
     private String endTime;
     private List<CategoryDto> categories;
-    private byte[] hostPhoto;
     private Long hostId;
     private Integer peopleCount;
     private Integer capacity;

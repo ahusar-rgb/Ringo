@@ -2,11 +2,11 @@ package com.ringo.service.aws.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ringo.exception.InternalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +27,12 @@ public class AwsFileManager {
         s3.deleteObject(BUCKET_NAME, fileName);
     }
 
-    public byte[] getFile(String fileName) throws IOException {
-        return s3.getObject(BUCKET_NAME, fileName).getObjectContent().readAllBytes();
+    public byte[] getFile(String fileName) {
+        try {
+            return s3.getObject(BUCKET_NAME, fileName).getObjectContent().readAllBytes();
+        }
+        catch (Exception e) {
+            throw new InternalException("Failed to read file");
+        }
     }
 }

@@ -1,21 +1,18 @@
 package com.ringo.model.company;
 
-import com.ringo.model.common.Photo;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import com.ringo.model.common.AbstractActiveEntity;
+import com.ringo.model.photo.Photo;
+import jakarta.persistence.*;
 
 @Entity
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class OrgPhoto extends Photo {
+@Table(name = "organisation_photo")
+public class OrgPhoto extends AbstractActiveEntity {
+
+    @OneToOne
+    @JoinColumn(name = "photo_id")
+    private Photo photo;
+
     @ManyToOne
     @JoinColumn(name = "organisation_id")
-    private Organisation organisation;
+    private Organisation owner;
 }

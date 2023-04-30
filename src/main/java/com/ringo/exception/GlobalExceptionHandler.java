@@ -31,4 +31,11 @@ public class GlobalExceptionHandler {
         log.warn(error);
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(InternalException.class)
+    public ResponseEntity<String> handleInternalException(InternalException e) {
+        String error = e.getMessage();
+        log.warn(error);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
