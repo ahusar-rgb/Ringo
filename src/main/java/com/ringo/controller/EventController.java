@@ -88,7 +88,26 @@ public class EventController {
         eventService.delete(id);
         return ResponseEntity
                 .ok()
-                .body("Event#%s deleted".formatted(id));
+                .body("Event#%d deleted".formatted(id));
+    }
+
+    @Operation(summary = "Update event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Event updated",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+            }
+    )
+    @PutMapping(value = "/{id}", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<String> updateEvent(
+            @Parameter(description = "Event id") @PathVariable("id") Long id,
+            @Parameter(description = "Event to update") @RequestBody EventRequestDto eventDto
+    ) {
+        eventService.update(id, eventDto);
+        return ResponseEntity
+                .ok()
+                .body("Event#%d updated".formatted(eventDto.getId()));
     }
 
     @Operation(summary = "Add photo to event")
@@ -119,10 +138,10 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "Photo not owned by the event", content = @Content)
             }
     )
-    @PutMapping(value = "{id}/remove-photo", produces = {"application/json"}, consumes = {"application/json"})
+    @PutMapping(value = "{id}/remove-photo/{photo_id}", produces = {"application/json"})
     public ResponseEntity<String> removePhotoFromEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
-            @Parameter(description = "Id of the photo") Long photoId) {
+            @Parameter(description = "Id of the photo") @PathVariable("photo_id") Long photoId) {
 
         eventService.removePhoto(id, photoId);
         return ResponseEntity
@@ -139,9 +158,9 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "Photo not owned by the event", content = @Content)
             }
     )
-    @PutMapping(value = "{id}/change-main-photo", produces = {"application/json"}, consumes = {"application/json"})
+    @PutMapping(value = "{id}/change-main-photo/{photo_id}", produces = {"application/json"})
     public ResponseEntity<String> changeMainPhoto(@Parameter(description = "Event id") @PathVariable("id") Long id,
-                                @Parameter(description = "Photo id") @RequestBody Long photoId) {
+                                @Parameter(description = "Photo id") @PathVariable("photo_id") Long photoId) {
         eventService.setMainPhoto(id, photoId);
         return ResponseEntity
                 .ok("Main photo of event %s changed to %s".formatted(id, photoId));

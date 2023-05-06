@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,8 +15,5 @@ import java.time.LocalDate;
 public class UserResponseDto extends AbstractEntityDto {
     private String name;
     private String username;
-    private byte[] photo;
-    private String role;
-    private String gender;
-    private LocalDate birthDate;
+    private Long profilePicture;
 }

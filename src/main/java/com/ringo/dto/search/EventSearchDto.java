@@ -56,9 +56,10 @@ public class EventSearchDto extends GenericSearchDto<Event>{
             throw new UserException("Currency is required when filtering by price");
 
         if (searchString != null) {
+            searchString = searchString.toLowerCase();
             filters.add(criteriaBuilder.or(
-                    criteriaBuilder.like(root.get("name"), "%" + searchString + "%"),
-                    criteriaBuilder.like(root.get("description"), "%" + searchString + "%")
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchString + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchString + "%")
             ));
         }
         if (hostId != null) {

@@ -7,6 +7,8 @@ public class Constants {
     public static String[] PUBLIC_URLS = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/api/auth/**"
+            "/api/auth/**",
+            "/api/organisations/sign-up/**",
+            "/api/participants/sign-up/**"
     };
 }

@@ -2,7 +2,10 @@ package com.ringo.model.photo;
 
 import com.ringo.model.common.AbstractEntity;
 import com.ringo.model.company.Event;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -30,7 +33,7 @@ public class EventMainPhoto extends AbstractEntity {
     @JoinColumn(name = "lazy_photo_id")
     private Photo lazyPhoto;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "event_id")
     private Event event;
 }

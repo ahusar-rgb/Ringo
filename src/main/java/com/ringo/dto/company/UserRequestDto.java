@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,7 +17,5 @@ public class UserRequestDto extends AbstractEntityDto {
     private String username;
     private String password;
     private String email;
-    private String gender;
-    private LocalDate birthDate;
-    private byte[] photo;
+    private String role;
 }

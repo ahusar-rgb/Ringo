@@ -16,11 +16,11 @@ public class JwtService {
     private final AuthenticationProperties config;
 
     public String generateAccessToken(User user) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret());
+        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
 
         return JWT.create()
                 .withIssuer(config.getIssuer())
-                .withSubject(user.getUsername())
+                .withSubject(user.getEmail())
                 .withExpiresAt(new Date((new Date()).getTime() + config.getAccessTokenExpirationMillis()))
                 .withClaim("username", user.getUsername())
                 .withClaim("role", user.getRole().name())
@@ -29,11 +29,11 @@ public class JwtService {
     }
 
     public String generateRefreshToken(User user) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret());
+        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
 
         return JWT.create()
                 .withIssuer(config.getIssuer())
-                .withSubject(user.getUsername())
+                .withSubject(user.getEmail())
                 .withExpiresAt(new Date((new Date()).getTime() + config.getRefreshTokenExpirationMillis()))
                 .withClaim("username", user.getUsername())
                 .withClaim("role", user.getRole().name())
@@ -41,14 +41,29 @@ public class JwtService {
                 .sign(algorithm);
     }
 
+    public String generateRecoverPasswordToken(User user) {
+        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
 
-    public String getUsernameFromToken(String token) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret());
+        return JWT.create()
+                .withIssuer(config.getIssuer())
+                .withSubject(user.getEmail())
+                .withClaim("recover", true)
+                .withExpiresAt(new Date((new Date()).getTime() + config.getRecoverPasswordTokenExpirationMillis()))
+                .sign(algorithm);
+    }
+
+    public boolean isTokenValid(User user, String token) {
+        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(config.getIssuer()).build();
         DecodedJWT jwt = verifier.verify(token);
         if (isTokenExpired(jwt)) {
             throw new AuthenticationException("Token expired");
         }
+        return jwt.getSubject().equals(user.getEmail());
+    }
+
+    public String getEmailFromToken(String token) {
+        DecodedJWT jwt = JWT.decode(token);
         return jwt.getSubject();
     }
 

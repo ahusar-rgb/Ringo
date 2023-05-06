@@ -2,19 +2,22 @@ package com.ringo.service.security;
 
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
-import com.ringo.exception.NotFoundException;
+import com.ringo.exception.InternalException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.UserMapper;
-import com.ringo.model.security.Role;
+import com.ringo.model.photo.Photo;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
+import com.ringo.service.common.PhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,42 +25,30 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final PhotoService photoService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException("User [username: %s] not found".formatted(username))
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new UserException("User [email: %s] not found".formatted(email))
         );
     }
 
-    public UserResponseDto save(UserRequestDto userRequestDto) {
-        if(userRepository.findByUsername(userRequestDto.getUsername()).isPresent())
-            throw new UserException("User with [username: %s] already exists".formatted(userRequestDto.getUsername()));
-        if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent())
-            throw new UserException("User with [email: %s] already exists".formatted(userRequestDto.getEmail()));
-
-        User user = userMapper.toEntity(userRequestDto);
-        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        user.setRole(Role.ROLE_ORGANISATION);
-        user.setIsActive(true);
-
-        return userMapper.toDto(userRepository.save(user));
+    public UserResponseDto findById(Long id) {
+        return userMapper.toDto(userRepository.findById(id).orElseThrow(
+                () -> new UserException("User#" + id + " not found")));
     }
 
-    public UserResponseDto delete(Long id) {
-        User user = userRepository.findActiveById(id).orElseThrow(
-                () -> new NotFoundException("User#" + id + " not found"));
-        user.setIsActive(false);
-
-        return userMapper.toDto(userRepository.save(user));
+    public void delete() {
+        User user = getCurrentUserAsEntity();
+        removePhoto();
+        userRepository.delete(user);
     }
 
-    public UserResponseDto update(UserRequestDto userRequestDto) {
-        if(userRepository.findActiveById(userRequestDto.getId()).isEmpty())
-            throw new NotFoundException("User#" + userRequestDto.getId() + " not found");
+    public UserResponseDto partialUpdate(UserRequestDto userRequestDto) {
+        User user = getCurrentUserAsEntity();
 
-        User user = userMapper.toEntity(userRequestDto);
+        userMapper.partialUpdate(user, userRequestDto);
         return userMapper.toDto(userRepository.save(user));
     }
 
@@ -65,7 +56,32 @@ public class UserService implements UserDetailsService {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public UserResponseDto getCurrentUserAsDto() {
-        return userMapper.toDto(getCurrentUserAsEntity());
+    public void setPhoto(MultipartFile photo) {
+        User user = getCurrentUserAsEntity();
+
+        if(photo.getContentType() == null)
+            throw new UserException("Photo is not valid");
+        String contentType = photo.getContentType().split("/")[1];
+
+        try {
+            removePhoto();
+            Photo profilePicture = photoService.save("profilePictures/user#" + user.getId(), contentType, photo.getBytes());
+            user.setProfilePicture(profilePicture);
+        } catch (IOException e) {
+            throw new InternalException("Error while saving photo");
+        }
+
+        userRepository.save(user);
+    }
+
+    public void removePhoto() {
+        User user = getCurrentUserAsEntity();
+
+        if(user.getProfilePicture() != null) {
+            long photoId = user.getProfilePicture().getId();
+            user.setProfilePicture(null);
+            userRepository.save(user);
+            photoService.delete(photoId);
+        }
     }
 }

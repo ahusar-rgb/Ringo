@@ -26,7 +26,5 @@ public class EventRequestDto extends AbstractEntityDto {
     private String startTime;
     private String endTime;
     private List<Long> categoryIds;
-    private Long organisationId;
-    private Integer totalPhotoCount;
     private Integer capacity;
 }

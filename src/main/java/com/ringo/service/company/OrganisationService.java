@@ -8,8 +8,10 @@ import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
 import com.ringo.repository.OrganisationRepository;
+import com.ringo.service.security.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,16 +23,26 @@ public class OrganisationService {
 
     private final OrganisationRepository organisationRepository;
     private final OrganisationMapper organisationMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    public OrganisationResponseDto findOrganisationById(Long id) {
+    public OrganisationResponseDto findById(Long id) {
         log.info("findOrganisationById: {}", id);
-        Organisation organisation = organisationRepository.findById(id).orElseThrow(
+        Organisation organisation = organisationRepository.findByIdWithEvents(id).orElseThrow(
                 () -> new NotFoundException("Organisation [id: %d] not found".formatted(id)));
 
         return organisationMapper.toDto(organisation);
     }
 
-    public OrganisationResponseDto createOrganisation(OrganisationRequestDto dto) {
+    public OrganisationResponseDto findCurrentOrganisation() {
+        log.info("findCurrentOrganisation");
+        Organisation organisation = organisationRepository.findByIdWithEvents(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+                () -> new UserException("Authorized user is not an organisation"));
+
+        return organisationMapper.toDto(organisation);
+    }
+
+    public OrganisationResponseDto create(OrganisationRequestDto dto) {
         log.info("createOrganisation: {}", dto);
         Organisation organisation = organisationMapper.toEntity(dto);
 
@@ -42,7 +54,20 @@ public class OrganisationService {
         }
 
         organisation.setRole(Role.ROLE_ORGANISATION);
-        organisation = organisationRepository.save(organisation);
+        organisation.setPassword(passwordEncoder.encode(dto.getPassword()));
+        organisationRepository.save(organisation);
+
+        return organisationMapper.toDto(organisation);
+    }
+
+    public OrganisationResponseDto update(OrganisationRequestDto dto) {
+        log.info("updateOrganisation: {}", dto);
+
+        Organisation organisation = organisationRepository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+                () -> new UserException("Authorized user is not an organisation"));
+
+        organisationMapper.partialUpdate(organisation, dto);
+        organisationRepository.save(organisation);
 
         return organisationMapper.toDto(organisation);
     }

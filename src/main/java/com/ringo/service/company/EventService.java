@@ -15,11 +15,13 @@ import com.ringo.model.company.Event;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
+import com.ringo.model.security.User;
 import com.ringo.repository.CategoryRepository;
 import com.ringo.repository.CurrencyRepository;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
+import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.ringo.utils.Geography.getDistance;
@@ -46,6 +49,7 @@ public class EventService {
     private final OrganisationRepository organisationRepository;
     private final CurrencyRepository currencyRepository;
     private final CategoryRepository categoryRepository;
+    private final UserService userService;
 
     public EventResponseDto findById(Long id) {
         log.info("findEventById: {}", id);
@@ -60,9 +64,9 @@ public class EventService {
     public Long save(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
-        Organisation organisation = organisationRepository.findActiveById(eventDto.getOrganisationId()).orElseThrow(
-                () -> new NotFoundException("Organisation [id: %d] not found".formatted(eventDto.getOrganisationId()))
-        );
+        User currentUser = userService.getCurrentUserAsEntity();
+        Organisation organisation = organisationRepository.findById(currentUser.getId()).orElseThrow(
+                () -> new NotFoundException("Only organisations can create events"));
         Currency currency = currencyRepository.findById(eventDto.getCurrencyId()).orElseThrow(
                 () -> new NotFoundException("Currency [id: %d] not found".formatted(eventDto.getCurrencyId()))
         );
@@ -76,16 +80,22 @@ public class EventService {
         event.setHost(organisation);
         event.setCurrency(currency);
         event.setCategories(categories);
-        event.setIsActive(false);
-
-        if(event.getTotalPhotoCount() > config.getMaxPhotoCount())
-            throw new UserException("Max photos count reached: %d/%d".formatted(event.getTotalPhotoCount(), config.getMaxPhotoCount()));
 
         return repository.save(event).getId();
     }
 
-    public void partialUpdate(EventRequestDto update) {
+    public void update(Long id, EventRequestDto dto) {
+        log.info("updateEvent: {}, {}", id, dto);
 
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+            throw new UserException("Only event host can update event");
+
+        mapper.partialUpdate(event, dto);
+        repository.save(event);
     }
 
     public void delete(Long id) {
@@ -93,8 +103,17 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+            throw new UserException("Only event host can update event");
+
         eventPhotoService.removeMainPhoto(event);
-        event.getPhotos().stream().map(AbstractEntity::getId).forEach(eventPhotoService::delete);
+        event.getPhotos().stream().map(AbstractEntity::getId).forEach(
+                photo -> {
+                    try {
+                        eventPhotoService.delete(photo);
+                    } catch (UserException ignored) {}
+                }
+        );
 
         repository.deleteById(id);
     }
@@ -107,18 +126,13 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
-        if(event.getPhotos().size() >= event.getTotalPhotoCount())
-            throw new UserException("All photos for event [id: %d] have been uploaded".formatted(event.getId()));
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+            throw new UserException("Only event host can update event");
+
+        if(event.getPhotos().size() >= config.getMaxPhotoCount())
+            throw new UserException("No more photos for this event is allowed");
 
         eventPhotoService.save(event, photo);
-
-        if(event.getPhotos().size() == event.getTotalPhotoCount()) {
-            event.setIsActive(true);
-            if(event.getMainPhoto() == null) {
-                setMainPhoto(event.getId(), event.getPhotos().get(0).getId());
-            }
-            repository.save(event);
-        }
     }
 
     public void removePhoto(Long eventId, Long photoId) {
@@ -131,6 +145,9 @@ public class EventService {
         EventPhoto photo = eventPhotoRepository.findById(photoId).orElseThrow(
                 () -> new NotFoundException("Photo [id: %d] not found".formatted(photoId))
         );
+
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+            throw new UserException("Only event host can update event");
 
         if(!event.getPhotos().remove(photo))
             throw new UserException("Photo [id: %d] was not owned by this event".formatted(photoId));
@@ -145,6 +162,9 @@ public class EventService {
         Event event = repository.findById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
+
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+            throw new UserException("Only event host can update event");
 
         EventMainPhoto eventMainPhoto = eventPhotoService.prepareMainPhoto(event, photoId);
         event.setMainPhoto(eventMainPhoto);

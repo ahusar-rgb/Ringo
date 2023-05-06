@@ -13,23 +13,24 @@ import java.io.ByteArrayInputStream;
 public class AwsFileManager {
 
     private static final String BUCKET_NAME = "ringo-photos";
+    private static final String WORKING_DIRECTORY = "test2/";
 
     private final AmazonS3 s3;
 
     public void uploadFile(String fileName, byte[] bytes) {
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, fileName, new ByteArrayInputStream(bytes), null);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, WORKING_DIRECTORY + fileName, new ByteArrayInputStream(bytes), null);
 
         s3.putObject(putObjectRequest);
     }
 
     public void deleteFile(String fileName) {
-        s3.deleteObject(BUCKET_NAME, fileName);
+        s3.deleteObject(BUCKET_NAME, WORKING_DIRECTORY + fileName);
     }
 
     public byte[] getFile(String fileName) {
         try {
-            return s3.getObject(BUCKET_NAME, fileName).getObjectContent().readAllBytes();
+            return s3.getObject(BUCKET_NAME, WORKING_DIRECTORY + fileName).getObjectContent().readAllBytes();
         }
         catch (Exception e) {
             throw new InternalException("Failed to read file");

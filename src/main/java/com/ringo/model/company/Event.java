@@ -1,6 +1,6 @@
 package com.ringo.model.company;
 
-import com.ringo.model.common.AbstractActiveEntity;
+import com.ringo.model.common.AbstractEntity;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
 import jakarta.persistence.*;
@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class Event extends AbstractActiveEntity {
+public class Event extends AbstractEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -28,8 +28,7 @@ public class Event extends AbstractActiveEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "main_photo_id")
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private EventMainPhoto mainPhoto;
 
     @Column(name = "address")
@@ -71,9 +70,6 @@ public class Event extends AbstractActiveEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "category_id"}))
     private List<Category> categories;
-
-    @Column(name = "photo_count", nullable = false)
-    private Integer totalPhotoCount;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

@@ -66,7 +66,6 @@ public class EventPhotoService {
     }
 
     public void delete(Long photoId) {
-
         EventPhoto eventPhoto = eventPhotoRepository.findById(photoId)
                 .orElseThrow(() -> new UserException("Photo not found"));
 
@@ -79,7 +78,7 @@ public class EventPhotoService {
         EventPhoto eventPhoto = eventPhotoRepository.findById(photoId)
                 .orElseThrow(() -> new UserException("Photo not found"));
         if(event.getPhotos() == null || !event.getPhotos().contains(eventPhoto)) {
-            throw new UserException("Photo not found");
+            throw new UserException("Photo is not related to this event");
         }
 
         if(event.getMainPhoto() != null) {
@@ -114,10 +113,8 @@ public class EventPhotoService {
         EventMainPhoto eventMainPhoto = eventMainPhotoRepository.findById(event.getMainPhoto().getId())
                 .orElseThrow(() -> new UserException("Main photo not found"));
 
-        photoService.delete(eventMainPhoto.getHighQualityPhoto().getId());
         photoService.delete(eventMainPhoto.getMediumQualityPhoto().getId());
         photoService.delete(eventMainPhoto.getLowQualityPhoto().getId());
-        photoService.delete(eventMainPhoto.getLazyPhoto().getId());
 
         eventMainPhotoRepository.delete(eventMainPhoto);
     }

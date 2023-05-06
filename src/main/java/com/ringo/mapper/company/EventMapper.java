@@ -50,7 +50,7 @@ public class EventMapper {
         if(event.getPhotos() != null)
             event.getPhotos().forEach(
                     photo -> {
-                        if(Objects.equals(photo.getId(), event.getMainPhoto().getId()))
+                        if(event.getMainPhoto() != null && Objects.equals(photo.getId(), event.getMainPhoto().getId()))
                             return;
 
                        photos.add(eventPhotoMapper.toDto(photo));
@@ -60,6 +60,29 @@ public class EventMapper {
         dto.setPhotos(photos);
 
         return dto;
+    }
+
+    public void partialUpdate(Event event, EventRequestDto eventRequestDto) {
+        if(eventRequestDto.getName() != null)
+            event.setName(eventRequestDto.getName());
+        if(eventRequestDto.getDescription() != null)
+            event.setDescription(eventRequestDto.getDescription());
+        if(eventRequestDto.getAddress() != null)
+            event.setAddress(eventRequestDto.getAddress());
+        if(eventRequestDto.getCoordinates() != null) {
+            event.setLatitude(eventRequestDto.getCoordinates().latitude());
+            event.setLongitude(eventRequestDto.getCoordinates().longitude());
+        }
+        if(eventRequestDto.getIsTicketNeeded() != null)
+            event.setIsTicketNeeded(eventRequestDto.getIsTicketNeeded());
+        if(eventRequestDto.getPrice() != null)
+            event.setPrice(eventRequestDto.getPrice());
+        if(eventRequestDto.getStartTime() != null)
+            event.setStartTime(LocalDateTime.parse(eventRequestDto.getStartTime()));
+        if(eventRequestDto.getEndTime() != null)
+            event.setEndTime(LocalDateTime.parse(eventRequestDto.getEndTime()));
+        if(eventRequestDto.getCapacity() != null)
+            event.setCapacity(eventRequestDto.getCapacity());
     }
 
     public EventSmallDto toSmallDto(Event event) {
@@ -107,7 +130,6 @@ public class EventMapper {
                 .categories(null)
                 .capacity(dto.getCapacity())
                 .peopleCount(0)
-                .totalPhotoCount(dto.getTotalPhotoCount())
                 .build();
     }
 

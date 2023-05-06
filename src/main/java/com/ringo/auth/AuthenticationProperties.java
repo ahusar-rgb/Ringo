@@ -10,4 +10,5 @@ public class AuthenticationProperties {
     private String issuer;
     private long accessTokenExpirationMillis;
     private long refreshTokenExpirationMillis;
+    private long recoverPasswordTokenExpirationMillis;
 }

@@ -1,6 +1,7 @@
 package com.ringo.auth;
 
 import com.ringo.config.Constants;
+import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import com.ringo.service.security.UserService;
 import jakarta.servlet.FilterChain;
@@ -35,9 +36,21 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+
         String token = authorizationHeader.substring(Constants.TOKEN_PREFIX.length());
-        String username = jwtService.getUsernameFromToken(token);
-        User authenticatedUser = (User) userService.loadUserByUsername(username);
+        String email = jwtService.getEmailFromToken(token);
+        User authenticatedUser;
+        try {
+            authenticatedUser = (User) userService.loadUserByUsername(email);
+            if(!jwtService.isTokenValid(authenticatedUser, token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        } catch (UserException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 authenticatedUser,

@@ -28,20 +28,46 @@ public class OrganisationController {
     public ResponseEntity<OrganisationResponseDto> findOrganisationById(@PathVariable("id") Long id) {
         return ResponseEntity
                 .ok()
-                .body(organisationService.findOrganisationById(id));
+                .body(organisationService.findById(id));
+    }
+
+    @Operation(summary = "Find current organisation")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Found the organisation"),
+                    @ApiResponse(responseCode = "404", description = "Organisation not found")
+            }
+    )
+    @GetMapping(produces = {"application/json"})
+    public ResponseEntity<OrganisationResponseDto> findCurrentOrganisation() {
+        return ResponseEntity
+                .ok()
+                .body(organisationService.findCurrentOrganisation());
     }
 
     @Operation(summary = "Create a new organisation")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Organisation created"),
-                    @ApiResponse(responseCode = "400", description = "Invalid input")
+                    @ApiResponse(responseCode = "400", description = "Invalid arguments")
             }
     )
-    @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> createOrganisation(@RequestBody OrganisationRequestDto dto) {
-        return ResponseEntity
-                .ok()
-                .body(organisationService.createOrganisation(dto));
+    @PostMapping(value = "/sign-up", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<String> createOrganisation(@RequestBody OrganisationRequestDto dto) {
+        OrganisationResponseDto organisation = organisationService.create(dto);
+        return ResponseEntity.ok("Organisation created successfully [id: %d]".formatted(organisation.getId()));
+    }
+
+    @Operation(summary = "Update an existing organisation")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Organisation updated"),
+                    @ApiResponse(responseCode = "404", description = "Organisation not found")
+            }
+    )
+    @PutMapping(produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<String> updateOrganisation(@RequestBody OrganisationRequestDto dto) {
+        organisationService.update(dto);
+        return ResponseEntity.ok("Organisation updated successfully");
     }
 }

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +17,5 @@ public class OrganisationResponseDto extends UserResponseDto {
     private String description;
     private Float rating;
     private String contacts;
-    private List<Long> hostedEventIds;
+    private Set<Long> hostedEventIds;
 }

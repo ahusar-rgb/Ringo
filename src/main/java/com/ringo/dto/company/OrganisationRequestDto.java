@@ -13,6 +13,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class OrganisationRequestDto extends UserRequestDto {
     private String description;
-    private Float rating;
     private String contacts;
 }

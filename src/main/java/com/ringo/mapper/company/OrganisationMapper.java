@@ -2,23 +2,47 @@ package com.ringo.mapper.company;
 
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.mapper.common.EntityMapper;
 import com.ringo.model.company.Organisation;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface OrganisationMapper extends EntityMapper<OrganisationRequestDto, OrganisationResponseDto, Organisation> {
+import java.util.HashSet;
 
-    @Override
-    @Mapping(target = "profilePicture", ignore = true)
-    @Mapping(target = "hostedEvents", ignore = true)
-    @Mapping(target = "role", ignore = true)
-    Organisation toEntity(OrganisationRequestDto dto);
+@Component
+public class OrganisationMapper {
 
-    @Override
-    @Mapping(target = "photo", ignore = true)
-    @Mapping(target = "hostedEventIds", ignore = true)
-    @Mapping(target = "role", ignore = true)
-    OrganisationResponseDto toDto(Organisation entity);
+    public Organisation toEntity(OrganisationRequestDto dto)
+    {
+        return Organisation.builder()
+                .name(dto.getName())
+                .username(dto.getUsername())
+                .description(dto.getDescription())
+                .email(dto.getEmail())
+                .contacts(dto.getContacts())
+                .build();
+    }
+
+    public OrganisationResponseDto toDto(Organisation entity) {
+        OrganisationResponseDto organisation = OrganisationResponseDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .username(entity.getUsername())
+                .description(entity.getDescription())
+                .contacts(entity.getContacts())
+                .rating(entity.getRating())
+                .build();
+
+        organisation.setHostedEventIds(new HashSet<>());
+        entity.getHostedEvents().forEach(e -> organisation.getHostedEventIds().add(e.getId()));
+        if(entity.getProfilePicture() != null)
+            organisation.setProfilePicture(entity.getProfilePicture().getId());
+        return organisation;
+    }
+
+
+    public void partialUpdate(Organisation entity, OrganisationRequestDto dto) {
+        if(dto.getName() != null) entity.setName(dto.getName());
+        if(dto.getUsername() != null) entity.setUsername(dto.getUsername());
+        if(dto.getDescription() != null) entity.setDescription(dto.getDescription());
+        if(dto.getContacts() != null) entity.setContacts(dto.getContacts());
+    }
 }
