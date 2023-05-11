@@ -1,5 +1,6 @@
 package com.ringo.service.security;
 
+import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.InternalException;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +28,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PhotoService photoService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -83,5 +86,15 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
             photoService.delete(photoId);
         }
+    }
+
+    public void updatePassword(ChangePasswordForm changePasswordForm) {
+        User user = getCurrentUserAsEntity();
+
+        if(!passwordEncoder.matches(changePasswordForm.getPassword(), user.getPassword()))
+            throw new UserException("Wrong password");
+
+        user.setPassword(passwordEncoder.encode(changePasswordForm.getNewPassword()));
+        userRepository.save(user);
     }
 }
