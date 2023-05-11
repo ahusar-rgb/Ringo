@@ -2,9 +2,11 @@ package com.ringo.controller;
 
 import com.ringo.auth.JwtService;
 import com.ringo.config.Constants;
+import com.ringo.dto.auth.ForgotPasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.exception.AuthenticationException;
+import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.EmailSender;
@@ -107,13 +109,13 @@ public class AuthController {
     }
 
     @PostMapping(value = "/forgot-password", produces = {"application/json"})
-    public ResponseEntity<String> forgotPassword(@RequestBody String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new AuthenticationException("User not found")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordForm form) {
+        User user = userRepository.findByEmail(form.getEmail()).orElseThrow(
+                () -> new UserException("User not found")
         );
         String token = jwtService.generateRecoverPasswordToken(user);
         String link = "http://localhost:8080/api/auth/reset-password-form/" + user.getId() + "/" + token;
-        emailSender.send(email, "Password reset", "Click on the link to reset your password: " + link);
+        emailSender.send(form.getEmail(), "Password reset", "Click on the link to reset your password: " + link);
         return ResponseEntity.ok("Password reset link was sent to your email");
     }
 

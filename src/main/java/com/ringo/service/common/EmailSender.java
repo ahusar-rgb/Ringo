@@ -1,5 +1,6 @@
 package com.ringo.service.common;
 
+import com.ringo.exception.InternalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,7 +17,11 @@ public class EmailSender {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new InternalException("Failed to send email to %s".formatted(to));
+        }
     }
 
 }

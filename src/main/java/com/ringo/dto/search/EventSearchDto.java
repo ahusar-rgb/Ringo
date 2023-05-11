@@ -143,6 +143,8 @@ public class EventSearchDto extends GenericSearchDto<Event>{
 
     private void addOrderByName(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         if(Objects.equals(sort, "string")) {
+            if(searchString == null)
+                return;
             String searchStringLower = searchString.toLowerCase();
             query.orderBy(criteriaBuilder.asc(criteriaBuilder.selectCase()
                     .when(criteriaBuilder.equal(root.get("name"), searchString), 1)

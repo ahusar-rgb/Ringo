@@ -3,6 +3,7 @@ package com.ringo.auth;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.exception.AuthenticationException;
 import com.ringo.model.security.User;
@@ -55,11 +56,14 @@ public class JwtService {
     public boolean isTokenValid(User user, String token) {
         Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(config.getIssuer()).build();
-        DecodedJWT jwt = verifier.verify(token);
-        if (isTokenExpired(jwt)) {
+        try {
+            DecodedJWT jwt = verifier.verify(token);
+            return jwt.getSubject().equals(user.getEmail());
+        } catch (TokenExpiredException e) {
             throw new AuthenticationException("Token expired");
+        } catch (Exception e) {
+            throw new AuthenticationException("Token is not valid");
         }
-        return jwt.getSubject().equals(user.getEmail());
     }
 
     public String getEmailFromToken(String token) {
