@@ -106,7 +106,7 @@ public class AuthController {
                 );
     }
 
-    @GetMapping(value = "/forgot-password", produces = {"application/json"})
+    @PostMapping(value = "/forgot-password", produces = {"application/json"})
     public ResponseEntity<String> forgotPassword(@RequestBody String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AuthenticationException("User not found")

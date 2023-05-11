@@ -2,6 +2,7 @@ package com.ringo.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ringo.exception.UserException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -33,7 +34,7 @@ public class GenericSearchDto<T>{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Integer page = 0;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    protected String sort = "id";
+    protected String sort = "string";
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected Sort.Direction dir = Sort.DEFAULT_DIRECTION;
 
@@ -52,9 +53,13 @@ public class GenericSearchDto<T>{
 
     @JsonIgnore
     public Pageable getPageable() {
+        if(limit > MAX_PAGE_SIZE)
+            throw new UserException("Limit cannot be greater than " + MAX_PAGE_SIZE);
+        if(limit < 1)
+            throw new UserException("Limit cannot be less than 1");
         return PageRequest.of(
                 (page != null) ? page : 0,
-                (limit != null && limit >= 0) ? limit : DEFAULT_PAGE_SIZE,
+                limit,
                 getSortSpec()
         );
     }

@@ -34,7 +34,7 @@ public class EventSearchDto extends GenericSearchDto<Event>{
     @Override
     @JsonIgnore
     public Sort getSortSpec() {
-        if(Objects.equals(sort, "distance")) {
+        if(Objects.equals(sort, "distance") || Objects.equals(sort, "string")) {
             return Sort.unsorted();
         }
         return super.getSortSpec();
@@ -46,6 +46,7 @@ public class EventSearchDto extends GenericSearchDto<Event>{
         return (root, query, criteriaBuilder) -> {
             Specification<Event> specification = super.getSpecification();
             addOrderByDistance(root, query, criteriaBuilder);
+            addOrderByName(root, query, criteriaBuilder);
             return specification.toPredicate(root, query, criteriaBuilder);
         };
     }
@@ -56,10 +57,9 @@ public class EventSearchDto extends GenericSearchDto<Event>{
             throw new UserException("Currency is required when filtering by price");
 
         if (searchString != null) {
-            searchString = searchString.toLowerCase();
             filters.add(criteriaBuilder.or(
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchString + "%"),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchString + "%")
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchString.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchString.toLowerCase() + "%")
             ));
         }
         if (hostId != null) {
@@ -138,6 +138,20 @@ public class EventSearchDto extends GenericSearchDto<Event>{
                 query.orderBy(criteriaBuilder.asc(byDistance));
             else
                 query.orderBy(criteriaBuilder.desc(byDistance));
+        }
+    }
+
+    private void addOrderByName(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        if(Objects.equals(sort, "string")) {
+            String searchStringLower = searchString.toLowerCase();
+            query.orderBy(criteriaBuilder.asc(criteriaBuilder.selectCase()
+                    .when(criteriaBuilder.equal(root.get("name"), searchString), 1)
+                    .when(criteriaBuilder.equal(criteriaBuilder.lower(root.get("name")), searchStringLower), 2)
+                    .when(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchStringLower + "%"), 3)
+                    .when(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "% " + searchStringLower + " %"), 4)
+                    .when(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchStringLower + "%"), 5)
+                    .otherwise(6)
+            ));
         }
     }
 }
