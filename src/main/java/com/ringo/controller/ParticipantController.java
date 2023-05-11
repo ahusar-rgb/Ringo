@@ -17,27 +17,21 @@ public class ParticipantController {
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
     public ResponseEntity<ParticipantResponseDto> findParticipantById(@PathVariable("id") Long id) {
-        return ResponseEntity
-                .ok()
-                .body(participantService.findById(id));
+        return ResponseEntity.ok(participantService.findById(id));
     }
 
     @GetMapping(produces = {"application/json"})
     public ResponseEntity<ParticipantResponseDto> findCurrentParticipant() {
-        return ResponseEntity
-                .ok()
-                .body(participantService.findCurrentParticipant());
+        return ResponseEntity.ok(participantService.findCurrentParticipant());
     }
 
     @PostMapping(value = "/sign-up", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<String> createParticipant(@RequestBody ParticipantRequestDto dto) {
-        ParticipantResponseDto participant = participantService.save(dto);
-        return ResponseEntity.ok("Participant created successfully [id: %d]".formatted(participant.getId()));
+    public ResponseEntity<ParticipantResponseDto> createParticipant(@RequestBody ParticipantRequestDto dto) {
+        return ResponseEntity.ok(participantService.save(dto));
     }
 
     @PutMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<String> updateParticipant(@RequestBody ParticipantRequestDto dto) {
-        participantService.update(dto);
-        return ResponseEntity.ok("Participant updated successfully");
+    public ResponseEntity<ParticipantResponseDto> updateParticipant(@RequestBody ParticipantRequestDto dto) {
+        return ResponseEntity.ok(participantService.update(dto));
     }
 }

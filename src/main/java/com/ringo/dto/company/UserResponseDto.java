@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 public class UserResponseDto extends AbstractEntityDto {
+    private String email;
     private String name;
     private String username;
     private Long profilePicture;

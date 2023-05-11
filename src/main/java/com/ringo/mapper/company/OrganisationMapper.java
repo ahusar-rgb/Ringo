@@ -25,6 +25,7 @@ public class OrganisationMapper {
         OrganisationResponseDto organisation = OrganisationResponseDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
+                .email(entity.getEmail())
                 .username(entity.getUsername())
                 .description(entity.getDescription())
                 .contacts(entity.getContacts())

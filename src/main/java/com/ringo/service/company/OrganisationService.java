@@ -31,7 +31,9 @@ public class OrganisationService {
         Organisation organisation = organisationRepository.findByIdWithEvents(id).orElseThrow(
                 () -> new NotFoundException("Organisation [id: %d] not found".formatted(id)));
 
-        return organisationMapper.toDto(organisation);
+        OrganisationResponseDto dto = organisationMapper.toDto(organisation);
+        dto.setEmail(null);
+        return dto;
     }
 
     public OrganisationResponseDto findCurrentOrganisation() {

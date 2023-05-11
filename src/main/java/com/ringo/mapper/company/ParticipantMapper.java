@@ -32,6 +32,7 @@ public class ParticipantMapper {
         ParticipantResponseDto dto = ParticipantResponseDto.builder()
                 .id(participant.getId())
                 .name(participant.getName())
+                .email(participant.getEmail())
                 .username(participant.getUsername())
                 .dateOfBirth(participant.getDateOfBirth().toString())
                 .gender(participant.getGender().toString())

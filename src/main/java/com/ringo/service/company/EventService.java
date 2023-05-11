@@ -61,7 +61,7 @@ public class EventService {
         return mapper.toDto(event);
     }
 
-    public Long save(EventRequestDto eventDto) {
+    public EventResponseDto save(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
         User currentUser = userService.getCurrentUserAsEntity();
@@ -81,10 +81,10 @@ public class EventService {
         event.setCurrency(currency);
         event.setCategories(categories);
 
-        return repository.save(event).getId();
+        return mapper.toDto(repository.save(event));
     }
 
-    public void update(Long id, EventRequestDto dto) {
+    public EventResponseDto update(Long id, EventRequestDto dto) {
         log.info("updateEvent: {}, {}", id, dto);
 
         Event event = repository.findById(id).orElseThrow(
@@ -95,7 +95,7 @@ public class EventService {
             throw new UserException("Only event host can update event");
 
         mapper.partialUpdate(event, dto);
-        repository.save(event);
+        return mapper.toDto(repository.save(event));
     }
 
     public void delete(Long id) {
@@ -118,7 +118,7 @@ public class EventService {
         repository.deleteById(id);
     }
 
-    public void addPhoto(Long eventId, MultipartFile photo) {
+    public EventResponseDto addPhoto(Long eventId, MultipartFile photo) {
         log.info("addPhotoToEvent: {}, {}", eventId, photo.getOriginalFilename());
         log.info("photo type: {}", photo.getContentType());
 
@@ -133,9 +133,10 @@ public class EventService {
             throw new UserException("No more photos for this event is allowed");
 
         eventPhotoService.save(event, photo);
+        return mapper.toDto(event);
     }
 
-    public void removePhoto(Long eventId, Long photoId) {
+    public EventResponseDto removePhoto(Long eventId, Long photoId) {
         log.info("removePhotoFromEvent: {}, {}", eventId, photoId);
 
         Event event = repository.findById(eventId).orElseThrow(
@@ -153,10 +154,10 @@ public class EventService {
             throw new UserException("Photo [id: %d] was not owned by this event".formatted(photoId));
 
         eventPhotoService.delete(photo.getId());
-        repository.save(event);
+        return mapper.toDto(repository.save(event));
     }
 
-    public void setMainPhoto(Long eventId, Long photoId) {
+    public EventResponseDto setMainPhoto(Long eventId, Long photoId) {
         log.info("setMainPhoto: {}", photoId);
 
         Event event = repository.findById(eventId).orElseThrow(
@@ -168,6 +169,7 @@ public class EventService {
 
         EventMainPhoto eventMainPhoto = eventPhotoService.prepareMainPhoto(event, photoId);
         event.setMainPhoto(eventMainPhoto);
+        return mapper.toDto(event);
     }
 
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {

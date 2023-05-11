@@ -27,9 +27,12 @@ public class ParticipantService {
 
     public ParticipantResponseDto findById(Long id) {
         log.info("findParticipantById: {}", id);
-        return mapper.toDto(repository.findById(id).orElseThrow(
+        ParticipantResponseDto dto = mapper.toDto(repository.findById(id).orElseThrow(
                 () -> new UserException("Participant [id: %d] not found".formatted(id))
         ));
+
+        dto.setEmail(null);
+        return dto;
     }
 
     public ParticipantResponseDto findCurrentParticipant() {

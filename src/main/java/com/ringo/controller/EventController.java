@@ -67,12 +67,10 @@ public class EventController {
             }
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<Long> saveEvent(
+    public ResponseEntity<EventResponseDto> saveEvent(
             @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
     ) {
-        return ResponseEntity
-                .ok()
-                .body(eventService.save(eventDto));
+        return ResponseEntity.ok(eventService.save(eventDto));
     }
 
     @Operation(summary = "Delete event by id")
@@ -100,14 +98,11 @@ public class EventController {
             }
     )
     @PutMapping(value = "/{id}", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<String> updateEvent(
+    public ResponseEntity<EventResponseDto> updateEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
             @Parameter(description = "Event to update") @RequestBody EventRequestDto eventDto
     ) {
-        eventService.update(id, eventDto);
-        return ResponseEntity
-                .ok()
-                .body("Event#%d updated".formatted(eventDto.getId()));
+        return ResponseEntity.ok(eventService.update(id, eventDto));
     }
 
     @Operation(summary = "Add photo to event")
@@ -119,13 +114,11 @@ public class EventController {
             }
     )
     @PutMapping(value = "/{id}/add-photo", produces = {"application/json"}, consumes = {"multipart/form-data"})
-    public ResponseEntity<String> addPhotoToEvent(
+    public ResponseEntity<EventResponseDto> addPhotoToEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
             @Parameter(description = "Photo") @RequestPart("file") MultipartFile photo) {
 
-        eventService.addPhoto(id, photo);
-        return ResponseEntity
-                .ok("Photo %s added to event %s".formatted(photo.getOriginalFilename(), id));
+        return ResponseEntity.ok(eventService.addPhoto(id, photo));
     }
 
     @Operation(summary = "Remove photo from event")
@@ -139,13 +132,11 @@ public class EventController {
             }
     )
     @PutMapping(value = "{id}/remove-photo/{photo_id}", produces = {"application/json"})
-    public ResponseEntity<String> removePhotoFromEvent(
+    public ResponseEntity<EventResponseDto> removePhotoFromEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
             @Parameter(description = "Id of the photo") @PathVariable("photo_id") Long photoId) {
 
-        eventService.removePhoto(id, photoId);
-        return ResponseEntity
-                .ok("Photo %s removed from event %s".formatted(photoId, id));
+        return ResponseEntity.ok(eventService.removePhoto(id, photoId));
     }
 
     @Operation(summary = "Set main photo of event")
@@ -159,11 +150,10 @@ public class EventController {
             }
     )
     @PutMapping(value = "{id}/change-main-photo/{photo_id}", produces = {"application/json"})
-    public ResponseEntity<String> changeMainPhoto(@Parameter(description = "Event id") @PathVariable("id") Long id,
+    public ResponseEntity<EventResponseDto> changeMainPhoto(@Parameter(description = "Event id") @PathVariable("id") Long id,
                                 @Parameter(description = "Photo id") @PathVariable("photo_id") Long photoId) {
-        eventService.setMainPhoto(id, photoId);
-        return ResponseEntity
-                .ok("Main photo of event %s changed to %s".formatted(id, photoId));
+
+        return ResponseEntity.ok(eventService.setMainPhoto(id, photoId));
     }
 
     @Operation(summary = "Search events")

@@ -26,9 +26,7 @@ public class OrganisationController {
     )
     @GetMapping(value = "/{id}", produces = {"application/json"})
     public ResponseEntity<OrganisationResponseDto> findOrganisationById(@PathVariable("id") Long id) {
-        return ResponseEntity
-                .ok()
-                .body(organisationService.findById(id));
+        return ResponseEntity.ok(organisationService.findById(id));
     }
 
     @Operation(summary = "Find current organisation")
@@ -40,9 +38,7 @@ public class OrganisationController {
     )
     @GetMapping(produces = {"application/json"})
     public ResponseEntity<OrganisationResponseDto> findCurrentOrganisation() {
-        return ResponseEntity
-                .ok()
-                .body(organisationService.findCurrentOrganisation());
+        return ResponseEntity.ok(organisationService.findCurrentOrganisation());
     }
 
     @Operation(summary = "Create a new organisation")
@@ -53,9 +49,8 @@ public class OrganisationController {
             }
     )
     @PostMapping(value = "/sign-up", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<String> createOrganisation(@RequestBody OrganisationRequestDto dto) {
-        OrganisationResponseDto organisation = organisationService.create(dto);
-        return ResponseEntity.ok("Organisation created successfully [id: %d]".formatted(organisation.getId()));
+    public ResponseEntity<OrganisationResponseDto> createOrganisation(@RequestBody OrganisationRequestDto dto) {
+        return ResponseEntity.ok(organisationService.create(dto));
     }
 
     @Operation(summary = "Update an existing organisation")
@@ -66,8 +61,7 @@ public class OrganisationController {
             }
     )
     @PutMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<String> updateOrganisation(@RequestBody OrganisationRequestDto dto) {
-        organisationService.update(dto);
-        return ResponseEntity.ok("Organisation updated successfully");
+    public ResponseEntity<OrganisationResponseDto> updateOrganisation(@RequestBody OrganisationRequestDto dto) {
+        return ResponseEntity.ok(organisationService.update(dto));
     }
 }
