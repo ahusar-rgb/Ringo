@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,10 +60,7 @@ public class TicketService {
         Event event = eventRepository.findById(jwt.getClaim("event").asLong())
                 .orElseThrow(() -> new UserException("Event not found"));
 
-        User user = userService.getCurrentUserAsEntity();
-        Organisation organisation = organisationRepository.findById(user.getId())
-                .orElseThrow(() -> new UserException("Current user is not an organisation"));
-        if(!event.getHost().equals(organisation))
+        if(!isUserHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
         Participant participant = participantRepository.findById(jwt.getClaim("participant").asLong())
@@ -74,5 +73,44 @@ public class TicketService {
             throw new UserException("Ticket expired");
 
         return mapper.toDto(ticket);
+    }
+
+    public TicketDto validateTicket(TicketCode ticketCode) {
+
+        DecodedJWT jwt = jwtService.verifyTicketCode(ticketCode.getTicketCode());
+
+        Event event = eventRepository.findById(jwt.getClaim("event").asLong())
+                .orElseThrow(() -> new UserException("Event not found"));
+
+        if(!isUserHostOfEvent(event))
+            throw new UserException("Current user is not the host of this event");
+
+        Participant participant = participantRepository.findById(jwt.getClaim("participant").asLong())
+                .orElseThrow(() -> new UserException("Participant not found"));
+
+        Ticket ticket = repository.findById(new TicketId(participant, event))
+                .orElseThrow(() -> new UserException("Ticket not found"));
+
+        if(ticket.getExpiryDate().isBefore(LocalDateTime.now()))
+            throw new UserException("Ticket expired");
+
+        ticket.setIsValidated(true);
+        return mapper.toDto(repository.save(ticket));
+    }
+
+    public List<TicketDto> findByEventId(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new UserException("Event not found"));
+
+        if(!isUserHostOfEvent(event))
+            throw new UserException("Current user is not the host of this event");
+
+        return mapper.toDtos(repository.findAllByEventId(event.getId()));
+    }
+
+    private boolean isUserHostOfEvent(Event event) {
+        User user = userService.getCurrentUserAsEntity();
+        Optional<Organisation> organisation = organisationRepository.findById(user.getId());
+        return organisation.filter(value -> event.getHost().equals(value)).isPresent();
     }
 }

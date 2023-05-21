@@ -171,5 +171,4 @@ public class EventController {
     public ResponseEntity<TicketDto> joinEvent(@PathVariable("id") Long id) {
         return ResponseEntity.ok(eventService.joinEvent(id));
     }
-
 }

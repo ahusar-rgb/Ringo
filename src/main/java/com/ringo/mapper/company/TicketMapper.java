@@ -12,5 +12,6 @@ public interface TicketMapper extends SingleDtoEntityMapper<TicketDto, Ticket> {
     @Override
     @Mapping(source = "id.participant", target = "participant")
     @Mapping(source = "id.event", target = "event")
+    @Mapping(target = "ticketCode", ignore = true)
     TicketDto toDto(Ticket entity);
 }
