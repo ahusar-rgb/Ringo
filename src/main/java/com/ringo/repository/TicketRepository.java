@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, TicketId> {
-    @Query("SELECT t FROM Ticket t WHERE t.event.id = :eventId")
+    @Query("SELECT t FROM Ticket t WHERE t.id.event.id = :eventId")
     List<Ticket> findAllByEventId(Long eventId);
 
-    @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId")
+    @Query("SELECT t FROM Ticket t WHERE t.id.participant.id = :userId")
     List<Ticket> findAllByUserId(Long userId);
 }

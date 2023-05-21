@@ -6,9 +6,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.exception.AuthenticationException;
+import com.ringo.model.company.Ticket;
 import com.ringo.model.security.User;
 import lombok.AllArgsConstructor;
 
+import java.time.ZoneOffset;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -26,6 +28,18 @@ public class JwtService {
                 .withClaim("username", user.getUsername())
                 .withClaim("role", user.getRole().name())
                 .withClaim("refresh", false)
+                .sign(algorithm);
+    }
+
+    public String generateTicketCode(Ticket ticket) {
+        Algorithm algorithm = Algorithm.HMAC512(config.getSecret());
+
+        return JWT.create()
+                .withIssuer(config.getIssuer())
+                .withSubject(ticket.getId().getParticipant().getEmail())
+                .withExpiresAt(ticket.getExpiryDate().toInstant(ZoneOffset.UTC))
+                .withClaim("event", ticket.getId().getEvent().getId())
+                .withClaim("participant", ticket.getId().getParticipant().getId())
                 .sign(algorithm);
     }
 
@@ -82,5 +96,15 @@ public class JwtService {
         DecodedJWT jwt = verifier.verify(token);
 
         return jwt.getExpiresAt();
+    }
+
+    public DecodedJWT verifyTicketCode(String ticketCode) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC512(config.getSecret());
+            JWTVerifier verifier = JWT.require(algorithm).withIssuer(config.getIssuer()).build();
+            return verifier.verify(ticketCode);
+        } catch (Exception e) {
+            throw new AuthenticationException("Ticket code is not valid");
+        }
     }
 }

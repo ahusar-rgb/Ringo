@@ -9,17 +9,11 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
 import com.ringo.model.common.AbstractEntity;
-import com.ringo.model.company.Category;
-import com.ringo.model.company.Currency;
-import com.ringo.model.company.Event;
-import com.ringo.model.company.Organisation;
+import com.ringo.model.company.*;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
 import com.ringo.model.security.User;
-import com.ringo.repository.CategoryRepository;
-import com.ringo.repository.CurrencyRepository;
-import com.ringo.repository.EventRepository;
-import com.ringo.repository.OrganisationRepository;
+import com.ringo.repository.*;
 import com.ringo.repository.photo.EventPhotoRepository;
 import com.ringo.service.common.CurrencyExchanger;
 import com.ringo.service.security.UserService;
@@ -52,6 +46,8 @@ public class EventService {
     private final CategoryRepository categoryRepository;
     private final UserService userService;
     private final CurrencyExchanger currencyExchanger;
+    private final TicketService ticketService;
+    private final ParticipantRepository participantRepository;
 
     public EventResponseDto findById(Long id) {
         log.info("findEventById: {}", id);
@@ -253,5 +249,26 @@ public class EventService {
 
                     return dto;
         }).collect(Collectors.toList());
+    }
+
+    public TicketDto joinEvent(Long id) {
+        User user = userService.getCurrentUserAsEntity();
+        Participant participant = participantRepository.findById(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not a participant")
+        );
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        if(event.getPeopleCount() >= event.getCapacity())
+            throw new UserException("Event is already full");
+
+        TicketDto ticketDto = ticketService.issueTicket(event, participant);
+
+        event.setPeopleCount(event.getPeopleCount() + 1);
+        event = repository.save(event);
+
+        ticketDto.setEvent(mapper.toDto(event));
+        return ticketDto;
     }
 }

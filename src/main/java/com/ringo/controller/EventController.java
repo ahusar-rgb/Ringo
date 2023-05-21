@@ -1,9 +1,6 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.EventGroupDto;
-import com.ringo.dto.company.EventRequestDto;
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.company.*;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.service.company.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -168,6 +165,11 @@ public class EventController {
     public ResponseEntity<List<EventSmallDto>> searchEvent(EventSearchDto searchDto) {
         return ResponseEntity.ok()
                 .body(eventService.search(searchDto));
+    }
+
+    @PostMapping(value = "/{id}/join", produces = {"application/json"})
+    public ResponseEntity<TicketDto> joinEvent(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.joinEvent(id));
     }
 
 }
