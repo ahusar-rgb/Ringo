@@ -21,6 +21,7 @@ import com.ringo.repository.CurrencyRepository;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
+import com.ringo.service.common.CurrencyExchanger;
 import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,7 @@ public class EventService {
     private final CurrencyRepository currencyRepository;
     private final CategoryRepository categoryRepository;
     private final UserService userService;
+    private final CurrencyExchanger currencyExchanger;
 
     public EventResponseDto findById(Long id) {
         log.info("findEventById: {}", id);
@@ -235,6 +237,20 @@ public class EventService {
                                 getDistance(new Coordinates(searchDto.getLatitude(), searchDto.getLongitude()),
                                 dto.getCoordinates())
                         );
+                    if(searchDto.getCurrencyId() != null && (searchDto.getPriceMin() != null || searchDto.getPriceMax() != null)) {
+                        dto.setPrice(
+                                currencyExchanger.exchange(
+                                        event.getCurrency(),
+                                        currencyRepository.findById(searchDto.getCurrencyId()).orElseThrow(
+                                                () -> new UserException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId()))),
+                                        event.getPrice()
+                                )
+                        );
+                        Currency currency = currencyRepository.findById(searchDto.getCurrencyId()).orElseThrow(
+                                () -> new UserException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId())));
+                        dto.setCurrency(CurrencyDto.builder().name(currency.getName()).id(currency.getId()).symbol(currency.getSymbol()).build());
+                    }
+
                     return dto;
         }).collect(Collectors.toList());
     }

@@ -1,6 +1,5 @@
 package com.ringo.service.security;
 
-import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.InternalException;
@@ -86,15 +85,5 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
             photoService.delete(photoId);
         }
-    }
-
-    public void updatePassword(ChangePasswordForm changePasswordForm) {
-        User user = getCurrentUserAsEntity();
-
-        if(!passwordEncoder.matches(changePasswordForm.getPassword(), user.getPassword()))
-            throw new UserException("Wrong password");
-
-        user.setPassword(passwordEncoder.encode(changePasswordForm.getNewPassword()));
-        userRepository.save(user);
     }
 }

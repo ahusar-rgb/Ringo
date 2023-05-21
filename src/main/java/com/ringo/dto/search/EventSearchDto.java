@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ringo.exception.UserException;
 import com.ringo.model.company.Category;
 import com.ringo.model.company.Event;
+import com.ringo.model.company.ExchangeRate;
 import jakarta.persistence.criteria.*;
 import lombok.Data;
 import org.springframework.data.domain.Sort;
@@ -34,9 +35,10 @@ public class EventSearchDto extends GenericSearchDto<Event>{
     @Override
     @JsonIgnore
     public Sort getSortSpec() {
-        if(Objects.equals(sort, "distance") || Objects.equals(sort, "string")) {
+        if(Objects.equals(sort, "distance") ||
+                Objects.equals(sort, "string") ||
+                Objects.equals(sort, "price"))
             return Sort.unsorted();
-        }
         return super.getSortSpec();
     }
 
@@ -47,6 +49,7 @@ public class EventSearchDto extends GenericSearchDto<Event>{
             Specification<Event> specification = super.getSpecification();
             addOrderByDistance(root, query, criteriaBuilder);
             addOrderByName(root, query, criteriaBuilder);
+            addOrderByPrice(root, query, criteriaBuilder);
             return specification.toPredicate(root, query, criteriaBuilder);
         };
     }
@@ -65,18 +68,22 @@ public class EventSearchDto extends GenericSearchDto<Event>{
         if (hostId != null) {
             filters.add(criteriaBuilder.equal(root.get("host").get("id"), hostId));
         }
-        if (currencyId != null) {
-            filters.add(criteriaBuilder.equal(root.get("currency").get("id"), currencyId));
-        }
         if (isTicketNeeded != null) {
             filters.add(criteriaBuilder.equal(root.get("isTicketNeeded"), isTicketNeeded));
         }
-        if (priceMin != null) {
-            filters.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), priceMin));
+
+        if(currencyId != null) {
+
+            Expression<Float> price = getPriceExpression(root, query, criteriaBuilder, currencyId);
+
+            if (priceMin != null) {
+                filters.add(criteriaBuilder.greaterThanOrEqualTo(price, priceMin));
+            }
+            if (priceMax != null) {
+                filters.add(criteriaBuilder.lessThanOrEqualTo(price, priceMax));
+            }
         }
-        if (priceMax != null) {
-            filters.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), priceMax));
-        }
+
         if (categoryIds != null) {
             for(Long categoryId : categoryIds) {
                 Subquery<Long> ids = query.subquery(Long.class);
@@ -155,5 +162,32 @@ public class EventSearchDto extends GenericSearchDto<Event>{
                     .otherwise(6)
             ));
         }
+    }
+
+    private void addOrderByPrice(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        if (Objects.equals(sort, "price")) {
+
+            Expression<Float> price = getPriceExpression(root, query, criteriaBuilder, 2L); //EUR
+
+            if (dir == Sort.Direction.ASC)
+                query.orderBy(criteriaBuilder.asc(price));
+            else
+                query.orderBy(criteriaBuilder.desc(price));
+        }
+    }
+
+    private Expression<Float> getPriceExpression(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Long currency) {
+        Subquery<Float> exchangeRateSubquery = query.subquery(Float.class);
+        Root<ExchangeRate> exchangeRateRoot = exchangeRateSubquery.from(ExchangeRate.class);
+
+        exchangeRateSubquery.select(exchangeRateRoot.get("rate"))
+                .where(
+                        criteriaBuilder.equal(exchangeRateRoot.get("id").get("from"), root.get("currency")),
+                        criteriaBuilder.equal(exchangeRateRoot.get("id").get("to").get("id"), currency)
+                );
+
+        return criteriaBuilder.selectCase()
+                .when(criteriaBuilder.isNotNull(exchangeRateSubquery.getSelection()), criteriaBuilder.prod(exchangeRateSubquery.getSelection(), root.get("price")))
+                .otherwise(root.get("price")).as(Float.class);
     }
 }

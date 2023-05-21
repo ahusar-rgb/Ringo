@@ -2,6 +2,7 @@ package com.ringo.controller;
 
 import com.ringo.auth.JwtService;
 import com.ringo.config.Constants;
+import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.auth.ForgotPasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.security.TokenDto;
@@ -148,5 +149,28 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok("Password reset successfully");
+    }
+
+    @PostMapping (value = "change-password", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<TokenDto> updatePassword(@RequestBody ChangePasswordForm changePasswordForm) {
+
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal == null)
+            throw new UserException("User is not authenticated");
+
+        User user = (User) principal;
+
+        if(!passwordEncoder.matches(changePasswordForm.getPassword(), user.getPassword()))
+            throw new UserException("Wrong password");
+
+        user.setPassword(passwordEncoder.encode(changePasswordForm.getNewPassword()));
+        user = userRepository.save(user);
+
+        return ResponseEntity.ok(
+                new TokenDto(
+                        jwtService.generateAccessToken(user),
+                        jwtService.generateRefreshToken(user)
+                )
+        );
     }
 }
