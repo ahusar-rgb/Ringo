@@ -13,12 +13,15 @@ import com.ringo.repository.EventRepository;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.TicketRepository;
+import com.ringo.service.common.EmailSender;
+import com.ringo.service.common.QrCodeGenerator;
 import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +39,8 @@ public class TicketService {
     private final OrganisationRepository organisationRepository;
     private final UserService userService;
     private final JwtService jwtService;
+    private final EmailSender emailSender;
+    private final QrCodeGenerator qrCodeGenerator;
 
     public TicketDto issueTicket(Event event, Participant participant) {
 
@@ -51,6 +56,15 @@ public class TicketService {
 
         TicketDto ticketDto = mapper.toDto(repository.save(ticket));
         ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
+
+        BufferedImage qrCode = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
+
+        emailSender.sendTicket(
+                participant.getEmail(),
+                "Ticket for event %s".formatted(event.getName()),
+                "Here is your ticket!",
+                qrCode);
+
         return ticketDto;
     }
 

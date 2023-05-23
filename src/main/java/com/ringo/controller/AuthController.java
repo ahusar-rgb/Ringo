@@ -99,6 +99,10 @@ public class AuthController {
                 () -> new AuthenticationException("Invalid token")
         );
 
+        if(!jwtService.isTokenValid(user, refreshToken)) {
+            throw new AuthenticationException("Invalid token");
+        }
+
         return ResponseEntity
                 .ok()
                 .body(
