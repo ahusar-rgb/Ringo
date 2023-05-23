@@ -22,7 +22,7 @@ public class TicketController {
     }
 
     @GetMapping(value = "/{id}", produces = {"application/json"})
-    public ResponseEntity<List<TicketDto>> findTicketById(@PathVariable("id") Long id) {
+    public ResponseEntity<List<TicketDto>> findTicketByEventId(@PathVariable("id") Long id) {
         return ResponseEntity.ok()
                 .body(ticketService.findByEventId(id));
     }
@@ -31,5 +31,11 @@ public class TicketController {
     public ResponseEntity<TicketDto> validateTicket(@RequestBody TicketCode ticketCode) {
         return ResponseEntity.ok()
                 .body(ticketService.validateTicket(ticketCode));
+    }
+
+    @GetMapping(produces = {"application/json"})
+    public ResponseEntity<List<TicketDto>> getMyTickets() {
+        return ResponseEntity.ok()
+                .body(ticketService.getMyTickets());
     }
 }

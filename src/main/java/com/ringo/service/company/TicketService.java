@@ -127,4 +127,21 @@ public class TicketService {
         Optional<Organisation> organisation = organisationRepository.findById(user.getId());
         return organisation.filter(value -> event.getHost().equals(value)).isPresent();
     }
+
+    public List<TicketDto> getMyTickets() {
+
+        User user = userService.getCurrentUserAsEntity();
+        Participant participant = participantRepository.findById(user.getId())
+                .orElseThrow(() -> new UserException("User is not a participant"));
+
+        List<Ticket> tickets = repository.findAllByParticipantId(participant.getId());
+
+        return tickets.stream().map(ticket -> {
+            if(eventRepository.findById(ticket.getId().getEvent().getId()).isEmpty())
+                throw new UserException("Event not found");
+            TicketDto ticketDto = mapper.toDto(ticket);
+            ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
+            return ticketDto;
+        }).toList();
+    }
 }
