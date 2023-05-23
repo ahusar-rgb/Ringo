@@ -26,7 +26,7 @@ public class EventController {
     @Operation(summary = "Find event by id")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Found the event",
+                    @ApiResponse(responseCode = "200", description = "Event found",
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
                     @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
             }
@@ -167,8 +167,20 @@ public class EventController {
                 .body(eventService.search(searchDto));
     }
 
+    @Operation(summary = "Join event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Joined the event",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TicketDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Event is full", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User already joined the event", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content)
+            }
+    )
     @PostMapping(value = "/{id}/join", produces = {"application/json"})
-    public ResponseEntity<TicketDto> joinEvent(@PathVariable("id") Long id) {
+    public ResponseEntity<TicketDto> joinEvent(
+            @Parameter(description = "Event id") @PathVariable("id") Long id) {
         return ResponseEntity.ok(eventService.joinEvent(id));
     }
 }

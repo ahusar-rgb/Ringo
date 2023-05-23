@@ -11,6 +11,11 @@ import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.EmailSender;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +44,14 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
 
+    @Operation(summary = "Login")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Login successful",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class))),
+                    @ApiResponse(responseCode = "401", description = "User is not authenticated", content = @Content)
+            }
+    )
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<TokenDto> login(@RequestBody UserRequestDto login) {
 
@@ -113,6 +126,14 @@ public class AuthController {
                 );
     }
 
+    @Operation(summary = "Forgot password")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Password reset link was sent to your email",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "400", description = "User not found", content = @Content)
+            }
+    )
     @PostMapping(value = "/forgot-password", produces = {"application/json"})
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordForm form) {
         User user = userRepository.findByEmail(form.getEmail()).orElseThrow(
@@ -124,6 +145,15 @@ public class AuthController {
         return ResponseEntity.ok("Password reset link was sent to your email");
     }
 
+
+    @Operation(summary = "Reset password form (will be moved to frontend)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Password change form",
+                            content = @Content(mediaType = "text/html", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "401", description = "Invalid token", content = @Content)
+            }
+    )
     @GetMapping(value = "/reset-password-form/{id}/{token}", produces = {"text/html"})
     public ResponseEntity<String> resetPasswordForm(@PathVariable("id") Long id, @PathVariable("token") String token) {
         User user = userRepository.findById(id).orElseThrow(
@@ -140,6 +170,14 @@ public class AuthController {
     }
 
 
+    @Operation(summary = "Reset password")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Password reset successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "401", description = "Invalid token", content = @Content)
+            }
+    )
     @PostMapping(value = "/reset-password/{id}/{token}", produces = {"application/json"})
     public ResponseEntity<String> resetPassword(@PathVariable("id") Long id, @PathVariable("token") String token, @RequestBody String newPassword) {
         User user = userRepository.findById(id).orElseThrow(
@@ -155,6 +193,16 @@ public class AuthController {
         return ResponseEntity.ok("Password reset successfully");
     }
 
+
+    @Operation(summary = "Change password")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Password changed successfully",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class))),
+                @ApiResponse(responseCode = "400", description = "Wrong password", content = @Content),
+                @ApiResponse(responseCode = "401", description = "User is not authenticated", content = @Content)
+            }
+    )
     @PostMapping (value = "change-password", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<TokenDto> updatePassword(@RequestBody ChangePasswordForm changePasswordForm) {
 
