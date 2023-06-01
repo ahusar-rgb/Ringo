@@ -338,6 +338,21 @@ public class EventService {
         return ticketDto;
     }
 
+    public TicketDto getTicketForEvent(Long id) {
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        User user = userService.getCurrentUserAsEntity();
+        Participant participant = participantRepository.findById(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not a participant")
+        );
+
+        TicketDto ticketDto = ticketService.getTicketWithCode(event, participant);
+        ticketDto.setEvent(mapper.toDto(event));
+        return ticketDto;
+    }
+
     public EventResponseDto saveEvent(Long id) {
         User user = userService.getCurrentUserAsEntity();
         Participant participant = participantRepository.findByIdWithSavedEvents(user.getId()).orElseThrow(

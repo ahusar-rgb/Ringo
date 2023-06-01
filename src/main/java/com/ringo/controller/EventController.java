@@ -269,4 +269,20 @@ public class EventController {
         return ResponseEntity.ok()
                 .body(eventService.getSavedEvents());
     }
+
+    @Operation(summary = "Get ticket for an event (already acquired)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Found the ticket",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TicketDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "The participant is not registered for this event", content = @Content)
+            }
+    )
+    @GetMapping(value = "/{id}/ticket", produces = {"application/json"})
+    public ResponseEntity<TicketDto> getTicket(
+            @Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.getTicketForEvent(id));
+    }
 }

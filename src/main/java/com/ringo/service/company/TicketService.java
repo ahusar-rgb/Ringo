@@ -139,7 +139,6 @@ public class TicketService {
     }
 
     public List<TicketDto> getMyTickets() {
-
         User user = userService.getCurrentUserAsEntity();
         Participant participant = participantRepository.findById(user.getId())
                 .orElseThrow(() -> new UserException("User is not a participant"));
@@ -161,5 +160,14 @@ public class TicketService {
 
         repository.delete(ticket);
         return mapper.toDto(ticket);
+    }
+
+    public TicketDto getTicketWithCode(Event event, Participant participant) {
+        Ticket ticket = repository.findById(new TicketId(participant, event))
+                .orElseThrow(() -> new UserException("The user is not registered for this event"));
+
+        TicketDto ticketDto = mapper.toDto(ticket);
+        ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
+        return ticketDto;
     }
 }

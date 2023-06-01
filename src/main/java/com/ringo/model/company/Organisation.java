@@ -34,4 +34,8 @@ public class Organisation extends User {
     @OneToMany(mappedBy = "host")
     @Builder.Default
     private Set<Event> hostedEvents = new HashSet<>();
+
+    @OneToMany(mappedBy = "organisation")
+    @Builder.Default
+    private Set<Review> reviews = new HashSet<>();
 }

@@ -3,10 +3,16 @@ package com.ringo.mapper.company;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.model.company.Organisation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
+@RequiredArgsConstructor
 public class OrganisationMapper {
+
+    private final ReviewMapper reviewMapper;
 
     public Organisation toEntity(OrganisationRequestDto dto)
     {
@@ -34,6 +40,14 @@ public class OrganisationMapper {
         organisation.setUpcomingEventsCount((int)entity.getHostedEvents().stream().filter(event -> event.getStartTime().isAfter(java.time.LocalDateTime.now())).count());
         if(entity.getProfilePicture() != null)
             organisation.setProfilePicture(entity.getProfilePicture().getId());
+
+        if(entity.getReviews() != null)
+            organisation.setReviews(
+                    entity.getReviews().stream()
+                            .map(reviewMapper::toDto)
+                            .collect(Collectors.toSet())
+            );
+
         return organisation;
     }
 
