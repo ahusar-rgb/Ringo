@@ -5,6 +5,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.auth.JwtService;
 import com.ringo.dto.common.TicketCode;
 import com.ringo.dto.company.TicketDto;
+import com.ringo.exception.InternalException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
@@ -59,13 +60,22 @@ public class TicketService {
 
         BufferedImage qrCode = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
 
-        emailSender.sendTicket(
-                participant.getEmail(),
-                "Ticket for event %s".formatted(event.getName()),
-                "Here is your ticket!",
-                qrCode);
+        try {
+            emailSender.sendTicket(
+                    participant.getEmail(),
+                    "Ticket for event %s".formatted(event.getName()),
+                    "Here is your ticket!",
+                    qrCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException("Failed to save the ticket by email");
+        }
 
         return ticketDto;
+    }
+
+    public Boolean ticketExists(Event event, Participant participant) {
+        return repository.existsById(new TicketId(participant, event));
     }
 
     public TicketDto scanTicket(TicketCode ticketCode) {
@@ -143,5 +153,13 @@ public class TicketService {
             ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
             return ticketDto;
         }).toList();
+    }
+
+    public TicketDto cancelTicket(Event event, Participant participant) {
+        Ticket ticket = repository.findById(new TicketId(participant, event))
+                .orElseThrow(() -> new UserException("The user is not registered for this event"));
+
+        repository.delete(ticket);
+        return mapper.toDto(ticket);
     }
 }

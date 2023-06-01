@@ -12,6 +12,7 @@ import java.util.List;
 public class EventSmallDto extends AbstractEntityDto {
     private String name;
     private String description;
+    private Boolean isActive;
     private String address;
     private Coordinates coordinates;
     private Long mainPhotoId;

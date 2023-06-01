@@ -15,4 +15,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 
     @Query("SELECT p FROM Participant p WHERE p.username = :username")
     Optional<Participant> findByUsername(String username);
+
+    @Query("SELECT p FROM Participant p LEFT JOIN FETCH p.savedEvents WHERE p.id = :id")
+    Optional<Participant> findByIdWithSavedEvents(Long id);
 }

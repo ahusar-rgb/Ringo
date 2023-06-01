@@ -1,6 +1,8 @@
 package com.ringo.model.common;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,22 +16,16 @@ import java.util.Objects;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class AbstractEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AbstractActiveEntity extends AbstractEntity{
+    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE", nullable = false)
+    private Boolean isActive;
 
     @Override
     @Transient
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        AbstractEntity that = (AbstractEntity) o;
+        AbstractActiveEntity that = (AbstractActiveEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 }

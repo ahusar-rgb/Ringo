@@ -5,8 +5,6 @@ import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.model.company.Organisation;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-
 @Component
 public class OrganisationMapper {
 
@@ -32,8 +30,8 @@ public class OrganisationMapper {
                 .rating(entity.getRating())
                 .build();
 
-        organisation.setHostedEventIds(new HashSet<>());
-        entity.getHostedEvents().forEach(e -> organisation.getHostedEventIds().add(e.getId()));
+        organisation.setPastEventsCount((int)entity.getHostedEvents().stream().filter(event -> event.getEndTime().isBefore(java.time.LocalDateTime.now())).count());
+        organisation.setUpcomingEventsCount((int)entity.getHostedEvents().stream().filter(event -> event.getStartTime().isAfter(java.time.LocalDateTime.now())).count());
         if(entity.getProfilePicture() != null)
             organisation.setProfilePicture(entity.getProfilePicture().getId());
         return organisation;

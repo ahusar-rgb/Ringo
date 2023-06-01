@@ -30,6 +30,7 @@ public class EventMapper {
                 .id(event.getId())
                 .name(event.getName())
                 .description(event.getDescription())
+                .isActive(event.getIsActive())
                 .address(event.getAddress())
                 .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
                 .isTicketNeeded(event.getIsTicketNeeded())
@@ -40,6 +41,7 @@ public class EventMapper {
                 .categories(categoryMapper.toDtos(event.getCategories()))
                 .host(organisationMapper.toDto(event.getHost()))
                 .peopleCount(event.getPeopleCount())
+                .peopleSaved(event.getPeopleSaved())
                 .capacity(event.getCapacity())
                 .build();
 
@@ -90,6 +92,7 @@ public class EventMapper {
                 .id(event.getId())
                 .name(event.getName())
                 .description(event.getDescription())
+                .isActive(event.getIsActive())
                 .address(event.getAddress())
                 .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
                 .isTicketNeeded(event.getIsTicketNeeded())

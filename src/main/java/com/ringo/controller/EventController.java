@@ -64,10 +64,10 @@ public class EventController {
             }
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<EventResponseDto> saveEvent(
+    public ResponseEntity<EventResponseDto> createEvent(
             @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
     ) {
-        return ResponseEntity.ok(eventService.save(eventDto));
+        return ResponseEntity.ok(eventService.create(eventDto));
     }
 
     @Operation(summary = "Delete event by id")
@@ -153,6 +153,32 @@ public class EventController {
         return ResponseEntity.ok(eventService.setMainPhoto(id, photoId));
     }
 
+    @Operation(summary = "Activate event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Event activated",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Event not found", content = @Content)
+            }
+    )
+    @PutMapping(value = "/{id}/activate", produces = {"application/json"})
+    public ResponseEntity<EventResponseDto> activateEvent(@Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.activate(id));
+    }
+
+    @Operation(summary = "Deactivate event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Event deactivated",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Event not found", content = @Content)
+            }
+    )
+    @PutMapping(value = "/{id}/deactivate", produces = {"application/json"})
+    public ResponseEntity<EventResponseDto> deactivateEvent(@Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.deactivate(id));
+    }
+
     @Operation(summary = "Search events")
     @ApiResponses(
             value = {
@@ -182,5 +208,65 @@ public class EventController {
     public ResponseEntity<TicketDto> joinEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id) {
         return ResponseEntity.ok(eventService.joinEvent(id));
+    }
+
+    @Operation(summary = "Leave event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Left the event",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TicketDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "The participant is not registered for this event", content = @Content)
+            }
+    )
+    @PostMapping(value = "/{id}/leave", produces = {"application/json"})
+    public ResponseEntity<TicketDto> leaveEvent(
+            @Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.leaveEvent(id));
+    }
+
+    @Operation(summary = "Save event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Event saved",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content)
+            }
+    )
+    @PostMapping(value = "/{id}/save", produces = {"application/json"})
+    public ResponseEntity<EventResponseDto> saveEvent(
+            @Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.saveEvent(id));
+    }
+
+    @Operation(summary = "Unsave event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Event unsaved",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventResponseDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content)
+            }
+    )
+    @PostMapping(value = "/{id}/unsave", produces = {"application/json"})
+    public ResponseEntity<EventResponseDto> unsaveEvent(
+            @Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.unsaveEvent(id));
+    }
+
+    @Operation(summary = "Get saved events")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Found the events",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = EventSmallDto.class))))
+            }
+    )
+    @GetMapping(value = "/saved", produces = {"application/json"})
+    public ResponseEntity<List<EventSmallDto>> getSavedEvents() {
+        return ResponseEntity.ok()
+                .body(eventService.getSavedEvents());
     }
 }

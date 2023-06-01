@@ -19,6 +19,7 @@ import com.ringo.service.common.CurrencyExchanger;
 import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ringo.utils.Geography.getDistance;
@@ -56,10 +58,15 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        return mapper.toDto(event);
+        if(!event.getIsActive()) {
+            if(!event.getHost().getId().equals(userService.getCurrentUserAsEntity().getId()))
+                throw new NotFoundException("Event [id: %d] not found".formatted(id));
+        }
+
+        return getPersonalizedDto(event);
     }
 
-    public EventResponseDto save(EventRequestDto eventDto) {
+    public EventResponseDto create(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
         User currentUser = userService.getCurrentUserAsEntity();
@@ -78,6 +85,7 @@ public class EventService {
         event.setHost(organisation);
         event.setCurrency(currency);
         event.setCategories(categories);
+        event.setIsActive(false);
 
         return mapper.toDto(repository.save(event));
     }
@@ -131,7 +139,41 @@ public class EventService {
             throw new UserException("No more photos for this event is allowed");
 
         eventPhotoService.save(event, photo);
+        event.setPhotoCount(event.getPhotoCount() + 1);
+        repository.save(event);
+
         return mapper.toDto(event);
+    }
+
+    public EventResponseDto activate(Long eventId) {
+        log.info("setActive: {}", eventId);
+
+        Event event = repository.findById(eventId).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
+        );
+
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+            throw new UserException("Only event host can update event");
+
+        if(event.getPhotos() == null || event.getPhotos().isEmpty())
+            throw new UserException("Event must have at least one photo");
+
+        event.setIsActive(true);
+        return mapper.toDto(repository.save(event));
+    }
+
+    public EventResponseDto deactivate(Long eventId) {
+        log.info("setInactive: {}", eventId);
+
+        Event event = repository.findById(eventId).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
+        );
+
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+            throw new UserException("Only event host can update event");
+
+        event.setIsActive(false);
+        return mapper.toDto(repository.save(event));
     }
 
     public EventResponseDto removePhoto(Long eventId, Long photoId) {
@@ -220,7 +262,14 @@ public class EventService {
     public List<EventSmallDto> search(EventSearchDto searchDto) {
         log.info("searchEvents: {}", searchDto);
 
-        List<Event> events = repository.findAll(searchDto.getSpecification(), searchDto.getPageable()).getContent();
+        User user = userService.getCurrentUserAsEntity();
+        Specification<Event> specification = searchDto.getSpecification();
+        specification = specification.and((root, query, builder) -> builder.or(
+                builder.equal(root.get("host").get("id"), user.getId()),
+                builder.isTrue(root.get("isActive")))
+        );
+
+        List<Event> events = repository.findAll(specification, searchDto.getPageable()).getContent();
 
         return events.stream()
                 .map(event -> {
@@ -270,5 +319,84 @@ public class EventService {
 
         ticketDto.setEvent(mapper.toDto(event));
         return ticketDto;
+    }
+
+    public TicketDto leaveEvent(Long id) {
+        User user = userService.getCurrentUserAsEntity();
+        Participant participant = participantRepository.findById(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not a participant")
+        );
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        TicketDto ticketDto = ticketService.cancelTicket(event, participant);
+        event.setPeopleCount(event.getPeopleCount() - 1);
+        event = repository.save(event);
+
+        ticketDto.setEvent(mapper.toDto(event));
+        return ticketDto;
+    }
+
+    public EventResponseDto saveEvent(Long id) {
+        User user = userService.getCurrentUserAsEntity();
+        Participant participant = participantRepository.findByIdWithSavedEvents(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not a participant")
+        );
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        if(participant.getSavedEvents().contains(event))
+            throw new UserException("Event [id: %d] is already saved".formatted(id));
+
+        participant.getSavedEvents().add(event);
+        participantRepository.save(participant);
+
+        event.setPeopleSaved(event.getPeopleSaved() + 1);
+        event = repository.save(event);
+
+        return getPersonalizedDto(event);
+    }
+
+    public EventResponseDto unsaveEvent(Long id) {
+        User user = userService.getCurrentUserAsEntity();
+        Participant participant = participantRepository.findByIdWithSavedEvents(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not a participant")
+        );
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        if(!participant.getSavedEvents().remove(event))
+            throw new UserException("Event [id: %d] is not saved".formatted(id));
+
+        participantRepository.save(participant);
+        event.setPeopleSaved(event.getPeopleSaved() - 1);
+        event = repository.save(event);
+
+        return getPersonalizedDto(event);
+    }
+
+    public List<EventSmallDto> getSavedEvents() {
+        User user = userService.getCurrentUserAsEntity();
+        Participant participant = participantRepository.findByIdWithSavedEvents(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not a participant")
+        );
+
+        return mapper.toSmallDtos(participant.getSavedEvents());
+    }
+
+    private EventResponseDto getPersonalizedDto(Event event) {
+        EventResponseDto dto = mapper.toDto(event);
+        User user = userService.getCurrentUserAsEntity();
+        Optional<Participant> participantOptional = participantRepository.findById(user.getId());
+        participantOptional.ifPresent(
+                participant -> {
+                    dto.setIsRegistered(ticketService.ticketExists(event, participant));
+                    dto.setIsSaved(participant.getSavedEvents().contains(event));
+                }
+        );
+        return dto;
     }
 }

@@ -55,14 +55,8 @@ public class AuthController {
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<TokenDto> login(@RequestBody UserRequestDto login) {
 
-        Authentication authentication;
-        try {
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
 
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationException("User [email: %s] is not authenticated".formatted(login.getEmail()));

@@ -13,22 +13,25 @@ import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
-    @Query("SELECT e FROM Event e WHERE e.host.id = :orgId")
+    @Query("SELECT e FROM Event e WHERE e.host.id = :orgId AND e.isActive")
     List<Event> findAllByOrgId(Long orgId);
 
     @Query("SELECT e FROM Event e " +
-            "WHERE get_distance(e.latitude, e.longitude, :lat, :lon) < :distance")
+            "WHERE get_distance(e.latitude, e.longitude, :lat, :lon) < :distance " +
+            "AND e.isActive")
     List<Event> findAllByDistance(double lat, double lon, double distance);
 
     @Query("SELECT e FROM Event e " +
+            "WHERE e.isActive " +
             "ORDER BY get_distance(e.latitude, e.longitude, ?1, ?2) ASC")
     Page<Event> findTopByDistance(double lat, double lon, Pageable pageable);
 
     @Query("SELECT e FROM Event e " +
             "WHERE e.latitude < :latMax AND e.latitude > :latMin " +
-            "AND e.longitude < :lonMax AND e.longitude > :lonMin")
+            "AND e.longitude < :lonMax AND e.longitude > :lonMin " +
+            "AND e.isActive")
     List<Event> findAllInArea(double latMin, double latMax, double lonMin, double lonMax);
 
-    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.photos WHERE e.id = :id")
-    Optional<Event> findById(Long id);
+    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.photos WHERE e.id = :id AND e.isActive")
+    Optional<Event> findActiveById(Long id);
 }

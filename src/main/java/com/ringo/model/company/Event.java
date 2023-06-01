@@ -1,6 +1,6 @@
 package com.ringo.model.company;
 
-import com.ringo.model.common.AbstractEntity;
+import com.ringo.model.common.AbstractActiveEntity;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
 import jakarta.persistence.*;
@@ -9,10 +9,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "event")
@@ -20,7 +22,7 @@ import java.util.List;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class Event extends AbstractEntity {
+public class Event extends AbstractActiveEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -73,9 +75,27 @@ public class Event extends AbstractEntity {
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @OrderBy("orderNumber ASC")
     private List<EventPhoto> photos = new ArrayList<>();
+
+    @Column(name = "photoCount", columnDefinition = "INT DEFAULT 0")
+    @Builder.Default
+    private Integer photoCount = 0;
 
     @Column(name = "people_count", columnDefinition = "INT DEFAULT 0")
     @Builder.Default
     private Integer peopleCount = 0;
+
+    @Column(name = "people_saved", columnDefinition = "INT DEFAULT 0")
+    @Builder.Default
+    private Integer peopleSaved = 0;
+
+    @Override
+    @Transient
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Event event = (Event) o;
+        return getId() != null && Objects.equals(getId(), event.getId());
+    }
 }

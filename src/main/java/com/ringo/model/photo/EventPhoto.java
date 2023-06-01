@@ -24,4 +24,7 @@ public class EventPhoto extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @Column(name = "order_number", nullable = false)
+    private Integer orderNumber;
 }

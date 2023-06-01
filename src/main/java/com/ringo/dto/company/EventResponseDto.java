@@ -16,6 +16,7 @@ import java.util.List;
 public class EventResponseDto extends AbstractEntityDto {
     private String name;
     private String description;
+    private Boolean isActive;
     private EventMainPhotoDto mainPhoto;
     private List<EventPhotoDto> photos;
     private String address;
@@ -29,4 +30,7 @@ public class EventResponseDto extends AbstractEntityDto {
     private OrganisationResponseDto host;
     private Integer peopleCount;
     private Integer capacity;
+    private Boolean isSaved;
+    private Integer peopleSaved;
+    private Boolean isRegistered;
 }

@@ -38,7 +38,7 @@ public class CurrencyExchanger {
                 .getRate();
     }
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     private void updateCurrencies() {
 
         List<Currency> currencies = currencyRepository.findAll();
