@@ -6,8 +6,6 @@ import com.ringo.model.company.Organisation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @Component
 @RequiredArgsConstructor
 public class OrganisationMapper {
@@ -29,7 +27,6 @@ public class OrganisationMapper {
         OrganisationResponseDto organisation = OrganisationResponseDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .email(entity.getEmail())
                 .username(entity.getUsername())
                 .description(entity.getDescription())
                 .contacts(entity.getContacts())
@@ -40,13 +37,6 @@ public class OrganisationMapper {
         organisation.setUpcomingEventsCount((int)entity.getHostedEvents().stream().filter(event -> event.getStartTime().isAfter(java.time.LocalDateTime.now())).count());
         if(entity.getProfilePicture() != null)
             organisation.setProfilePicture(entity.getProfilePicture().getId());
-
-        if(entity.getReviews() != null)
-            organisation.setReviews(
-                    entity.getReviews().stream()
-                            .map(reviewMapper::toDto)
-                            .collect(Collectors.toSet())
-            );
 
         return organisation;
     }

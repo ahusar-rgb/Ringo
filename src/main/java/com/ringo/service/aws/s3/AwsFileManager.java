@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ringo.exception.InternalException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -13,7 +14,9 @@ import java.io.ByteArrayInputStream;
 public class AwsFileManager {
 
     private static final String BUCKET_NAME = "ringo-photos";
-    private static final String WORKING_DIRECTORY = "test2/";
+
+    @Value("${AWS_WORKING_DIR}")
+    private String WORKING_DIRECTORY;
 
     private final AmazonS3 s3;
 

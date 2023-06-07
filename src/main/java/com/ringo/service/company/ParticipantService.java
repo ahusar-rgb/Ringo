@@ -27,19 +27,18 @@ public class ParticipantService {
 
     public ParticipantResponseDto findById(Long id) {
         log.info("findParticipantById: {}", id);
-        ParticipantResponseDto dto = mapper.toDto(repository.findById(id).orElseThrow(
+        return mapper.toDto(repository.findById(id).orElseThrow(
                 () -> new UserException("Participant [id: %d] not found".formatted(id))
         ));
-
-        dto.setEmail(null);
-        return dto;
     }
 
     public ParticipantResponseDto findCurrentParticipant() {
         log.info("findCurrentParticipant");
-        return mapper.toDto(repository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        ParticipantResponseDto dto = mapper.toDto(repository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
                 () -> new UserException("Authorized user is not a participant")
         ));
+        dto.setEmail(userService.getCurrentUserAsEntity().getEmail());
+        return dto;
     }
 
     public ParticipantResponseDto save(ParticipantRequestDto dto) {

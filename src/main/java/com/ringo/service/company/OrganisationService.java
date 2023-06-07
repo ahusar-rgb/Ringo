@@ -31,9 +31,7 @@ public class OrganisationService {
         Organisation organisation = organisationRepository.findByIdWithEvents(id).orElseThrow(
                 () -> new NotFoundException("Organisation [id: %d] not found".formatted(id)));
 
-        OrganisationResponseDto dto = organisationMapper.toDto(organisation);
-        dto.setEmail(null);
-        return dto;
+        return organisationMapper.toDto(organisation);
     }
 
     public OrganisationResponseDto findCurrentOrganisation() {
@@ -41,7 +39,9 @@ public class OrganisationService {
         Organisation organisation = organisationRepository.findByIdWithEvents(userService.getCurrentUserAsEntity().getId()).orElseThrow(
                 () -> new UserException("Authorized user is not an organisation"));
 
-        return organisationMapper.toDto(organisation);
+        OrganisationResponseDto dto = organisationMapper.toDto(organisation);
+        dto.setEmail(organisation.getEmail());
+        return dto;
     }
 
     public OrganisationResponseDto create(OrganisationRequestDto dto) {

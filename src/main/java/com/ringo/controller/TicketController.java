@@ -4,6 +4,7 @@ import com.ringo.dto.common.TicketCode;
 import com.ringo.dto.company.TicketDto;
 import com.ringo.service.company.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -88,5 +89,12 @@ public class TicketController {
     public ResponseEntity<List<TicketDto>> getMyTickets() {
         return ResponseEntity.ok()
                 .body(ticketService.getMyTickets());
+    }
+
+
+    @GetMapping(value = "/{id}/ticket-qr", produces = {"application/json"})
+    public ResponseEntity<String> getTicketQr(@Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok()
+                .body(ticketService.getTicketQrCode(id).toString());
     }
 }

@@ -22,7 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -61,17 +63,44 @@ public class TicketService {
         BufferedImage qrCode = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
 
         try {
-            emailSender.sendTicket(
-                    participant.getEmail(),
-                    "Ticket for event %s".formatted(event.getName()),
-                    "Here is your ticket!",
-                    qrCode);
+            emailSender.sendTicket(ticket, qrCode);
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException("Failed to save the ticket by email");
         }
 
         return ticketDto;
+    }
+
+    public byte[] getTicketQrCode(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new UserException("Event with id %d not found".formatted(eventId)));
+
+        Participant participant = participantRepository.findById(userService.getCurrentUserAsEntity().getId())
+                .orElseThrow(() -> new UserException("The user is not a participant of this event"));
+
+        if(repository.existsById(new TicketId(participant, event)))
+            throw new UserException("The user is already registered for this event");
+
+        Ticket ticket = Ticket.builder()
+                .id(new TicketId(participant, event))
+                .timeOfSubmission(LocalDateTime.now())
+                .expiryDate(event.getEndTime())
+                .isValidated(false)
+                .build();
+
+        TicketDto ticketDto = mapper.toDto(repository.save(ticket));
+        ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
+
+        BufferedImage image = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "png", baos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException("Failed to generate QR code");
+        }
+        return baos.toByteArray();
     }
 
     public Boolean ticketExists(Event event, Participant participant) {
