@@ -34,4 +34,5 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     @Query("SELECT e FROM Event e LEFT JOIN FETCH e.photos WHERE e.id = :id AND e.isActive")
     Optional<Event> findActiveById(Long id);
+
 }

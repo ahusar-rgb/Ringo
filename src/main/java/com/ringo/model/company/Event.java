@@ -1,6 +1,7 @@
 package com.ringo.model.company;
 
 import com.ringo.model.common.AbstractActiveEntity;
+import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
 import jakarta.persistence.*;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -89,6 +92,10 @@ public class Event extends AbstractActiveEntity {
     @Column(name = "people_saved", columnDefinition = "INT DEFAULT 0")
     @Builder.Default
     private Integer peopleSaved = 0;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "registration_form", columnDefinition = "JSONB")
+    private RegistrationForm registrationForm;
 
     @Override
     @Transient

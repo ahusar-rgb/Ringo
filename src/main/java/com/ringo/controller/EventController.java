@@ -2,6 +2,8 @@ package com.ringo.controller;
 
 import com.ringo.dto.company.*;
 import com.ringo.dto.search.EventSearchDto;
+import com.ringo.model.form.RegistrationForm;
+import com.ringo.model.form.RegistrationSubmission;
 import com.ringo.service.company.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -100,6 +102,41 @@ public class EventController {
             @Parameter(description = "Event to update") @RequestBody EventRequestDto eventDto
     ) {
         return ResponseEntity.ok(eventService.update(id, eventDto));
+    }
+
+    @Operation(summary = "Add registration form to event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Registration form added to event",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Registration form already exists", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User is not the owner of the event", content = @Content),
+            }
+    )
+    @PutMapping(value = "/{id}/add-registration-form", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<EventResponseDto> addRegistrationFormToEvent(
+            @Parameter(description = "Id of the event") @PathVariable("id") Long id,
+            @Parameter(description = "Registration form") @RequestBody RegistrationForm registrationForm) {
+
+        return ResponseEntity.ok(eventService.setRegistrationForm(id, registrationForm));
+    }
+
+    @Operation(summary = "Remove registration form from event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Registration form removed from event",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Registration form does not exist", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "User is not the owner of the event", content = @Content),
+            }
+    )
+    @PutMapping(value = "/{id}/remove-registration-form", produces = {"application/json"})
+    public ResponseEntity<EventResponseDto> removeRegistrationFormFromEvent(
+            @Parameter(description = "Id of the event") @PathVariable("id") Long id) {
+
+        return ResponseEntity.ok(eventService.removeRegistrationForm(id));
     }
 
     @Operation(summary = "Add photo to event")
@@ -206,8 +243,9 @@ public class EventController {
     )
     @PostMapping(value = "/{id}/join", produces = {"application/json"})
     public ResponseEntity<TicketDto> joinEvent(
-            @Parameter(description = "Event id") @PathVariable("id") Long id) {
-        return ResponseEntity.ok(eventService.joinEvent(id));
+            @Parameter(description = "Event id") @PathVariable("id") Long id,
+            @Parameter(description = "Registration submission") @RequestBody(required = false) RegistrationSubmission submission) {
+        return ResponseEntity.ok(eventService.joinEvent(id, submission));
     }
 
     @Operation(summary = "Leave event")

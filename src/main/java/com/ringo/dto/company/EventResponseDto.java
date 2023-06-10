@@ -4,6 +4,7 @@ import com.ringo.dto.common.AbstractEntityDto;
 import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.photo.EventMainPhotoDto;
 import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.model.form.RegistrationForm;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -33,4 +34,5 @@ public class EventResponseDto extends AbstractEntityDto {
     private Boolean isSaved;
     private Integer peopleSaved;
     private Boolean isRegistered;
+    private RegistrationForm registrationForm;
 }

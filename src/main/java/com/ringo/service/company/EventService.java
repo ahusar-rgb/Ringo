@@ -10,6 +10,7 @@ import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
 import com.ringo.model.common.AbstractEntity;
 import com.ringo.model.company.*;
+import com.ringo.model.form.*;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
 import com.ringo.model.security.User;
@@ -300,7 +301,7 @@ public class EventService {
         }).collect(Collectors.toList());
     }
 
-    public TicketDto joinEvent(Long id) {
+    public TicketDto joinEvent(Long id, RegistrationSubmission submission) {
         User user = userService.getCurrentUserAsEntity();
         Participant participant = participantRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not a participant")
@@ -312,7 +313,9 @@ public class EventService {
         if(event.getPeopleCount() >= event.getCapacity())
             throw new UserException("Event is already full");
 
-        TicketDto ticketDto = ticketService.issueTicket(event, participant);
+        throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
+
+        TicketDto ticketDto = ticketService.issueTicket(event, participant, submission);
 
         event.setPeopleCount(event.getPeopleCount() + 1);
         event = repository.save(event);
@@ -413,5 +416,97 @@ public class EventService {
                 }
         );
         return dto;
+    }
+
+    public EventResponseDto setRegistrationForm(Long id, RegistrationForm registrationForm) {
+        Organisation organisation = organisationRepository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+                () -> new UserException("The authorized user is not an organisation")
+        );
+
+        Event event = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(id))
+        );
+
+        if(!event.getHost().equals(organisation))
+            throw new UserException("Event [id: %d] is not owned by the organisation".formatted(id));
+
+        if(registrationForm != null) {
+            if(registrationForm.getQuestions() == null)
+                throw new UserException("Questions are not specified");
+            for(int i = 0; i < registrationForm.getQuestions().size(); i++) {
+                Question question = registrationForm.getQuestions().get(i);
+                question.setId((long) i);
+                List<Option> options = null;
+                if(question instanceof MultipleChoiceQuestion multipleChoiceQuestion) {
+                    if(multipleChoiceQuestion.getOptions() == null || multipleChoiceQuestion.getOptions().isEmpty())
+                        throw new UserException("Choices are not specified for question [id: %d]".formatted(i));
+                    options = multipleChoiceQuestion.getOptions();
+                }
+                if(question instanceof CheckboxQuestion checkboxQuestion) {
+                    if(checkboxQuestion.getOptions() == null || checkboxQuestion.getOptions().isEmpty())
+                        throw new UserException("Choices are not specified for question [id: %d]".formatted(i));
+                    options = checkboxQuestion.getOptions();
+                }
+                if(options != null) {
+                    for(int j = 0; j < options.size(); j++) {
+                        Option option = options.get(j);
+                        option.setId((long) j);
+                    }
+                }
+            }
+        }
+
+        event.setRegistrationForm(registrationForm);
+        event = repository.save(event);
+        return mapper.toDto(event);
+    }
+
+    public EventResponseDto removeRegistrationForm(Long id) {
+        return setRegistrationForm(id, null);
+    }
+
+    private void throwIfSubmissionInvalid(RegistrationForm form, RegistrationSubmission submission) {
+        if(form != null && submission == null)
+            throw new UserException("Event requires registration form");
+        if(form == null && submission != null)
+            throw new UserException("Event does not require registration form");
+        if(submission == null)
+            return;
+
+        for(Answer answer : submission.getAnswers()) {
+            if(answer.getQuestionId() == null)
+                throw new UserException("Answer is invalid");
+
+            Question question = form.getQuestions().get(answer.getQuestionId().intValue());
+            if(question == null)
+                throw new UserException("Answer for question [id: %d] is invalid".formatted(answer.getQuestionId()));
+
+            if(question instanceof MultipleChoiceQuestion multipleChoiceQuestion) {
+                if(answer.getOptionIds() == null ||
+                        answer.getOptionIds().size() != 1 ||
+                        answer.getOptionIds().get(0) == null ||
+                        answer.getOptionIds().get(0) < 0 ||
+                        answer.getOptionIds().get(0) >= multipleChoiceQuestion.getOptions().size() ||
+                        answer.getContent() != null
+                )
+                    throw new UserException("Answer for question [id: %d] is invalid".formatted(answer.getQuestionId()));
+            }
+            else if (question instanceof CheckboxQuestion checkboxQuestion) {
+                if(answer.getOptionIds() == null ||
+                        answer.getOptionIds().isEmpty() ||
+                        answer.getOptionIds().stream().anyMatch(id -> id == null || id < 0 || id >= checkboxQuestion.getOptions().size()) ||
+                        answer.getContent() != null
+                )
+                    throw new UserException("Answer for question [id: %d] is invalid".formatted(answer.getQuestionId()));
+            }
+            else if (question instanceof InputFieldQuestion) {
+                if(answer.getOptionIds() != null ||
+                        answer.getContent() == null
+                )
+                    throw new UserException("Answer for question [id: %d] is invalid".formatted(answer.getQuestionId()));
+            }
+            else
+                throw new UserException("Question [id: %d] is invalid".formatted(answer.getQuestionId()));
+        }
     }
 }

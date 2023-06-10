@@ -9,6 +9,7 @@ import com.ringo.exception.InternalException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
+import com.ringo.model.form.RegistrationSubmission;
 import com.ringo.model.security.User;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.OrganisationRepository;
@@ -45,7 +46,7 @@ public class TicketService {
     private final EmailSender emailSender;
     private final QrCodeGenerator qrCodeGenerator;
 
-    public TicketDto issueTicket(Event event, Participant participant) {
+    public TicketDto issueTicket(Event event, Participant participant, RegistrationSubmission submission) {
 
         if(repository.existsById(new TicketId(participant, event)))
             throw new UserException("The user is already registered for this event");
@@ -55,6 +56,7 @@ public class TicketService {
                 .timeOfSubmission(LocalDateTime.now())
                 .expiryDate(event.getEndTime())
                 .isValidated(false)
+                .registrationSubmission(submission)
                 .build();
 
         TicketDto ticketDto = mapper.toDto(repository.save(ticket));

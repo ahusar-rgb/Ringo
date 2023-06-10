@@ -43,6 +43,7 @@ public class EventMapper {
                 .peopleCount(event.getPeopleCount())
                 .peopleSaved(event.getPeopleSaved())
                 .capacity(event.getCapacity())
+                .registrationForm(event.getRegistrationForm())
                 .build();
 
         if(event.getMainPhoto() != null)
@@ -132,6 +133,7 @@ public class EventMapper {
                 .endTime(LocalDateTime.parse(dto.getEndTime()))
                 .categories(null)
                 .capacity(dto.getCapacity())
+                .registrationForm(null)
                 .peopleCount(0)
                 .build();
     }
