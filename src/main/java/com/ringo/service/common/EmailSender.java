@@ -7,6 +7,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,6 +27,9 @@ public class EmailSender {
 
     private final JavaMailSender mailSender;
 
+    @Value("${PATH_TO_EMAIL_TEMPLATE}")
+    private String pathToEmailTemplate;
+
     public void send(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -42,7 +46,8 @@ public class EmailSender {
         try {
             MimeMessage message = mailSender.createMimeMessage();
 
-            String html = Files.readString(new File("src/main/resources/static/email-template.html").toPath());
+            //src/main/resources/static/email-template.html
+            String html = Files.readString(new File(pathToEmailTemplate).toPath());
             html = html.replace("{{ title of the event }}", ticket.getId().getEvent().getName());
             html = html.replace("{{ name }}", ticket.getId().getParticipant().getName());
 
