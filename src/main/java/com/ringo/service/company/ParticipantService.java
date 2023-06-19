@@ -17,6 +17,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 @Slf4j
@@ -75,6 +77,7 @@ public class ParticipantService {
 
         participant.setRole(Role.ROLE_PARTICIPANT);
         participant.setPassword(passwordEncoder.encode(dto.getPassword()));
+        participant.setCreatedAt(LocalDateTime.now());
         participant.setIsActive(true);
 
         ParticipantResponseDto saved = mapper.toDto(repository.save(participant));
@@ -90,6 +93,7 @@ public class ParticipantService {
         );
 
         mapper.partialUpdate(participant, dto);
+        participant.setUpdatedAt(LocalDateTime.now());
         return mapper.toDto(repository.save(participant));
     }
 
@@ -118,6 +122,7 @@ public class ParticipantService {
             throw new UserException("Participant with [email: " + participant.getEmail() + "] already exists");
         }
         participant.setRole(Role.ROLE_PARTICIPANT);
+        participant.setCreatedAt(LocalDateTime.now());
         participant.setIsActive(false);
 
         ParticipantResponseDto saved = mapper.toDto(repository.save(participant));

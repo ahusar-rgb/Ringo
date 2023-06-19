@@ -1,14 +1,12 @@
 package com.ringo.model.company;
 
-import com.ringo.model.common.AbstractEntity;
+import com.ringo.model.common.AbstractAuditableEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "review",
@@ -18,7 +16,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review extends AbstractEntity {
+public class Review extends AbstractAuditableEntity {
 
     @ManyToOne
     @JoinColumn(name = "participant_id", nullable = false)
@@ -33,7 +31,4 @@ public class Review extends AbstractEntity {
 
     @Column(name = "rate", nullable = false)
     private Integer rate;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
 }

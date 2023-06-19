@@ -16,7 +16,7 @@ import java.util.Objects;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class AbstractActiveEntity extends AbstractEntity{
+public class AbstractActiveEntity extends AbstractAuditableEntity {
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE", nullable = false)
     private Boolean isActive;
 

@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -58,6 +60,8 @@ public class OrganisationService {
 
         organisation.setRole(Role.ROLE_ORGANISATION);
         organisation.setPassword(passwordEncoder.encode(dto.getPassword()));
+        organisation.setIsActive(true);
+        organisation.setCreatedAt(LocalDateTime.now());
         organisationRepository.save(organisation);
 
         return organisationMapper.toDto(organisation);
@@ -70,6 +74,7 @@ public class OrganisationService {
                 () -> new UserException("Authorized user is not an organisation"));
 
         organisationMapper.partialUpdate(organisation, dto);
+        organisation.setUpdatedAt(LocalDateTime.now());
         organisationRepository.save(organisation);
 
         return organisationMapper.toDto(organisation);
@@ -97,6 +102,7 @@ public class OrganisationService {
                 .build();
 
         organisation.setIsActive(false);
+        organisation.setCreatedAt(LocalDateTime.now());
         organisation.setRole(Role.ROLE_ORGANISATION);
 
         return organisationMapper.toDto(organisationRepository.save(organisation));

@@ -56,7 +56,7 @@ public class ReviewService {
         review.setOrganisation(organisation);
         review.setCreatedAt(LocalDateTime.now());
 
-        review = repository.save(review);
+        repository.save(review);
         updateRating(organisation);
 
         return organisationMapper.toDto(organisation);
@@ -78,6 +78,7 @@ public class ReviewService {
 
         review.setRate(dto.getRate());
         review.setComment(dto.getComment());
+        review.setUpdatedAt(LocalDateTime.now());
         review = repository.save(review);
 
         updateRating(review.getOrganisation());

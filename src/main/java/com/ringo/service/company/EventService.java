@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -87,6 +88,7 @@ public class EventService {
         event.setCurrency(currency);
         event.setCategories(categories);
         event.setIsActive(false);
+        event.setCreatedAt(LocalDateTime.now());
 
         return mapper.toDto(repository.save(event));
     }
@@ -102,6 +104,8 @@ public class EventService {
             throw new UserException("Only event host can update event");
 
         mapper.partialUpdate(event, dto);
+        event.setUpdatedAt(LocalDateTime.now());
+
         return mapper.toDto(repository.save(event));
     }
 
@@ -466,6 +470,8 @@ public class EventService {
     }
 
     private void throwIfSubmissionInvalid(RegistrationForm form, RegistrationSubmission submission) {
+        if(submission != null && submission.getCreatedAt() == null)
+            throw new UserException("Submission is missing creation date");
         if(form != null && submission == null)
             throw new UserException("Event requires registration form");
         if(form == null && submission != null)
