@@ -201,4 +201,19 @@ public class TicketService {
         ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
         return ticketDto;
     }
+
+    public void issueToUserByEmail(Long eventId, String email) {
+        Participant participant = participantRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException("Participant not found"));
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new UserException("Event not found"));
+        if(event.getRegistrationForm() != null)
+            throw new UserException("Can't issue a ticket to a user for an event with a registration form");
+
+        if(!isUserHostOfEvent(event))
+            throw new UserException("Current user is not the host of this event");
+
+        issueTicket(event, participant, null);
+    }
 }

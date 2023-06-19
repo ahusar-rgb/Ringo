@@ -97,4 +97,12 @@ public class TicketController {
         return ResponseEntity.ok()
                 .body(ticketService.getTicketQrCode(id).toString());
     }
+
+    @PostMapping(value = "/issue/{event_id}/{email}", produces = {"application/json"})
+    public ResponseEntity<String> issueTicketByEmail(
+            @PathVariable("event_id") Long eventId,
+            @PathVariable("email") String email) {
+        ticketService.issueToUserByEmail(eventId, email);
+        return ResponseEntity.ok("Ticket issued successfully");
+    }
 }
