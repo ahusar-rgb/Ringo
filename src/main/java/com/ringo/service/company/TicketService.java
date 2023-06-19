@@ -78,7 +78,7 @@ public class TicketService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new UserException("Event with id %d not found".formatted(eventId)));
 
-        Participant participant = participantRepository.findById(userService.getCurrentUserAsEntity().getId())
+        Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId())
                 .orElseThrow(() -> new UserException("The user is not a participant of this event"));
 
         if(repository.existsById(new TicketId(participant, event)))
@@ -164,13 +164,13 @@ public class TicketService {
     }
 
     private boolean isUserHostOfEvent(Event event) {
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Optional<Organisation> organisation = organisationRepository.findById(user.getId());
         return organisation.filter(value -> event.getHost().equals(value)).isPresent();
     }
 
     public List<TicketDto> getMyTickets() {
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Participant participant = participantRepository.findById(user.getId())
                 .orElseThrow(() -> new UserException("User is not a participant"));
 

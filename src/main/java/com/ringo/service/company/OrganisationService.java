@@ -12,6 +12,7 @@ import com.ringo.service.security.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class OrganisationService {
 
     public OrganisationResponseDto findCurrentOrganisation() {
         log.info("findCurrentOrganisation");
-        Organisation organisation = organisationRepository.findByIdWithEvents(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        Organisation organisation = organisationRepository.findByIdWithEvents(userService.getCurrentUserIfActive().getId()).orElseThrow(
                 () -> new UserException("Authorized user is not an organisation"));
 
         OrganisationResponseDto dto = organisationMapper.toDto(organisation);
@@ -65,12 +66,39 @@ public class OrganisationService {
     public OrganisationResponseDto update(OrganisationRequestDto dto) {
         log.info("updateOrganisation: {}", dto);
 
-        Organisation organisation = organisationRepository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        Organisation organisation = organisationRepository.findById(userService.getCurrentUser().getId()).orElseThrow(
                 () -> new UserException("Authorized user is not an organisation"));
 
         organisationMapper.partialUpdate(organisation, dto);
         organisationRepository.save(organisation);
 
         return organisationMapper.toDto(organisation);
+    }
+
+    public OrganisationResponseDto activate() {
+        Organisation organisation = organisationRepository.findById(userService.getCurrentUser().getId()).orElseThrow(
+                () -> new UserException("Authorized user is not an organisation"));
+
+        throwIfNotFullyFilled(organisation);
+
+        organisation.setIsActive(true);
+        return organisationMapper.toDto(organisationRepository.save(organisation));
+    }
+
+    private void throwIfNotFullyFilled(Organisation organisation) {
+        if(organisation.getUsername() == null)
+            throw new UserException("Username is not set");
+    }
+
+    public OrganisationResponseDto signUpGoogle(OAuth2AuthenticationToken token) {
+        Organisation organisation = Organisation.builder()
+                .email(token.getPrincipal().getAttribute("email"))
+                .name(token.getPrincipal().getAttribute("name"))
+                .build();
+
+        organisation.setIsActive(false);
+        organisation.setRole(Role.ROLE_ORGANISATION);
+
+        return organisationMapper.toDto(organisationRepository.save(organisation));
     }
 }

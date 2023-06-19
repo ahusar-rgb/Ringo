@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,26 +37,11 @@ public class ParticipantService {
 
     public ParticipantResponseDto findCurrentParticipant() {
         log.info("findCurrentParticipant");
-        ParticipantResponseDto dto = mapper.toDto(repository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        ParticipantResponseDto dto = mapper.toDto(repository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
                 () -> new UserException("Authorized user is not a participant")
         ));
-        dto.setEmail(userService.getCurrentUserAsEntity().getEmail());
+        dto.setEmail(userService.getCurrentUserIfActive().getEmail());
         return dto;
-    }
-
-    public ParticipantResponseDto saveDraft(ParticipantRequestDto dto) {
-        log.info("saveParticipant: {}", dto);
-        Participant participant = mapper.toEntity(dto);
-
-        if (repository.findByEmail(participant.getEmail()).isPresent()) {
-            throw new UserException("Participant with [email: " + participant.getEmail() + "] already exists");
-        }
-        participant.setRole(Role.ROLE_PARTICIPANT);
-        participant.setIsActive(false);
-
-        ParticipantResponseDto saved = mapper.toDto(repository.save(participant));
-        saved.setEmail(participant.getEmail());
-        return saved;
     }
 
     public ParticipantResponseDto activate() {
@@ -120,5 +106,22 @@ public class ParticipantService {
         if(participant.getUsername() == null) {
             throw new UserException("Username is not specified");
         }
+    }
+
+    public ParticipantResponseDto signUpGoogle(OAuth2AuthenticationToken authenticationToken) {
+        Participant participant = Participant.builder()
+                .email(authenticationToken.getPrincipal().getAttribute("email"))
+                .name(authenticationToken.getPrincipal().getAttribute("name"))
+                .build();
+
+        if (repository.findByEmail(participant.getEmail()).isPresent()) {
+            throw new UserException("Participant with [email: " + participant.getEmail() + "] already exists");
+        }
+        participant.setRole(Role.ROLE_PARTICIPANT);
+        participant.setIsActive(false);
+
+        ParticipantResponseDto saved = mapper.toDto(repository.save(participant));
+        saved.setEmail(participant.getEmail());
+        return saved;
     }
 }

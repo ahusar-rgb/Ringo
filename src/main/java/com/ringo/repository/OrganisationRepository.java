@@ -10,12 +10,12 @@ import java.util.Optional;
 @Repository
 public interface OrganisationRepository extends JpaRepository<Organisation, Long> {
 
-    @Query("SELECT o FROM Organisation o WHERE o.email = :email")
+    @Query("SELECT o FROM Organisation o WHERE o.email = :email AND o.isActive = true")
     Optional<Organisation> findByEmail(String email);
 
-    @Query("SELECT o FROM Organisation o WHERE o.username = :username")
+    @Query("SELECT o FROM Organisation o WHERE o.username = :username AND o.isActive = true")
     Optional<Organisation> findByUsername(String username);
 
-    @Query("SELECT o FROM Organisation o LEFT JOIN FETCH o.hostedEvents WHERE o.id = :id")
+    @Query("SELECT o FROM Organisation o LEFT JOIN FETCH o.hostedEvents WHERE o.id = :id AND o.isActive = true")
     Optional<Organisation> findByIdWithEvents(Long id);
 }

@@ -38,12 +38,7 @@ public class ParticipantController {
 
     @GetMapping(value = "/sign-up/google", produces = {"application/json"})
     public ResponseEntity<ParticipantResponseDto> signUpGoogle(OAuth2AuthenticationToken authenticationToken) {
-        ParticipantRequestDto participant = ParticipantRequestDto.builder()
-                .email(authenticationToken.getPrincipal().getAttribute("email"))
-                .name(authenticationToken.getPrincipal().getAttribute("name"))
-                .build();
-
-        return ResponseEntity.ok(participantService.saveDraft(participant));
+        return ResponseEntity.ok(participantService.signUpGoogle(authenticationToken));
     }
 
     @PostMapping(value = "activate", produces = {"application/json"})

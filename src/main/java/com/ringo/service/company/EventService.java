@@ -60,7 +60,7 @@ public class EventService {
         );
 
         if(!event.getIsActive()) {
-            if(!event.getHost().getId().equals(userService.getCurrentUserAsEntity().getId()))
+            if(!event.getHost().getId().equals(userService.getCurrentUserIfActive().getId()))
                 throw new NotFoundException("Event [id: %d] not found".formatted(id));
         }
 
@@ -70,7 +70,7 @@ public class EventService {
     public EventResponseDto create(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
-        User currentUser = userService.getCurrentUserAsEntity();
+        User currentUser = userService.getCurrentUserIfActive();
         Organisation organisation = organisationRepository.findById(currentUser.getId()).orElseThrow(
                 () -> new NotFoundException("Only organisations can create events"));
         Currency currency = currencyRepository.findById(eventDto.getCurrencyId()).orElseThrow(
@@ -98,7 +98,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
         mapper.partialUpdate(event, dto);
@@ -110,7 +110,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
         eventPhotoService.removeMainPhoto(event);
@@ -133,7 +133,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
-        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
         if(event.getPhotos().size() >= config.getMaxPhotoCount())
@@ -153,7 +153,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
-        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
         if(event.getPhotos() == null || event.getPhotos().isEmpty())
@@ -170,7 +170,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
-        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
         event.setIsActive(false);
@@ -188,7 +188,7 @@ public class EventService {
                 () -> new NotFoundException("Photo [id: %d] not found".formatted(photoId))
         );
 
-        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
         if(!event.getPhotos().remove(photo))
@@ -205,7 +205,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
-        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserAsEntity().getId()))
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
         EventMainPhoto eventMainPhoto = eventPhotoService.prepareMainPhoto(event, photoId);
@@ -263,7 +263,7 @@ public class EventService {
     public List<EventSmallDto> search(EventSearchDto searchDto) {
         log.info("searchEvents: {}", searchDto);
 
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Specification<Event> specification = searchDto.getSpecification();
         specification = specification.and((root, query, builder) -> builder.or(
                 builder.equal(root.get("host").get("id"), user.getId()),
@@ -302,7 +302,7 @@ public class EventService {
     }
 
     public TicketDto joinEvent(Long id, RegistrationSubmission submission) {
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Participant participant = participantRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not a participant")
         );
@@ -325,7 +325,7 @@ public class EventService {
     }
 
     public TicketDto leaveEvent(Long id) {
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Participant participant = participantRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not a participant")
         );
@@ -346,7 +346,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Participant participant = participantRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not a participant")
         );
@@ -357,7 +357,7 @@ public class EventService {
     }
 
     public EventResponseDto saveEvent(Long id) {
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Participant participant = participantRepository.findByIdWithSavedEvents(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not a participant")
         );
@@ -378,7 +378,7 @@ public class EventService {
     }
 
     public EventResponseDto unsaveEvent(Long id) {
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Participant participant = participantRepository.findByIdWithSavedEvents(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not a participant")
         );
@@ -397,7 +397,7 @@ public class EventService {
     }
 
     public List<EventSmallDto> getSavedEvents() {
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Participant participant = participantRepository.findByIdWithSavedEvents(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not a participant")
         );
@@ -407,7 +407,7 @@ public class EventService {
 
     private EventResponseDto getPersonalizedDto(Event event) {
         EventResponseDto dto = mapper.toDto(event);
-        User user = userService.getCurrentUserAsEntity();
+        User user = userService.getCurrentUserIfActive();
         Optional<Participant> participantOptional = participantRepository.findById(user.getId());
         participantOptional.ifPresent(
                 participant -> {
@@ -419,7 +419,7 @@ public class EventService {
     }
 
     public EventResponseDto setRegistrationForm(Long id, RegistrationForm registrationForm) {
-        Organisation organisation = organisationRepository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        Organisation organisation = organisationRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
                 () -> new UserException("The authorized user is not an organisation")
         );
 

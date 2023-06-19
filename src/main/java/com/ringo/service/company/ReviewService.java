@@ -44,7 +44,7 @@ public class ReviewService {
                 () -> new UserException("Organisation#" + id + " was not found")
         );
 
-        Participant participant = participantRepository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
                 () -> new UserException("Current user is not a participant")
         );
 
@@ -69,7 +69,7 @@ public class ReviewService {
                 () -> new UserException("Review#" + dto.getId() + " was not found")
         );
 
-        Participant participant = participantRepository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
                 () -> new UserException("Current user is not a participant")
         );
 
@@ -95,7 +95,7 @@ public class ReviewService {
                 () -> new UserException("Review#" + id + " was not found")
         );
 
-        Participant participant = participantRepository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
                 () -> new UserException("Current user is not a participant")
         );
 
@@ -113,7 +113,7 @@ public class ReviewService {
     }
 
     public List<ReviewResponseDto> findAllByOrganisation(Long organisationId, ReviewPageRequestDto request) {
-        Optional<Participant> participantOptional = participantRepository.findById(userService.getCurrentUserAsEntity().getId());
+        Optional<Participant> participantOptional = participantRepository.findById(userService.getCurrentUserIfActive().getId());
 
         Page<Review> page = repository.findAll(
                 request.getSpecification(

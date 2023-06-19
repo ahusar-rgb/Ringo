@@ -42,27 +42,31 @@ public class UserService implements UserDetailsService {
     }
 
     public void delete() {
-        User user = getCurrentUserAsEntity();
+        User user = getCurrentUserIfActive();
         removePhoto();
         userRepository.delete(user);
     }
 
     public UserResponseDto partialUpdate(UserRequestDto userRequestDto) {
-        User user = getCurrentUserAsEntity();
+        User user = getCurrentUserIfActive();
 
         userMapper.partialUpdate(user, userRequestDto);
         return userMapper.toDto(userRepository.save(user));
     }
 
-    public User getCurrentUserAsEntity() {
+    public User getCurrentUserIfActive() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!user.getIsActive())
             throw new UserException("User is not active");
         return user;
     }
 
+    public User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     public void setPhoto(MultipartFile photo) {
-        User user = getCurrentUserAsEntity();
+        User user = getCurrentUserIfActive();
 
         if(photo.getContentType() == null)
             throw new UserException("Photo is not valid");
@@ -80,7 +84,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void removePhoto() {
-        User user = getCurrentUserAsEntity();
+        User user = getCurrentUserIfActive();
 
         if(user.getProfilePicture() != null) {
             long photoId = user.getProfilePicture().getId();
