@@ -2,6 +2,7 @@ package com.ringo.service.company;
 
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
+import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
 import com.ringo.model.company.Participant;
@@ -33,7 +34,7 @@ public class ParticipantService {
     public ParticipantResponseDto findById(Long id) {
         log.info("findParticipantById: {}", id);
         return mapper.toDto(repository.findById(id).orElseThrow(
-                () -> new UserException("Participant [id: %d] not found".formatted(id))
+                () -> new NotFoundException("Participant [id: %d] not found".formatted(id))
         ));
     }
 
@@ -51,7 +52,7 @@ public class ParticipantService {
 
         log.info("activateParticipant: {}", currentUser.getEmail());
         Participant participant = repository.findById(currentUser.getId()).orElseThrow(
-                () -> new UserException("Participant [id: %d] not found".formatted(currentUser.getId()))
+                () -> new NotFoundException("Participant [id: %d] not found".formatted(currentUser.getId()))
         );
 
         if(participant.getIsActive()) {

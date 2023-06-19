@@ -1,5 +1,6 @@
 package com.ringo.service.common;
 
+import com.ringo.exception.NotFoundException;
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.ExchangeRate;
 import com.ringo.model.company.ExchangeRateId;
@@ -34,7 +35,7 @@ public class CurrencyExchanger {
 
     public float exchange(Currency from, Currency to, float amount) {
         return amount * exchangeRateRepository.findByFromAndTo(from, to)
-                .orElseThrow(() -> new RuntimeException("Exchange rate not found"))
+                .orElseThrow(() -> new NotFoundException("Exchange rate not found"))
                 .getRate();
     }
 

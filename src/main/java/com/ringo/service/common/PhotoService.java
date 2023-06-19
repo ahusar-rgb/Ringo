@@ -1,5 +1,6 @@
 package com.ringo.service.common;
 
+import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.model.photo.Photo;
 import com.ringo.repository.photo.PhotoRepository;
@@ -19,7 +20,7 @@ public class PhotoService {
 
     public byte[] findBytes(Long id) {
         log.info("findPhoto: {}", id);
-        Photo photo = repository.findById(id).orElseThrow(() -> new UserException("Photo not found"));
+        Photo photo = repository.findById(id).orElseThrow(() -> new NotFoundException("Photo not found"));
 
         String path = photo.getPath();
         return awsFileManager.getFile(path);
@@ -27,7 +28,7 @@ public class PhotoService {
 
     public Photo findById(Long id) {
         log.info("findPhoto: {}", id);
-        return repository.findById(id).orElseThrow(() -> new UserException("Photo not found"));
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Photo not found"));
     }
 
     public Photo save(String path, String contentType, byte[] bytes) {
@@ -50,7 +51,7 @@ public class PhotoService {
     public void delete(Long id) {
         log.info("deletePhoto: {}", id);
 
-        Photo photo = repository.findById(id).orElseThrow(() -> new UserException("Photo not found"));
+        Photo photo = repository.findById(id).orElseThrow(() -> new NotFoundException("Photo not found"));
 
         repository.delete(photo);
         awsFileManager.deleteFile(photo.getPath());

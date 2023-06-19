@@ -4,6 +4,7 @@ import com.ringo.dto.ReviewPageRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.dto.company.ReviewRequestDto;
 import com.ringo.dto.company.ReviewResponseDto;
+import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.mapper.company.ReviewMapper;
@@ -41,7 +42,7 @@ public class ReviewService {
         log.info("rateOrganisation: {}", id);
 
         Organisation organisation = organisationRepository.findByIdWithEvents(id).orElseThrow(
-                () -> new UserException("Organisation#" + id + " was not found")
+                () -> new NotFoundException("Organisation#" + id + " was not found")
         );
 
         Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
@@ -66,7 +67,7 @@ public class ReviewService {
         log.info("updateReview: {}", dto.getId());
 
         Review review = repository.findById(dto.getId()).orElseThrow(
-                () -> new UserException("Review#" + dto.getId() + " was not found")
+                () -> new NotFoundException("Review#" + dto.getId() + " was not found")
         );
 
         Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
@@ -84,7 +85,7 @@ public class ReviewService {
         updateRating(review.getOrganisation());
 
         Organisation organisation = organisationRepository.findByIdWithEvents(review.getOrganisation().getId()).orElseThrow(
-                () -> new UserException("Organisation#" +  id + " was not found")
+                () -> new NotFoundException("Organisation#" +  id + " was not found")
         );
 
         return organisationMapper.toDto(organisation);
@@ -93,7 +94,7 @@ public class ReviewService {
     public OrganisationResponseDto deleteReview(Long id) {
         log.info("deleteReview: {}", id);
         Review review = repository.findById(id).orElseThrow(
-                () -> new UserException("Review#" + id + " was not found")
+                () -> new NotFoundException("Review#" + id + " was not found")
         );
 
         Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
@@ -107,7 +108,7 @@ public class ReviewService {
         updateRating(review.getOrganisation());
 
         Organisation organisation = organisationRepository.findByIdWithEvents(review.getOrganisation().getId()).orElseThrow(
-                () -> new UserException("Organisation#" + review.getOrganisation().getId() + " was not found")
+                () -> new NotFoundException("Organisation#" + review.getOrganisation().getId() + " was not found")
         );
 
         return organisationMapper.toDto(organisation);

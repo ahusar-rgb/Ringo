@@ -6,6 +6,7 @@ import com.ringo.auth.JwtService;
 import com.ringo.dto.common.TicketCode;
 import com.ringo.dto.company.TicketDto;
 import com.ringo.exception.InternalException;
+import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
@@ -76,7 +77,7 @@ public class TicketService {
 
     public byte[] getTicketQrCode(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new UserException("Event with id %d not found".formatted(eventId)));
+                .orElseThrow(() -> new NotFoundException("Event with id %d not found".formatted(eventId)));
 
         Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId())
                 .orElseThrow(() -> new UserException("The user is not a participant of this event"));
@@ -113,16 +114,16 @@ public class TicketService {
         DecodedJWT jwt = jwtService.verifyTicketCode(ticketCode.getTicketCode());
 
         Event event = eventRepository.findById(jwt.getClaim("event").asLong())
-                .orElseThrow(() -> new UserException("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event not found"));
 
         if(!isUserHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
         Participant participant = participantRepository.findById(jwt.getClaim("participant").asLong())
-                .orElseThrow(() -> new UserException("Participant not found"));
+                .orElseThrow(() -> new NotFoundException("Participant not found"));
 
         Ticket ticket = repository.findById(new TicketId(participant, event))
-                .orElseThrow(() -> new UserException("Ticket not found"));
+                .orElseThrow(() -> new NotFoundException("Ticket not found"));
 
         if(ticket.getExpiryDate().isBefore(LocalDateTime.now()))
             throw new UserException("Ticket expired");
@@ -135,16 +136,16 @@ public class TicketService {
         DecodedJWT jwt = jwtService.verifyTicketCode(ticketCode.getTicketCode());
 
         Event event = eventRepository.findById(jwt.getClaim("event").asLong())
-                .orElseThrow(() -> new UserException("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event not found"));
 
         if(!isUserHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
         Participant participant = participantRepository.findById(jwt.getClaim("participant").asLong())
-                .orElseThrow(() -> new UserException("Participant not found"));
+                .orElseThrow(() -> new NotFoundException("Participant not found"));
 
         Ticket ticket = repository.findById(new TicketId(participant, event))
-                .orElseThrow(() -> new UserException("Ticket not found"));
+                .orElseThrow(() -> new NotFoundException("Ticket not found"));
 
         if(ticket.getExpiryDate().isBefore(LocalDateTime.now()))
             throw new UserException("Ticket expired");
@@ -155,7 +156,7 @@ public class TicketService {
 
     public List<TicketDto> findByEventId(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new UserException("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event not found"));
 
         if(!isUserHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
@@ -178,7 +179,7 @@ public class TicketService {
 
         return tickets.stream().map(ticket -> {
             if(eventRepository.findById(ticket.getId().getEvent().getId()).isEmpty())
-                throw new UserException("Event not found");
+                throw new NotFoundException("Event not found");
             TicketDto ticketDto = mapper.toDto(ticket);
             ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
             return ticketDto;
@@ -204,10 +205,10 @@ public class TicketService {
 
     public void issueToUserByEmail(Long eventId, String email) {
         Participant participant = participantRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException("Participant not found"));
+                .orElseThrow(() -> new NotFoundException("Participant not found"));
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new UserException("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event not found"));
         if(event.getRegistrationForm() != null)
             throw new UserException("Can't issue a ticket to a user for an event with a registration form");
 

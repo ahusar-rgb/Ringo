@@ -292,12 +292,12 @@ public class EventService {
                                 currencyExchanger.exchange(
                                         event.getCurrency(),
                                         currencyRepository.findById(searchDto.getCurrencyId()).orElseThrow(
-                                                () -> new UserException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId()))),
+                                                () -> new NotFoundException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId()))),
                                         event.getPrice()
                                 )
                         );
                         Currency currency = currencyRepository.findById(searchDto.getCurrencyId()).orElseThrow(
-                                () -> new UserException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId())));
+                                () -> new NotFoundException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId())));
                         dto.setCurrency(CurrencyDto.builder().name(currency.getName()).id(currency.getId()).symbol(currency.getSymbol()).build());
                     }
 
@@ -470,8 +470,6 @@ public class EventService {
     }
 
     private void throwIfSubmissionInvalid(RegistrationForm form, RegistrationSubmission submission) {
-        if(submission != null && submission.getCreatedAt() == null)
-            throw new UserException("Submission is missing creation date");
         if(form != null && submission == null)
             throw new UserException("Event requires registration form");
         if(form == null && submission != null)

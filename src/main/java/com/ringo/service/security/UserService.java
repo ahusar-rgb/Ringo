@@ -3,6 +3,7 @@ package com.ringo.service.security;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.InternalException;
+import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.UserMapper;
 import com.ringo.model.photo.Photo;
@@ -32,13 +33,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(
-                () -> new UserException("User [email: %s] not found".formatted(email))
+                () -> new NotFoundException("User [email: %s] not found".formatted(email))
         );
     }
 
     public UserResponseDto findById(Long id) {
         return userMapper.toDto(userRepository.findById(id).orElseThrow(
-                () -> new UserException("User#" + id + " not found")));
+                () -> new NotFoundException("User#" + id + " not found")));
     }
 
     public void delete() {

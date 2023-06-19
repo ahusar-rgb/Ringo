@@ -8,5 +8,4 @@ import java.util.List;
 @Data
 public class RegistrationSubmission {
     private List<Answer> answers;
-    private LocalDateTime createdAt;
 }

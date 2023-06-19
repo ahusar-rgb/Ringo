@@ -1,6 +1,7 @@
 package com.ringo.service.company;
 
 import com.ringo.exception.InternalException;
+import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.model.company.Event;
 import com.ringo.model.photo.EventMainPhoto;
@@ -68,7 +69,7 @@ public class EventPhotoService {
 
     public void delete(Long photoId) {
         EventPhoto eventPhoto = eventPhotoRepository.findById(photoId)
-                .orElseThrow(() -> new UserException("Photo not found"));
+                .orElseThrow(() -> new NotFoundException("Photo not found"));
 
         eventPhotoRepository.delete(eventPhoto);
         photoService.delete(eventPhoto.getPhoto().getId());
@@ -77,7 +78,7 @@ public class EventPhotoService {
 
     public EventMainPhoto prepareMainPhoto(Event event, Long photoId) {
         EventPhoto eventPhoto = eventPhotoRepository.findById(photoId)
-                .orElseThrow(() -> new UserException("Photo not found"));
+                .orElseThrow(() -> new NotFoundException("Photo not found"));
         if(event.getPhotos() == null || !event.getPhotos().contains(eventPhoto)) {
             throw new UserException("Photo is not related to this event");
         }
@@ -112,7 +113,7 @@ public class EventPhotoService {
 
     public void removeMainPhoto(Event event) {
         EventMainPhoto eventMainPhoto = eventMainPhotoRepository.findById(event.getMainPhoto().getId())
-                .orElseThrow(() -> new UserException("Main photo not found"));
+                .orElseThrow(() -> new NotFoundException("Main photo not found"));
 
         photoService.delete(eventMainPhoto.getMediumQualityPhoto().getId());
         photoService.delete(eventMainPhoto.getLowQualityPhoto().getId());
