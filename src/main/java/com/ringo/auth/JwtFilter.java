@@ -30,6 +30,10 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        if(Arrays.stream(Constants.SIGN_UP_URLS).anyMatch(url -> request.getServletPath().contains(url))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if(authorizationHeader == null || !authorizationHeader.startsWith(Constants.TOKEN_PREFIX)) {

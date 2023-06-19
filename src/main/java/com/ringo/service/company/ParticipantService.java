@@ -6,10 +6,12 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
 import com.ringo.model.company.Participant;
 import com.ringo.model.security.Role;
+import com.ringo.model.security.User;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,38 @@ public class ParticipantService {
         return dto;
     }
 
+    public ParticipantResponseDto saveDraft(ParticipantRequestDto dto) {
+        log.info("saveParticipant: {}", dto);
+        Participant participant = mapper.toEntity(dto);
+
+        if (repository.findByEmail(participant.getEmail()).isPresent()) {
+            throw new UserException("Participant with [email: " + participant.getEmail() + "] already exists");
+        }
+        participant.setRole(Role.ROLE_PARTICIPANT);
+        participant.setIsActive(false);
+
+        ParticipantResponseDto saved = mapper.toDto(repository.save(participant));
+        saved.setEmail(participant.getEmail());
+        return saved;
+    }
+
+    public ParticipantResponseDto activate() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.info("activateParticipant: {}", currentUser.getEmail());
+        Participant participant = repository.findById(currentUser.getId()).orElseThrow(
+                () -> new UserException("Participant [id: %d] not found".formatted(currentUser.getId()))
+        );
+
+        if(participant.getIsActive()) {
+            throw new UserException("Participant [email: %s] is already active".formatted(currentUser.getEmail()));
+        }
+        throwIfNotFullyFilled(participant);
+
+        participant.setIsActive(true);
+        return mapper.toDto(repository.save(participant));
+    }
+
     public ParticipantResponseDto save(ParticipantRequestDto dto) {
         log.info("saveParticipant: {}", dto);
         Participant participant = mapper.toEntity(dto);
@@ -51,20 +85,40 @@ public class ParticipantService {
         if (repository.findByUsername(participant.getUsername()).isPresent()) {
             throw new UserException("Participant with [username: " + participant.getUsername() + "] already exists");
         }
+        throwIfNotFullyFilled(participant);
 
         participant.setRole(Role.ROLE_PARTICIPANT);
         participant.setPassword(passwordEncoder.encode(dto.getPassword()));
+        participant.setIsActive(true);
 
-        return mapper.toDto(repository.save(participant));
+        ParticipantResponseDto saved = mapper.toDto(repository.save(participant));
+        saved.setEmail(participant.getEmail());
+        return saved;
     }
 
     public ParticipantResponseDto update(ParticipantRequestDto dto) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("updateParticipant: {}", dto);
-        Participant participant = repository.findById(userService.getCurrentUserAsEntity().getId()).orElseThrow(
+        Participant participant = repository.findById(user.getId()).orElseThrow(
                 () -> new UserException("Authorized user is not a participant")
         );
 
         mapper.partialUpdate(participant, dto);
         return mapper.toDto(repository.save(participant));
+    }
+
+    private void throwIfNotFullyFilled(Participant participant) {
+        if(participant.getGender() == null) {
+            throw new UserException("Gender is not specified");
+        }
+        if(participant.getDateOfBirth() == null) {
+            throw new UserException("Date of birth is not specified");
+        }
+        if(participant.getName() == null) {
+            throw new UserException("Name is not specified");
+        }
+        if(participant.getUsername() == null) {
+            throw new UserException("Username is not specified");
+        }
     }
 }

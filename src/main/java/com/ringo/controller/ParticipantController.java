@@ -6,6 +6,7 @@ import com.ringo.service.company.ParticipantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,5 +34,20 @@ public class ParticipantController {
     @PutMapping(produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<ParticipantResponseDto> updateParticipant(@RequestBody ParticipantRequestDto dto) {
         return ResponseEntity.ok(participantService.update(dto));
+    }
+
+    @GetMapping(value = "/sign-up/google", produces = {"application/json"})
+    public ResponseEntity<ParticipantResponseDto> signUpGoogle(OAuth2AuthenticationToken authenticationToken) {
+        ParticipantRequestDto participant = ParticipantRequestDto.builder()
+                .email(authenticationToken.getPrincipal().getAttribute("email"))
+                .name(authenticationToken.getPrincipal().getAttribute("name"))
+                .build();
+
+        return ResponseEntity.ok(participantService.saveDraft(participant));
+    }
+
+    @PostMapping(value = "activate", produces = {"application/json"})
+    public ResponseEntity<ParticipantResponseDto> activateParticipant() {
+        return ResponseEntity.ok(participantService.activate());
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -102,7 +103,7 @@ public class AuthController {
 
         String email = jwtService.getEmailFromToken(refreshToken);
 
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findActiveByEmail(email).orElseThrow(
                 () -> new AuthenticationException("Invalid token")
         );
 
@@ -130,7 +131,7 @@ public class AuthController {
     )
     @PostMapping(value = "/forgot-password", produces = {"application/json"})
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordForm form) {
-        User user = userRepository.findByEmail(form.getEmail()).orElseThrow(
+        User user = userRepository.findActiveByEmail(form.getEmail()).orElseThrow(
                 () -> new UserException("User not found")
         );
         String token = jwtService.generateRecoverPasswordToken(user);
@@ -211,6 +212,21 @@ public class AuthController {
 
         user.setPassword(passwordEncoder.encode(changePasswordForm.getNewPassword()));
         user = userRepository.save(user);
+
+        return ResponseEntity.ok(
+                new TokenDto(
+                        jwtService.generateAccessToken(user),
+                        jwtService.generateRefreshToken(user)
+                )
+        );
+    }
+
+    @GetMapping("login/google")
+    public ResponseEntity<TokenDto> loginGoogle(OAuth2AuthenticationToken token) {
+        String email = token.getPrincipal().getAttribute("email");
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserException("User not found")
+        );
 
         return ResponseEntity.ok(
                 new TokenDto(

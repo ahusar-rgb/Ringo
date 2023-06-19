@@ -55,7 +55,10 @@ public class UserService implements UserDetailsService {
     }
 
     public User getCurrentUserAsEntity() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.getIsActive())
+            throw new UserException("User is not active");
+        return user;
     }
 
     public void setPhoto(MultipartFile photo) {

@@ -21,10 +21,10 @@ import java.util.List;
 @Setter
 public class Participant extends User {
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender")
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 

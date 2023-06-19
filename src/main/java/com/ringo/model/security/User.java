@@ -1,6 +1,6 @@
 package com.ringo.model.security;
 
-import com.ringo.model.common.AbstractEntity;
+import com.ringo.model.common.AbstractActiveEntity;
 import com.ringo.model.photo.Photo;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,18 +21,18 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User extends AbstractEntity implements UserDetails {
+public class User extends AbstractActiveEntity implements UserDetails {
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "role", nullable = false)
