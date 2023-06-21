@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -74,7 +73,7 @@ public class OrganisationController {
     }
 
     @GetMapping("sign-up/google")
-    public ResponseEntity<OrganisationResponseDto> signUpGoogle(OAuth2AuthenticationToken authenticationToken) {
-        return ResponseEntity.ok(organisationService.signUpGoogle(authenticationToken));
+    public ResponseEntity<OrganisationResponseDto> signUpGoogle(String token) {
+        return ResponseEntity.ok(organisationService.signUpGoogle(token));
     }
 }

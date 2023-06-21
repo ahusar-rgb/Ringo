@@ -1,5 +1,6 @@
 package com.ringo.controller;
 
+import com.ringo.auth.GoogleIdTokenService;
 import com.ringo.auth.JwtService;
 import com.ringo.config.Constants;
 import com.ringo.dto.auth.ChangePasswordForm;
@@ -24,7 +25,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -44,6 +44,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
+    private final GoogleIdTokenService googleIdTokenService;
 
     @Operation(summary = "Login")
     @ApiResponses(
@@ -222,10 +223,10 @@ public class AuthController {
     }
 
     @GetMapping("login/google")
-    public ResponseEntity<TokenDto> loginGoogle(OAuth2AuthenticationToken token) {
-        String email = token.getPrincipal().getAttribute("email");
+    public ResponseEntity<TokenDto> loginGoogle(String token) {
+        String email = googleIdTokenService.getUserFromToken(token).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserException("User not found")
+                () -> new UserException("User [email: " + email + "] not found")
         );
 
         return ResponseEntity.ok(

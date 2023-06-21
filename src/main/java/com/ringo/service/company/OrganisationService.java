@@ -1,5 +1,6 @@
 package com.ringo.service.company;
 
+import com.ringo.auth.GoogleIdTokenService;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -7,12 +8,12 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
+import com.ringo.model.security.User;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.service.security.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class OrganisationService {
     private final OrganisationMapper organisationMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final GoogleIdTokenService googleIdTokenService;
 
     public OrganisationResponseDto findById(Long id) {
         log.info("findOrganisationById: {}", id);
@@ -95,10 +97,11 @@ public class OrganisationService {
             throw new UserException("Username is not set");
     }
 
-    public OrganisationResponseDto signUpGoogle(OAuth2AuthenticationToken token) {
+    public OrganisationResponseDto signUpGoogle(String token) {
+        User user = googleIdTokenService.getUserFromToken(token);
         Organisation organisation = Organisation.builder()
-                .email(token.getPrincipal().getAttribute("email"))
-                .name(token.getPrincipal().getAttribute("name"))
+                .email(user.getEmail())
+                .name(user.getName())
                 .build();
 
         organisation.setIsActive(false);

@@ -1,5 +1,6 @@
 package com.ringo.service.company;
 
+import com.ringo.auth.GoogleIdTokenService;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -14,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +30,7 @@ public class ParticipantService {
     private final ParticipantMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final GoogleIdTokenService googleIdTokenService;
 
     public ParticipantResponseDto findById(Long id) {
         log.info("findParticipantById: {}", id);
@@ -113,10 +114,11 @@ public class ParticipantService {
         }
     }
 
-    public ParticipantResponseDto signUpGoogle(OAuth2AuthenticationToken authenticationToken) {
+    public ParticipantResponseDto signUpGoogle(String token) {
+        User user = googleIdTokenService.getUserFromToken(token);
         Participant participant = Participant.builder()
-                .email(authenticationToken.getPrincipal().getAttribute("email"))
-                .name(authenticationToken.getPrincipal().getAttribute("name"))
+                .email(user.getEmail())
+                .name(user.getName())
                 .build();
 
         if (repository.findByEmail(participant.getEmail()).isPresent()) {
