@@ -41,10 +41,11 @@ public class ParticipantService {
 
     public ParticipantResponseDto findCurrentParticipant() {
         log.info("findCurrentParticipant");
-        ParticipantResponseDto dto = mapper.toDto(repository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
+        User currentUser = userService.getCurrentUser();
+        ParticipantResponseDto dto = mapper.toDto(repository.findById(currentUser.getId()).orElseThrow(
                 () -> new UserException("Authorized user is not a participant")
         ));
-        dto.setEmail(userService.getCurrentUserIfActive().getEmail());
+        dto.setEmail(currentUser.getEmail());
         return dto;
     }
 
@@ -121,7 +122,7 @@ public class ParticipantService {
                 .name(user.getName())
                 .build();
 
-        if (repository.findByEmail(participant.getEmail()).isPresent()) {
+        if (repository.findByEmailAll(participant.getEmail()).isPresent()) {
             throw new UserException("Participant with [email: " + participant.getEmail() + "] already exists");
         }
         participant.setRole(Role.ROLE_PARTICIPANT);

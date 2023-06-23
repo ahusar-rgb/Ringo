@@ -104,7 +104,7 @@ public class AuthController {
 
         String email = jwtService.getEmailFromToken(refreshToken);
 
-        User user = userRepository.findActiveByEmail(email).orElseThrow(
+        User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AuthenticationException("Invalid token")
         );
 

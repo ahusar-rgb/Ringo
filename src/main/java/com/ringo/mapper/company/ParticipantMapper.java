@@ -28,6 +28,7 @@ public class ParticipantMapper {
                 .username(participant.getUsername())
                 .dateOfBirth(participant.getDateOfBirth() == null ? null : participant.getDateOfBirth().toString())
                 .gender(participant.getGender() == null ? null : participant.getGender().toString())
+                .isActive(participant.getIsActive())
                 .build();
 
         if(participant.getProfilePicture() != null)

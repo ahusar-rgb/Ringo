@@ -17,4 +17,5 @@ public class UserResponseDto extends AbstractEntityDto {
     private String name;
     private String username;
     private Long profilePicture;
+    private Boolean isActive;
 }
