@@ -33,7 +33,7 @@ public class Event extends AbstractActiveEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "event")
     private EventMainPhoto mainPhoto;
 
     @Column(name = "address")

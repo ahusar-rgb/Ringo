@@ -112,13 +112,14 @@ public class EventPhotoService {
     }
 
     public void removeMainPhoto(Event event) {
-        EventMainPhoto eventMainPhoto = eventMainPhotoRepository.findById(event.getMainPhoto().getId())
-                .orElseThrow(() -> new NotFoundException("Main photo not found"));
-
-        photoService.delete(eventMainPhoto.getMediumQualityPhoto().getId());
-        photoService.delete(eventMainPhoto.getLowQualityPhoto().getId());
+        if(event.getMainPhoto() == null) {
+            throw new UserException("Event doesn't have main photo");
+        }
+        EventMainPhoto eventMainPhoto = event.getMainPhoto();
 
         eventMainPhotoRepository.delete(eventMainPhoto);
+        photoService.delete(eventMainPhoto.getMediumQualityPhoto().getId());
+        photoService.delete(eventMainPhoto.getLowQualityPhoto().getId());
     }
 
     private Photo saveCompressedPhoto(String path, String contentType, byte[] bytes, float quality) {

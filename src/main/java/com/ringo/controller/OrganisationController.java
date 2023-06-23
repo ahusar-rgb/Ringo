@@ -3,7 +3,6 @@ package com.ringo.controller;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.service.company.OrganisationService;
-import com.ringo.service.company.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class OrganisationController {
 
     private final OrganisationService organisationService;
-    private final ReviewService reviewService;
 
     @Operation(summary = "Find organisation by id")
     @ApiResponses(
@@ -72,8 +70,8 @@ public class OrganisationController {
         return ResponseEntity.ok(organisationService.activate());
     }
 
-    @GetMapping("sign-up/google")
-    public ResponseEntity<OrganisationResponseDto> signUpGoogle(String token) {
+    @GetMapping(value = "sign-up/google", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<OrganisationResponseDto> signUpGoogle(@RequestBody String token) {
         return ResponseEntity.ok(organisationService.signUpGoogle(token));
     }
 }

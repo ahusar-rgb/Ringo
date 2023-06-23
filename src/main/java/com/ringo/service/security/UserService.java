@@ -48,6 +48,20 @@ public class UserService implements UserDetailsService {
         userRepository.delete(user);
     }
 
+    public User create(UserRequestDto userRequestDto) {
+        if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent())
+            throw new UserException("User with email %s already exists".formatted(userRequestDto.getEmail()));
+        if(userRepository.findByUsername(userRequestDto.getUsername()).isPresent())
+            throw new UserException("User with username %s already exists".formatted(userRequestDto.getUsername()));
+        if(userRequestDto.getPassword() == null)
+            throw new UserException("Password is required");
+
+        User user = userMapper.toEntity(userRequestDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setIsActive(false);
+        return user;
+    }
+
     public UserResponseDto partialUpdate(UserRequestDto userRequestDto) {
         User user = getCurrentUserIfActive();
 

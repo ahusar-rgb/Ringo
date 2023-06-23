@@ -192,6 +192,9 @@ public class EventService {
                 () -> new NotFoundException("Photo [id: %d] not found".formatted(photoId))
         );
 
+        if(Objects.equals(event.getMainPhoto().getHighQualityPhoto().getId(), photoId))
+            throw new UserException("Main photo cannot be removed");
+
         if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
             throw new UserException("Only event host can update event");
 
@@ -214,6 +217,21 @@ public class EventService {
 
         EventMainPhoto eventMainPhoto = eventPhotoService.prepareMainPhoto(event, photoId);
         event.setMainPhoto(eventMainPhoto);
+        return mapper.toDto(event);
+    }
+
+    public EventResponseDto removeMainPhoto(Long eventId) {
+        log.info("removeMainPhoto: {}", eventId);
+
+        Event event = repository.findById(eventId).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
+        );
+
+        if(!Objects.equals(event.getHost().getId(), userService.getCurrentUserIfActive().getId()))
+            throw new UserException("Only event host can update event");
+
+        eventPhotoService.removeMainPhoto(event);
+        event.setMainPhoto(null);
         return mapper.toDto(event);
     }
 

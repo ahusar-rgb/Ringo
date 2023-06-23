@@ -53,7 +53,8 @@ public class EventMapper {
         if(event.getPhotos() != null)
             event.getPhotos().forEach(
                     photo -> {
-                        if(event.getMainPhoto() != null && Objects.equals(photo.getId(), event.getMainPhoto().getId()))
+                        if(event.getMainPhoto() != null &&
+                                Objects.equals(photo.getPhoto().getId(), event.getMainPhoto().getHighQualityPhoto().getId()))
                             return;
 
                        photos.add(eventPhotoMapper.toDto(photo));

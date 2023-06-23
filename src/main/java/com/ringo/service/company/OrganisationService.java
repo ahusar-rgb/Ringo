@@ -13,7 +13,6 @@ import com.ringo.repository.OrganisationRepository;
 import com.ringo.service.security.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,6 @@ public class OrganisationService {
 
     private final OrganisationRepository organisationRepository;
     private final OrganisationMapper organisationMapper;
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final GoogleIdTokenService googleIdTokenService;
 
@@ -51,29 +49,25 @@ public class OrganisationService {
 
     public OrganisationResponseDto create(OrganisationRequestDto dto) {
         log.info("createOrganisation: {}", dto);
-        Organisation organisation = organisationMapper.toEntity(dto);
 
-        if (organisationRepository.findByEmail(organisation.getEmail()).isPresent()) {
-            throw new UserException("Organisation with [email: " + organisation.getEmail() + "] already exists");
-        }
-        if (organisationRepository.findByUsername(organisation.getUsername()).isPresent()) {
-            throw new UserException("Organisation with [username: " + organisation.getUsername() + "] already exists");
-        }
+        User user = userService.create(dto);
+        Organisation organisation = organisationMapper.fromUser(user);
+        organisationMapper.partialUpdate(organisation, dto);
+        throwIfNotFullyFilled(organisation);
 
-        organisation.setRole(Role.ROLE_ORGANISATION);
-        organisation.setPassword(passwordEncoder.encode(dto.getPassword()));
         organisation.setIsActive(true);
         organisation.setCreatedAt(LocalDateTime.now());
-        organisationRepository.save(organisation);
+        organisation.setRole(Role.ROLE_ORGANISATION);
 
-        return organisationMapper.toDto(organisation);
+        OrganisationResponseDto organisationResponseDto = organisationMapper.toDto(organisationRepository.save(organisation));
+        organisationResponseDto.setEmail(user.getEmail());
+
+        return organisationResponseDto;
     }
 
     public OrganisationResponseDto update(OrganisationRequestDto dto) {
         log.info("updateOrganisation: {}", dto);
-
-        Organisation organisation = organisationRepository.findById(userService.getCurrentUser().getId()).orElseThrow(
-                () -> new UserException("Authorized user is not an organisation"));
+        Organisation organisation = getCurrentUserAsOrganisation();
 
         organisationMapper.partialUpdate(organisation, dto);
         organisation.setUpdatedAt(LocalDateTime.now());
@@ -83,13 +77,13 @@ public class OrganisationService {
     }
 
     public OrganisationResponseDto activate() {
-        Organisation organisation = organisationRepository.findById(userService.getCurrentUser().getId()).orElseThrow(
-                () -> new UserException("Authorized user is not an organisation"));
-
+        Organisation organisation = getCurrentUserAsOrganisation();
         throwIfNotFullyFilled(organisation);
 
         organisation.setIsActive(true);
-        return organisationMapper.toDto(organisationRepository.save(organisation));
+        OrganisationResponseDto dto = organisationMapper.toDto(organisationRepository.save(organisation));
+        dto.setEmail(organisation.getEmail());
+        return dto;
     }
 
     private void throwIfNotFullyFilled(Organisation organisation) {
@@ -109,5 +103,12 @@ public class OrganisationService {
         organisation.setRole(Role.ROLE_ORGANISATION);
 
         return organisationMapper.toDto(organisationRepository.save(organisation));
+    }
+
+    public Organisation getCurrentUserAsOrganisation() {
+        User user = userService.getCurrentUserIfActive();
+        return organisationRepository.findById(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not aan organisation")
+        );
     }
 }

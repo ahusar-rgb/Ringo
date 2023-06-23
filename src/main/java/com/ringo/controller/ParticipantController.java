@@ -35,8 +35,8 @@ public class ParticipantController {
         return ResponseEntity.ok(participantService.update(dto));
     }
 
-    @GetMapping(value = "/sign-up/google", produces = {"application/json"})
-    public ResponseEntity<ParticipantResponseDto> signUpGoogle(String token) {
+    @PostMapping(value = "/sign-up/google", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<ParticipantResponseDto> signUpGoogle(@RequestBody String token) {
         return ResponseEntity.ok(participantService.signUpGoogle(token));
     }
 

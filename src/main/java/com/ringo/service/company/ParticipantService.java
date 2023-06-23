@@ -13,7 +13,6 @@ import com.ringo.repository.ParticipantRepository;
 import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +31,13 @@ public class ParticipantService {
     private final UserService userService;
     private final GoogleIdTokenService googleIdTokenService;
 
+    public Participant getCurrentUserAsParticipant() {
+        User user = userService.getCurrentUserIfActive();
+        return repository.findById(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not aan organisation")
+        );
+    }
+
     public ParticipantResponseDto findById(Long id) {
         log.info("findParticipantById: {}", id);
         return mapper.toDto(repository.findById(id).orElseThrow(
@@ -41,24 +47,18 @@ public class ParticipantService {
 
     public ParticipantResponseDto findCurrentParticipant() {
         log.info("findCurrentParticipant");
-        User currentUser = userService.getCurrentUser();
-        ParticipantResponseDto dto = mapper.toDto(repository.findById(currentUser.getId()).orElseThrow(
-                () -> new UserException("Authorized user is not a participant")
-        ));
-        dto.setEmail(currentUser.getEmail());
+        ParticipantResponseDto dto = mapper.toDto(getCurrentUserAsParticipant());
+        dto.setEmail(dto.getEmail());
         return dto;
     }
 
     public ParticipantResponseDto activate() {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       Participant participant = getCurrentUserAsParticipant();
 
-        log.info("activateParticipant: {}", currentUser.getEmail());
-        Participant participant = repository.findById(currentUser.getId()).orElseThrow(
-                () -> new NotFoundException("Participant [id: %d] not found".formatted(currentUser.getId()))
-        );
+        log.info("activateParticipant: {}", participant.getEmail());
 
         if(participant.getIsActive()) {
-            throw new UserException("Participant [email: %s] is already active".formatted(currentUser.getEmail()));
+            throw new UserException("Participant [email: %s] is already active".formatted(participant.getEmail()));
         }
         throwIfNotFullyFilled(participant);
 
@@ -68,18 +68,12 @@ public class ParticipantService {
 
     public ParticipantResponseDto save(ParticipantRequestDto dto) {
         log.info("saveParticipant: {}", dto);
-        Participant participant = mapper.toEntity(dto);
-
-        if (repository.findByEmail(participant.getEmail()).isPresent()) {
-            throw new UserException("Participant with [email: " + participant.getEmail() + "] already exists");
-        }
-        if (repository.findByUsername(participant.getUsername()).isPresent()) {
-            throw new UserException("Participant with [username: " + participant.getUsername() + "] already exists");
-        }
+        User user = userService.create(dto);
+        Participant participant = mapper.fromUser(user);
+        mapper.partialUpdate(participant, dto);
         throwIfNotFullyFilled(participant);
 
         participant.setRole(Role.ROLE_PARTICIPANT);
-        participant.setPassword(passwordEncoder.encode(dto.getPassword()));
         participant.setCreatedAt(LocalDateTime.now());
         participant.setIsActive(true);
 
@@ -89,30 +83,12 @@ public class ParticipantService {
     }
 
     public ParticipantResponseDto update(ParticipantRequestDto dto) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("updateParticipant: {}", dto);
-        Participant participant = repository.findById(user.getId()).orElseThrow(
-                () -> new UserException("Authorized user is not a participant")
-        );
+        Participant participant = getCurrentUserAsParticipant();
 
         mapper.partialUpdate(participant, dto);
         participant.setUpdatedAt(LocalDateTime.now());
         return mapper.toDto(repository.save(participant));
-    }
-
-    private void throwIfNotFullyFilled(Participant participant) {
-        if(participant.getGender() == null) {
-            throw new UserException("Gender is not specified");
-        }
-        if(participant.getDateOfBirth() == null) {
-            throw new UserException("Date of birth is not specified");
-        }
-        if(participant.getName() == null) {
-            throw new UserException("Name is not specified");
-        }
-        if(participant.getUsername() == null) {
-            throw new UserException("Username is not specified");
-        }
     }
 
     public ParticipantResponseDto signUpGoogle(String token) {
@@ -132,5 +108,20 @@ public class ParticipantService {
         ParticipantResponseDto saved = mapper.toDto(repository.save(participant));
         saved.setEmail(participant.getEmail());
         return saved;
+    }
+
+    private void throwIfNotFullyFilled(Participant participant) {
+        if(participant.getGender() == null) {
+            throw new UserException("Gender is not specified");
+        }
+        if(participant.getDateOfBirth() == null) {
+            throw new UserException("Date of birth is not specified");
+        }
+        if(participant.getName() == null) {
+            throw new UserException("Name is not specified");
+        }
+        if(participant.getUsername() == null) {
+            throw new UserException("Username is not specified");
+        }
     }
 }

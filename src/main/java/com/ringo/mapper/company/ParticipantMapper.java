@@ -4,6 +4,7 @@ import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.model.company.Participant;
 import com.ringo.model.enums.Gender;
+import com.ringo.model.security.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -41,5 +42,16 @@ public class ParticipantMapper {
         if(dto.getUsername() != null) participant.setUsername(dto.getUsername());
         if(dto.getDateOfBirth() != null) participant.setDateOfBirth(LocalDate.parse(dto.getDateOfBirth()));
         if(dto.getGender() != null) participant.setGender(Gender.valueOf(dto.getGender()));
+    }
+
+    public Participant fromUser(User user) {
+        return Participant.builder()
+                .name(user.getName())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .password(user.getPassword())
+                .profilePicture(user.getProfilePicture())
+                .build();
     }
 }

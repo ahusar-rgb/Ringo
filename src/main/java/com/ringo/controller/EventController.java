@@ -190,6 +190,11 @@ public class EventController {
         return ResponseEntity.ok(eventService.setMainPhoto(id, photoId));
     }
 
+    @PutMapping(value = "/{id}/remove-main-photo", produces = {"application/json"})
+    public ResponseEntity<EventResponseDto> removeMainPhoto(@Parameter(description = "Event id") @PathVariable("id") Long id) {
+        return ResponseEntity.ok(eventService.removeMainPhoto(id));
+    }
+
     @Operation(summary = "Activate event")
     @ApiResponses(
             value = {

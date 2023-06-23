@@ -1,7 +1,7 @@
 package com.ringo.auth;
 
 import com.ringo.config.Constants;
-import com.ringo.exception.AuthenticationException;
+import com.ringo.exception.AuthException;
 import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import com.ringo.service.security.UserService;
@@ -47,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-        } catch (AuthenticationException | UserException e) {
+        } catch (AuthException | UserException e) {
             filterChain.doFilter(request, response);
             return;
         }

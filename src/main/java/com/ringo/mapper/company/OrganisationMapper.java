@@ -3,6 +3,7 @@ package com.ringo.mapper.company;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.model.company.Organisation;
+import com.ringo.model.security.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,7 @@ public class OrganisationMapper {
                 .description(entity.getDescription())
                 .contacts(entity.getContacts())
                 .rating(entity.getRating())
+                .isActive(entity.getIsActive())
                 .build();
 
         organisation.setPastEventsCount((int)entity.getHostedEvents().stream().filter(event -> event.getEndTime().isBefore(java.time.LocalDateTime.now())).count());
@@ -47,5 +49,16 @@ public class OrganisationMapper {
         if(dto.getUsername() != null) entity.setUsername(dto.getUsername());
         if(dto.getDescription() != null) entity.setDescription(dto.getDescription());
         if(dto.getContacts() != null) entity.setContacts(dto.getContacts());
+    }
+
+    public Organisation fromUser(User user) {
+        return Organisation.builder()
+                .name(user.getName())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .password(user.getPassword())
+                .profilePicture(user.getProfilePicture())
+                .build();
     }
 }

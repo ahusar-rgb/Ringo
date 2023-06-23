@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.ringo.exception.AuthenticationException;
+import com.ringo.exception.AuthException;
 import com.ringo.model.company.Ticket;
 import com.ringo.model.security.User;
 import lombok.AllArgsConstructor;
@@ -74,9 +74,9 @@ public class JwtService {
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getSubject().equals(user.getEmail());
         } catch (TokenExpiredException e) {
-            throw new AuthenticationException("Token expired");
+            throw new AuthException("Token expired");
         } catch (Exception e) {
-            throw new AuthenticationException("Token is not valid");
+            throw new AuthException("Token is not valid");
         }
     }
 
@@ -104,7 +104,7 @@ public class JwtService {
             JWTVerifier verifier = JWT.require(algorithm).withIssuer(config.getIssuer()).build();
             return verifier.verify(ticketCode);
         } catch (Exception e) {
-            throw new AuthenticationException("Ticket code is not valid");
+            throw new AuthException("Ticket code is not valid");
         }
     }
 }
