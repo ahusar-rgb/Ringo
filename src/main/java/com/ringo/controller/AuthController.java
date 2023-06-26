@@ -4,6 +4,7 @@ import com.ringo.auth.JwtService;
 import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.auth.ForgotPasswordForm;
 import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.security.IdTokenDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.exception.AuthException;
 import com.ringo.model.security.User;
@@ -122,10 +123,10 @@ public class AuthController {
                 .body(authService.changePassword(changePasswordForm));
     }
 
-    @GetMapping("login/google")
-    public ResponseEntity<TokenDto> loginWithGoogle(String token) {
+    @PostMapping(value = "login/google", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<TokenDto> loginWithGoogle(@RequestBody IdTokenDto token) {
         return ResponseEntity
                 .ok()
-                .body(authService.loginWithGoogle(token));
+                .body(authService.loginWithGoogle(token.getIdToken()));
     }
 }

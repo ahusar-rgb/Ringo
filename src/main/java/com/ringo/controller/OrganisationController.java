@@ -2,6 +2,7 @@ package com.ringo.controller;
 
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.dto.security.IdTokenDto;
 import com.ringo.service.company.OrganisationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -71,7 +72,7 @@ public class OrganisationController {
     }
 
     @GetMapping(value = "sign-up/google", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> signUpGoogle(@RequestBody String token) {
-        return ResponseEntity.ok(organisationService.signUpGoogle(token));
+    public ResponseEntity<OrganisationResponseDto> signUpGoogle(@RequestBody IdTokenDto token) {
+        return ResponseEntity.ok(organisationService.signUpGoogle(token.getIdToken()));
     }
 }

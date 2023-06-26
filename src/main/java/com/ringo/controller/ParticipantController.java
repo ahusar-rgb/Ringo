@@ -2,6 +2,7 @@ package com.ringo.controller;
 
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
+import com.ringo.dto.security.IdTokenDto;
 import com.ringo.service.company.ParticipantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +37,8 @@ public class ParticipantController {
     }
 
     @PostMapping(value = "/sign-up/google", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<ParticipantResponseDto> signUpGoogle(@RequestBody String token) {
-        return ResponseEntity.ok(participantService.signUpGoogle(token));
+    public ResponseEntity<ParticipantResponseDto> signUpGoogle(@RequestBody IdTokenDto token) {
+        return ResponseEntity.ok(participantService.signUpGoogle(token.getIdToken()));
     }
 
     @PostMapping(value = "activate", produces = {"application/json"})
