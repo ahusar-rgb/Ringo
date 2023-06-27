@@ -1,5 +1,6 @@
 package com.ringo.service.security;
 
+import com.ringo.auth.AppleIdTokenService;
 import com.ringo.auth.GoogleIdTokenService;
 import com.ringo.auth.JwtService;
 import com.ringo.config.Constants;
@@ -34,6 +35,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final GoogleIdTokenService googleIdTokenService;
+    private final AppleIdTokenService appleIdTokenService;
     private final UserRepository userRepository;
     private final EmailSender emailSender;
 
@@ -67,6 +69,18 @@ public class AuthService {
 
     public TokenDto loginWithGoogle(String token) {
         String email = googleIdTokenService.getUserFromToken(token).getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserException("User [email: " + email + "] not found")
+        );
+
+        return TokenDto.builder()
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
+                .build();
+    }
+
+    public TokenDto loginWithApple(String token) {
+        String email = appleIdTokenService.getUserFromToken(token).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new UserException("User [email: " + email + "] not found")
         );

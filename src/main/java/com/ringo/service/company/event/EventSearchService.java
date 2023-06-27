@@ -7,6 +7,7 @@ import com.ringo.dto.search.EventSearchDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
+import com.ringo.mapper.company.EventPersonalizedMapper;
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.Event;
 import com.ringo.model.security.User;
@@ -33,6 +34,7 @@ public class EventSearchService {
     private final EventRepository repository;
     private final UserService userService;
     private final EventMapper mapper;
+    private final EventPersonalizedMapper personalizedMapper;
     private final CurrencyExchanger currencyExchanger;
     private final CurrencyRepository currencyRepository;
     private final ApplicationProperties config;
@@ -50,7 +52,7 @@ public class EventSearchService {
                 throw new NotFoundException("Event [id: %d] not found".formatted(id));
         }
 
-        return mapper.toPersonalizedDto(event);
+        return personalizedMapper.toPersonalizedDto(event);
     }
 
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {

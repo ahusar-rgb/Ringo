@@ -6,9 +6,6 @@ import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.model.company.Event;
-import com.ringo.model.company.Participant;
-import com.ringo.service.company.ParticipantService;
-import com.ringo.service.company.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +23,6 @@ public class EventMapper {
     private final OrganisationMapper organisationMapper;
     private final EventMainPhotoMapper eventMainPhotoMapper;
     private final EventPhotoMapper eventPhotoMapper;
-    private final ParticipantService participantService;
-    private final TicketService ticketService;
 
     public EventResponseDto toDto(Event event) {
         EventResponseDto dto = EventResponseDto.builder()
@@ -147,15 +142,5 @@ public class EventMapper {
         List<Event> events = new ArrayList<>();
         dtos.forEach(dto -> events.add(toEntity(dto)));
         return events;
-    }
-
-    public EventResponseDto toPersonalizedDto(Event event) {
-        EventResponseDto dto = toDto(event);
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
-
-        dto.setIsRegistered(ticketService.ticketExists(event, participant));
-        dto.setIsSaved(participant.getSavedEvents().contains(event));
-
-        return dto;
     }
 }

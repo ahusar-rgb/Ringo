@@ -1,5 +1,6 @@
 package com.ringo.service.company;
 
+import com.ringo.auth.AppleIdTokenService;
 import com.ringo.auth.GoogleIdTokenService;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
@@ -28,6 +29,7 @@ public class OrganisationService {
     private final OrganisationMapper organisationMapper;
     private final UserService userService;
     private final GoogleIdTokenService googleIdTokenService;
+    private final AppleIdTokenService appleIdTokenService;
 
     public OrganisationResponseDto findById(Long id) {
         log.info("findOrganisationById: {}", id);
@@ -95,14 +97,30 @@ public class OrganisationService {
         User user = googleIdTokenService.getUserFromToken(token);
         Organisation organisation = Organisation.builder()
                 .email(user.getEmail())
-                .name(user.getName())
                 .build();
+
+        return saveEmptyOrganisation(organisation);
+    }
+
+    public OrganisationResponseDto signUpApple(String token) {
+        User user = appleIdTokenService.getUserFromToken(token);
+        Organisation organisation = Organisation.builder()
+                .email(user.getEmail())
+                .build();
+        return saveEmptyOrganisation(organisation);
+    }
+
+    private OrganisationResponseDto saveEmptyOrganisation(Organisation organisation) {
+        if(organisationRepository.findByEmail(organisation.getEmail()).isPresent())
+            throw new UserException("Organisation with email %s already exists".formatted(organisation.getEmail()));
 
         organisation.setIsActive(false);
         organisation.setCreatedAt(LocalDateTime.now());
         organisation.setRole(Role.ROLE_ORGANISATION);
 
-        return organisationMapper.toDto(organisationRepository.save(organisation));
+        OrganisationResponseDto dto = organisationMapper.toDto(organisationRepository.save(organisation));
+        dto.setEmail(organisation.getEmail());
+        return dto;
     }
 
     public Organisation getCurrentUserAsOrganisationIfActive() {

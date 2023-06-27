@@ -1,5 +1,6 @@
 package com.ringo.service.company;
 
+import com.ringo.auth.AppleIdTokenService;
 import com.ringo.auth.GoogleIdTokenService;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
@@ -28,6 +29,7 @@ public class ParticipantService {
     private final ParticipantMapper mapper;
     private final UserService userService;
     private final GoogleIdTokenService googleIdTokenService;
+    private final AppleIdTokenService appleIdTokenService;
 
     public Participant getCurrentUserAsParticipantIfActive() {
         User user = userService.getCurrentUserIfActive();
@@ -108,9 +110,23 @@ public class ParticipantService {
                 .name(user.getName())
                 .build();
 
+        return saveEmptyParticipant(participant);
+    }
+
+    public ParticipantResponseDto signUpApple(String token) {
+        User user = appleIdTokenService.getUserFromToken(token);
+        Participant participant = Participant.builder()
+                .email(user.getEmail())
+                .build();
+
+        return saveEmptyParticipant(participant);
+    }
+
+    private ParticipantResponseDto saveEmptyParticipant(Participant participant) {
         if (repository.findByEmailAll(participant.getEmail()).isPresent()) {
             throw new UserException("Participant with [email: " + participant.getEmail() + "] already exists");
         }
+
         participant.setRole(Role.ROLE_PARTICIPANT);
         participant.setCreatedAt(LocalDateTime.now());
         participant.setIsActive(false);

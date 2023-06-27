@@ -71,8 +71,13 @@ public class OrganisationController {
         return ResponseEntity.ok(organisationService.activate());
     }
 
-    @GetMapping(value = "sign-up/google", consumes = {"application/json"}, produces = {"application/json"})
+    @PostMapping(value = "sign-up/google", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<OrganisationResponseDto> signUpGoogle(@RequestBody IdTokenDto token) {
         return ResponseEntity.ok(organisationService.signUpGoogle(token.getIdToken()));
+    }
+
+    @PostMapping(value = "sign-in/apple", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<OrganisationResponseDto> signInApple(@RequestBody IdTokenDto token) {
+        return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
     }
 }

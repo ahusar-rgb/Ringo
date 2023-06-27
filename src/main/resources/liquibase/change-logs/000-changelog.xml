@@ -211,9 +211,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="updated_at" type="DATETIME"/>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="name" type="VARCHAR(255)"/>
             <column name="username" type="VARCHAR(255)"/>
             <column name="password" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)">

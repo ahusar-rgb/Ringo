@@ -23,7 +23,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends AbstractActiveEntity implements UserDetails {
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "username", unique = true)

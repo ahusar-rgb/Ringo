@@ -6,6 +6,7 @@ import com.ringo.dto.company.TicketDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
+import com.ringo.mapper.company.EventPersonalizedMapper;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
 import com.ringo.model.form.RegistrationSubmission;
@@ -27,6 +28,7 @@ public class EventInteractionService {
     private final EventRepository repository;
     private final TicketService ticketService;
     private final EventMapper mapper;
+    private final EventPersonalizedMapper personalizedMapper;
     private final RegistrationValidator validator;
     private final ParticipantRepository participantRepository;
 
@@ -79,7 +81,7 @@ public class EventInteractionService {
         event.setPeopleSaved(event.getPeopleSaved() + 1);
         event = repository.save(event);
 
-        return mapper.toPersonalizedDto(event);
+        return personalizedMapper.toPersonalizedDto(event);
     }
 
     public EventResponseDto unsaveEvent(Long id) {
@@ -95,7 +97,7 @@ public class EventInteractionService {
         event.setPeopleSaved(event.getPeopleSaved() - 1);
         event = repository.save(event);
 
-        return mapper.toPersonalizedDto(event);
+        return personalizedMapper.toPersonalizedDto(event);
     }
 
     public List<EventSmallDto> getSavedEvents() {

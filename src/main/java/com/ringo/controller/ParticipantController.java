@@ -41,6 +41,11 @@ public class ParticipantController {
         return ResponseEntity.ok(participantService.signUpGoogle(token.getIdToken()));
     }
 
+    @PostMapping(value = "/sign-up/apple", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<ParticipantResponseDto> signInApple(@RequestBody IdTokenDto token) {
+        return ResponseEntity.ok(participantService.signUpApple(token.getIdToken()));
+    }
+
     @PostMapping(value = "activate", produces = {"application/json"})
     public ResponseEntity<ParticipantResponseDto> activateParticipant() {
         return ResponseEntity.ok(participantService.activate());
