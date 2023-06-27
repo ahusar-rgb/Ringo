@@ -4,7 +4,9 @@ import com.ringo.dto.company.*;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.form.RegistrationSubmission;
-import com.ringo.service.company.EventService;
+import com.ringo.service.company.event.EventInteractionService;
+import com.ringo.service.company.event.EventSearchService;
+import com.ringo.service.company.event.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,6 +26,8 @@ import java.util.List;
 @RequestMapping("/api/events")
 public class EventController {
     private final EventService eventService;
+    private final EventSearchService eventSearchService;
+    private final EventInteractionService eventInteractionService;
 
     @Operation(summary = "Find event by id")
     @ApiResponses(
@@ -37,7 +41,7 @@ public class EventController {
     public ResponseEntity<EventResponseDto> findEventById(@Parameter(description = "Event id") @PathVariable Long id) {
         return ResponseEntity
                 .ok()
-                .body(eventService.findById(id));
+                .body(eventSearchService.findById(id));
     }
 
     @Operation(summary = "Find all events in the given area")
@@ -55,7 +59,7 @@ public class EventController {
             @Parameter(description = "min longitude") @RequestParam Double lonMin,
             @Parameter(description = "max longitude") @RequestParam Double lonMax) {
         return ResponseEntity.ok()
-                .body(eventService.findEventsInArea(latMin, latMax, lonMin, lonMax));
+                .body(eventSearchService.findEventsInArea(latMin, latMax, lonMin, lonMax));
     }
 
     @Operation(summary = "Create a new event")
@@ -232,7 +236,7 @@ public class EventController {
     @GetMapping(produces = {"application/json"})
     public ResponseEntity<List<EventSmallDto>> searchEvent(EventSearchDto searchDto) {
         return ResponseEntity.ok()
-                .body(eventService.search(searchDto));
+                .body(eventSearchService.search(searchDto));
     }
 
     @Operation(summary = "Join event")
@@ -250,7 +254,7 @@ public class EventController {
     public ResponseEntity<TicketDto> joinEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
             @Parameter(description = "Registration submission") @RequestBody(required = false) RegistrationSubmission submission) {
-        return ResponseEntity.ok(eventService.joinEvent(id, submission));
+        return ResponseEntity.ok(eventInteractionService.joinEvent(id, submission));
     }
 
     @Operation(summary = "Leave event")
@@ -266,7 +270,7 @@ public class EventController {
     @PostMapping(value = "/{id}/leave", produces = {"application/json"})
     public ResponseEntity<TicketDto> leaveEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id) {
-        return ResponseEntity.ok(eventService.leaveEvent(id));
+        return ResponseEntity.ok(eventInteractionService.leaveEvent(id));
     }
 
     @Operation(summary = "Save event")
@@ -281,7 +285,7 @@ public class EventController {
     @PostMapping(value = "/{id}/save", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> saveEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id) {
-        return ResponseEntity.ok(eventService.saveEvent(id));
+        return ResponseEntity.ok(eventInteractionService.saveEvent(id));
     }
 
     @Operation(summary = "Unsave event")
@@ -296,7 +300,7 @@ public class EventController {
     @PostMapping(value = "/{id}/unsave", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> unsaveEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id) {
-        return ResponseEntity.ok(eventService.unsaveEvent(id));
+        return ResponseEntity.ok(eventInteractionService.unsaveEvent(id));
     }
 
     @Operation(summary = "Get saved events")
@@ -310,7 +314,7 @@ public class EventController {
     @GetMapping(value = "/saved", produces = {"application/json"})
     public ResponseEntity<List<EventSmallDto>> getSavedEvents() {
         return ResponseEntity.ok()
-                .body(eventService.getSavedEvents());
+                .body(eventInteractionService.getSavedEvents());
     }
 
     @Operation(summary = "Get ticket for an event (already acquired)")
@@ -326,6 +330,6 @@ public class EventController {
     @GetMapping(value = "/{id}/ticket", produces = {"application/json"})
     public ResponseEntity<TicketDto> getTicket(
             @Parameter(description = "Event id") @PathVariable("id") Long id) {
-        return ResponseEntity.ok(eventService.getTicketForEvent(id));
+        return ResponseEntity.ok(eventInteractionService.getTicketForEvent(id));
     }
 }

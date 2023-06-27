@@ -1,4 +1,4 @@
-package com.ringo.service.company;
+package com.ringo.service.company.event;
 
 import com.ringo.exception.InternalException;
 import com.ringo.exception.NotFoundException;

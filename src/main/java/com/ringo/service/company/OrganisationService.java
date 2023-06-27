@@ -105,8 +105,15 @@ public class OrganisationService {
         return organisationMapper.toDto(organisationRepository.save(organisation));
     }
 
-    public Organisation getCurrentUserAsOrganisation() {
+    public Organisation getCurrentUserAsOrganisationIfActive() {
         User user = userService.getCurrentUserIfActive();
+        return organisationRepository.findById(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not aan organisation")
+        );
+    }
+
+    private Organisation getCurrentUserAsOrganisation() {
+        User user = userService.getCurrentUser();
         return organisationRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not aan organisation")
         );

@@ -13,7 +13,6 @@ import com.ringo.repository.ParticipantRepository;
 import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,12 +26,18 @@ public class ParticipantService {
 
     private final ParticipantRepository repository;
     private final ParticipantMapper mapper;
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final GoogleIdTokenService googleIdTokenService;
 
-    public Participant getCurrentUserAsParticipant() {
+    public Participant getCurrentUserAsParticipantIfActive() {
         User user = userService.getCurrentUserIfActive();
+        return repository.findById(user.getId()).orElseThrow(
+                () -> new UserException("The authorized user is not aan organisation")
+        );
+    }
+
+    private Participant getCurrentUserAsParticipant() {
+        User user = userService.getCurrentUser();
         return repository.findById(user.getId()).orElseThrow(
                 () -> new UserException("The authorized user is not aan organisation")
         );
@@ -47,8 +52,9 @@ public class ParticipantService {
 
     public ParticipantResponseDto findCurrentParticipant() {
         log.info("findCurrentParticipant");
-        ParticipantResponseDto dto = mapper.toDto(getCurrentUserAsParticipant());
-        dto.setEmail(dto.getEmail());
+        Participant participant = getCurrentUserAsParticipant();
+        ParticipantResponseDto dto = mapper.toDto(participant);
+        dto.setEmail(participant.getEmail());
         return dto;
     }
 
@@ -63,7 +69,9 @@ public class ParticipantService {
         throwIfNotFullyFilled(participant);
 
         participant.setIsActive(true);
-        return mapper.toDto(repository.save(participant));
+        ParticipantResponseDto dto = mapper.toDto(repository.save(participant));
+        dto.setEmail(participant.getEmail());
+        return dto;
     }
 
     public ParticipantResponseDto save(ParticipantRequestDto dto) {
@@ -88,7 +96,9 @@ public class ParticipantService {
 
         mapper.partialUpdate(participant, dto);
         participant.setUpdatedAt(LocalDateTime.now());
-        return mapper.toDto(repository.save(participant));
+        ParticipantResponseDto responseDto = mapper.toDto(repository.save(participant));
+        responseDto.setEmail(participant.getEmail());
+        return responseDto;
     }
 
     public ParticipantResponseDto signUpGoogle(String token) {
