@@ -1,5 +1,6 @@
 package com.ringo.service.security;
 
+import com.ringo.auth.IdProvider;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.InternalException;
@@ -23,7 +24,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public abstract class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -37,18 +38,7 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public UserResponseDto findById(Long id) {
-        return userMapper.toDto(userRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("User#" + id + " not found")));
-    }
-
-    public void delete() {
-        User user = getCurrentUserIfActive();
-        removePhoto();
-        userRepository.delete(user);
-    }
-
-    public User create(UserRequestDto userRequestDto) {
+    public User build(UserRequestDto userRequestDto) {
         if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent())
             throw new UserException("User with email %s already exists".formatted(userRequestDto.getEmail()));
         if(userRepository.findByUsername(userRequestDto.getUsername()).isPresent())
@@ -60,13 +50,6 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setIsActive(false);
         return user;
-    }
-
-    public UserResponseDto partialUpdate(UserRequestDto userRequestDto) {
-        User user = getCurrentUserIfActive();
-
-        userMapper.partialUpdate(user, userRequestDto);
-        return userMapper.toDto(userRepository.save(user));
     }
 
     public User getCurrentUserIfActive() {

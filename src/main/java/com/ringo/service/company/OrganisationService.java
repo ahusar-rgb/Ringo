@@ -52,7 +52,7 @@ public class OrganisationService {
     public OrganisationResponseDto create(OrganisationRequestDto dto) {
         log.info("createOrganisation: {}", dto);
 
-        User user = userService.create(dto);
+        User user = userService.build(dto);
         Organisation organisation = organisationMapper.fromUser(user);
         organisationMapper.partialUpdate(organisation, dto);
         throwIfNotFullyFilled(organisation);
