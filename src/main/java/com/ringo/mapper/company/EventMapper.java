@@ -5,142 +5,87 @@ import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.mapper.common.EntityMapper;
 import com.ringo.model.company.Event;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import com.ringo.model.photo.EventPhoto;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-@Component
-@RequiredArgsConstructor
-public class EventMapper {
+@Mapper(componentModel = "spring",
+        uses = {EventMainPhotoMapper.class, EventPhotoMapper.class, CategoryMapper.class, CurrencyMapper.class, OrganisationMapper.class},
+        imports = {Coordinates.class})
+public abstract class EventMapper implements EntityMapper<EventRequestDto, EventResponseDto, Event> {
 
-    private final CurrencyMapper currencyMapper;
-    private final CategoryMapper categoryMapper;
-    private final OrganisationMapper organisationMapper;
-    private final EventMainPhotoMapper eventMainPhotoMapper;
-    private final EventPhotoMapper eventPhotoMapper;
+    @Autowired
+    private EventPhotoMapper eventPhotoMapper;
 
-    public EventResponseDto toDto(Event event) {
-        EventResponseDto dto = EventResponseDto.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .description(event.getDescription())
-                .isActive(event.getIsActive())
-                .address(event.getAddress())
-                .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
-                .isTicketNeeded(event.getIsTicketNeeded())
-                .price(event.getPrice())
-                .currency(currencyMapper.toDto(event.getCurrency()))
-                .startTime(event.getStartTime().toString())
-                .endTime(event.getEndTime().toString())
-                .categories(categoryMapper.toDtos(event.getCategories()))
-                .host(organisationMapper.toDto(event.getHost()))
-                .peopleCount(event.getPeopleCount())
-                .peopleSaved(event.getPeopleSaved())
-                .capacity(event.getCapacity())
-                .registrationForm(event.getRegistrationForm())
-                .build();
-
-        if(event.getMainPhoto() != null)
-            dto.setMainPhoto(eventMainPhotoMapper.toDto(event.getMainPhoto()));
-
-        List<EventPhotoDto> photos = new ArrayList<>();
-        if(event.getPhotos() != null)
-            event.getPhotos().forEach(
-                    photo -> {
-                        if(event.getMainPhoto() != null &&
-                                Objects.equals(photo.getPhoto().getId(), event.getMainPhoto().getHighQualityPhoto().getId()))
-                            return;
-
-                       photos.add(eventPhotoMapper.toDto(photo));
-                    }
-            );
-
-        dto.setPhotos(photos);
-
-        return dto;
+    @Override
+    public EventResponseDto toDto(Event entity) {
+        throw new UnsupportedOperationException("Use toDtoSmall or toDtoDetails instead");
     }
 
-    public void partialUpdate(Event event, EventRequestDto eventRequestDto) {
-        if(eventRequestDto.getName() != null)
-            event.setName(eventRequestDto.getName());
-        if(eventRequestDto.getDescription() != null)
-            event.setDescription(eventRequestDto.getDescription());
-        if(eventRequestDto.getAddress() != null)
-            event.setAddress(eventRequestDto.getAddress());
-        if(eventRequestDto.getCoordinates() != null) {
-            event.setLatitude(eventRequestDto.getCoordinates().latitude());
-            event.setLongitude(eventRequestDto.getCoordinates().longitude());
+    @Named("toDtoSmall")
+    @Mapping(target = "mainPhotoId", expression = "java(entity.getMainPhoto() == null ? null : entity.getMainPhoto().getId())")
+    public abstract EventSmallDto toDtoSmall(Event entity);
+
+    @Named("toDtoSmallList")
+    public List<EventSmallDto> toDtoSmallList(List<Event> events) {
+        if (events == null) {
+            return null;
         }
-        if(eventRequestDto.getIsTicketNeeded() != null)
-            event.setIsTicketNeeded(eventRequestDto.getIsTicketNeeded());
-        if(eventRequestDto.getPrice() != null)
-            event.setPrice(eventRequestDto.getPrice());
-        if(eventRequestDto.getStartTime() != null)
-            event.setStartTime(LocalDateTime.parse(eventRequestDto.getStartTime()));
-        if(eventRequestDto.getEndTime() != null)
-            event.setEndTime(LocalDateTime.parse(eventRequestDto.getEndTime()));
-        if(eventRequestDto.getCapacity() != null)
-            event.setCapacity(eventRequestDto.getCapacity());
+
+        List<EventSmallDto> list = new ArrayList<>(events.size());
+        for (Event event : events) {
+            list.add(toDtoSmall(event));
+        }
+        return list;
     }
 
-    public EventSmallDto toSmallDto(Event event) {
-        EventSmallDto dto = EventSmallDto.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .description(event.getDescription())
-                .isActive(event.getIsActive())
-                .address(event.getAddress())
-                .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
-                .isTicketNeeded(event.getIsTicketNeeded())
-                .price(event.getPrice())
-                .currency(currencyMapper.toDto(event.getCurrency()))
-                .startTime(event.getStartTime().toString())
-                .endTime(event.getEndTime().toString())
-                .categories(categoryMapper.toDtos(event.getCategories()))
-                .hostId(event.getHost().getId())
-                .peopleCount(event.getPeopleCount())
-                .capacity(event.getCapacity())
-                .build();
+    @Override
+    @Named("toDtoDetails")
+    @Mapping(target = "coordinates", expression = "java(new Coordinates(entity.getLatitude(), entity.getLongitude()))")
+    @Mapping(target = "photos", expression = "java(getPhotosWithoutMain(entity))")
+    public abstract EventResponseDto toDtoDetails(Event entity);
 
-        if(event.getMainPhoto() != null)
-           dto.setMainPhotoId(event.getMainPhoto().getMediumQualityPhoto().getId());
-
-        return dto;
+    @Named("getPhotosWithoutMain")
+    public List<EventPhotoDto> getPhotosWithoutMain(Event entity) {
+        List<EventPhotoDto> photos = new ArrayList<>();
+        if (entity.getPhotos() != null) {
+            for (EventPhoto photo : entity.getPhotos()) {
+                if (!photo.getPhoto().getId().equals(entity.getMainPhoto().getHighQualityPhoto().getId())) {
+                    photos.add(eventPhotoMapper.toDto(photo));
+                }
+            }
+        }
+        return photos;
     }
 
-    public List<EventSmallDto> toSmallDtos(List<Event> events) {
-        List<EventSmallDto> dtos = new ArrayList<>();
-        events.forEach(event -> dtos.add(toSmallDto(event)));
-        return dtos;
-    }
+    @Override
+    @Mapping(target = "latitude", expression = "java(eventRequestDto.getCoordinates() == null ? null : eventRequestDto.getCoordinates().latitude())")
+    @Mapping(target = "longitude", expression = "java(eventRequestDto.getCoordinates() == null ? null : eventRequestDto.getCoordinates().longitude())")
+    @Mapping(target = "host", ignore = true)
+    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "mainPhoto", ignore = true)
+    @Mapping(target = "photos", ignore = true)
+    @Mapping(target = "peopleCount", expression = "java(0)")
+    @Mapping(target = "peopleSaved", expression = "java(0)")
+    public abstract Event toEntity(EventRequestDto eventRequestDto);
 
-    public Event toEntity(EventRequestDto dto) {
-        return Event.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .address(dto.getAddress())
-                .latitude(dto.getCoordinates().latitude())
-                .longitude(dto.getCoordinates().longitude())
-                .isTicketNeeded(dto.getIsTicketNeeded())
-                .price(dto.getPrice())
-                .currency(null)
-                .startTime(LocalDateTime.parse(dto.getStartTime()))
-                .endTime(LocalDateTime.parse(dto.getEndTime()))
-                .categories(null)
-                .capacity(dto.getCapacity())
-                .registrationForm(null)
-                .peopleCount(0)
-                .build();
-    }
-
-    public List<Event> toEntities(List<EventRequestDto> dtos) {
-        List<Event> events = new ArrayList<>();
-        dtos.forEach(dto -> events.add(toEntity(dto)));
-        return events;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "host", ignore = true)
+    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "mainPhoto", ignore = true)
+    @Mapping(target = "photos", ignore = true)
+    @Mapping(target = "peopleCount", ignore = true)
+    @Mapping(target = "peopleSaved", ignore = true)
+    @Mapping(target = "registrationForm", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "currency", ignore = true)
+    @Mapping(target = "latitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLatitude() : eventSmallDto.getCoordinates().latitude())")
+    @Mapping(target = "longitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLongitude() : eventSmallDto.getCoordinates().longitude())")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public abstract void partialUpdate(@MappingTarget Event event, EventRequestDto eventSmallDto);
 }

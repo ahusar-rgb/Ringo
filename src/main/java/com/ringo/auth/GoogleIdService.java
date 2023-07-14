@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 
 @Component
-public class GoogleIdTokenService {
+public class GoogleIdService implements IdProvider{
 
     private static final String CLIENT_ID = "546639981524-u4a1kdbkmndq1ms0fo7s3ldtrmsufg4k.apps.googleusercontent.com";
     private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
@@ -19,11 +19,16 @@ public class GoogleIdTokenService {
             .build();
 
 
+    @Override
     public User getUserFromToken(String token) {
         GoogleIdToken idToken;
         try {
             idToken = verifier.verify(token);
         } catch (Exception e) {
+            throw new UserException("Invalid Google Id Token");
+        }
+
+        if(idToken == null) {
             throw new UserException("Invalid Google Id Token");
         }
 

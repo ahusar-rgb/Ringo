@@ -25,7 +25,7 @@ public class ReviewController {
             value = {
                     @ApiResponse(responseCode = "200", description = "Organisation rated"),
                     @ApiResponse(responseCode = "400", description = "Organisation not found"),
-                    @ApiResponse(responseCode = "400", description = "Current user is not a prticipant")
+                    @ApiResponse(responseCode = "400", description = "Current user is not a participant")
             }
     )
     @PostMapping(value = "{id}/reviews", produces = {"application/json"}, consumes = {"application/json"})

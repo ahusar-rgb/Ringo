@@ -15,8 +15,9 @@ import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
 @Component
-public class AppleIdTokenService {
+public class AppleIdService implements IdProvider{
 
+    @Override
     public User getUserFromToken(String token) {
         try {
             Claims claims = decodeJwt(token);

@@ -15,7 +15,6 @@ import com.ringo.model.company.Review;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.ReviewRepository;
-import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,7 +32,7 @@ public class ReviewService {
 
     private final OrganisationRepository organisationRepository;
     private final ParticipantRepository participantRepository;
-    private final UserService userService;
+    private final ParticipantService participantService;
     private final ReviewRepository repository;
     private final ReviewMapper reviewMapper;
     private final OrganisationMapper organisationMapper;
@@ -45,9 +44,7 @@ public class ReviewService {
                 () -> new NotFoundException("Organisation#" + id + " was not found")
         );
 
-        Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
-                () -> new UserException("Current user is not a participant")
-        );
+        Participant participant = participantService.getFullUser();
 
         if(repository.existsByOrganisationAndParticipant(organisation, participant))
             throw new UserException("Current user has already rated this organisation");
@@ -70,9 +67,7 @@ public class ReviewService {
                 () -> new NotFoundException("Review#" + dto.getId() + " was not found")
         );
 
-        Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
-                () -> new UserException("Current user is not a participant")
-        );
+        Participant participant = participantService.getFullUser();
 
         if(!Objects.equals(review.getParticipant().getId(), participant.getId()))
             throw new UserException("Current user is not the author of this review");
@@ -97,9 +92,7 @@ public class ReviewService {
                 () -> new NotFoundException("Review#" + id + " was not found")
         );
 
-        Participant participant = participantRepository.findById(userService.getCurrentUserIfActive().getId()).orElseThrow(
-                () -> new UserException("Current user is not a participant")
-        );
+        Participant participant = participantService.getFullUser();
 
         if(!Objects.equals(review.getParticipant().getId(), participant.getId()))
             throw new UserException("Current user is not the author of this review");
@@ -115,7 +108,7 @@ public class ReviewService {
     }
 
     public List<ReviewResponseDto> findAllByOrganisation(Long organisationId, ReviewPageRequestDto request) {
-        Optional<Participant> participantOptional = participantRepository.findById(userService.getCurrentUserIfActive().getId());
+        Optional<Participant> participantOptional = participantRepository.findById(participantService.getFullUser().getId());
 
         Page<Review> page = repository.findAll(
                 request.getSpecification(
@@ -124,7 +117,7 @@ public class ReviewService {
                 ),
                 request.getPageable()
         );
-        return reviewMapper.toDtos(page.getContent());
+        return reviewMapper.toDtoList(page.getContent());
     }
 
     private void updateRating(Organisation organisation) {

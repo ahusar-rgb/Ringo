@@ -32,7 +32,7 @@ public class CategoryService {
 
         public List<CategoryDto> findAll() {
             log.info("findAll categories");
-            return mapper.toDtos(repository.findAll());
+            return mapper.toDtoList(repository.findAll());
         }
 
         public CategoryDto saveCategory(CategoryDto categoryDto) {

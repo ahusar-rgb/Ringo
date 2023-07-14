@@ -1,7 +1,7 @@
 package com.ringo.service.company;
 
-import com.ringo.auth.AppleIdTokenService;
-import com.ringo.auth.GoogleIdTokenService;
+import com.ringo.auth.AppleIdService;
+import com.ringo.auth.GoogleIdService;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -9,39 +9,57 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
-import com.ringo.model.security.User;
 import com.ringo.repository.OrganisationRepository;
-import com.ringo.service.security.UserService;
-import lombok.AllArgsConstructor;
+import com.ringo.repository.UserRepository;
+import com.ringo.service.common.AbstractUserService;
+import com.ringo.service.common.PhotoService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
-@AllArgsConstructor
 @Transactional
 @Slf4j
-public class OrganisationService {
+public class OrganisationService extends AbstractUserService<OrganisationRequestDto, Organisation, OrganisationResponseDto> {
 
-    private final OrganisationRepository organisationRepository;
+    @Autowired
+    private GoogleIdService googleIdService;
+    @Autowired
+    private AppleIdService appleIdService;
+
+    private final UserRepository userRepository;
     private final OrganisationMapper organisationMapper;
-    private final UserService userService;
-    private final GoogleIdTokenService googleIdTokenService;
-    private final AppleIdTokenService appleIdTokenService;
+    private final OrganisationRepository organisationRepository;
+
+    public OrganisationService(UserRepository userRepository,
+                               OrganisationRepository repository,
+                               PasswordEncoder passwordEncoder,
+                               OrganisationMapper mapper,
+                               PhotoService photoService) {
+        super(userRepository, repository, passwordEncoder, mapper, photoService);
+        this.organisationMapper = mapper;
+        this.organisationRepository = repository;
+        this.userRepository = userRepository;
+    }
+
 
     public OrganisationResponseDto findById(Long id) {
         log.info("findOrganisationById: {}", id);
-        Organisation organisation = organisationRepository.findByIdWithEvents(id).orElseThrow(
+        Organisation organisation = organisationRepository.findByIdActiveWithEvents(id).orElseThrow(
                 () -> new NotFoundException("Organisation [id: %d] not found".formatted(id)));
 
         return organisationMapper.toDto(organisation);
     }
 
+    public OrganisationResponseDto save(OrganisationRequestDto dto) {
+        return save(dto, Role.ROLE_ORGANISATION);
+    }
+
     public OrganisationResponseDto findCurrentOrganisation() {
         log.info("findCurrentOrganisation");
-        Organisation organisation = organisationRepository.findByIdWithEvents(userService.getCurrentUserIfActive().getId()).orElseThrow(
+        Organisation organisation = organisationRepository.findByIdWithEvents(getUserDetails().getId()).orElseThrow(
                 () -> new UserException("Authorized user is not an organisation"));
 
         OrganisationResponseDto dto = organisationMapper.toDto(organisation);
@@ -49,91 +67,26 @@ public class OrganisationService {
         return dto;
     }
 
-    public OrganisationResponseDto create(OrganisationRequestDto dto) {
-        log.info("createOrganisation: {}", dto);
-
-        User user = userService.create(dto);
-        Organisation organisation = organisationMapper.fromUser(user);
-        organisationMapper.partialUpdate(organisation, dto);
-        throwIfNotFullyFilled(organisation);
-
-        organisation.setIsActive(true);
-        organisation.setCreatedAt(LocalDateTime.now());
-        organisation.setRole(Role.ROLE_ORGANISATION);
-
-        OrganisationResponseDto organisationResponseDto = organisationMapper.toDto(organisationRepository.save(organisation));
-        organisationResponseDto.setEmail(user.getEmail());
-
-        return organisationResponseDto;
+    public OrganisationResponseDto signUpGoogle(String token) {
+        return signUpWithIdProvider(token, googleIdService, Role.ROLE_ORGANISATION);
     }
 
-    public OrganisationResponseDto update(OrganisationRequestDto dto) {
-        log.info("updateOrganisation: {}", dto);
-        Organisation organisation = getCurrentUserAsOrganisation();
-
-        organisationMapper.partialUpdate(organisation, dto);
-        organisation.setUpdatedAt(LocalDateTime.now());
-        organisationRepository.save(organisation);
-
-        return organisationMapper.toDto(organisation);
+    public OrganisationResponseDto signUpApple(String token) {
+        return signUpWithIdProvider(token, appleIdService, Role.ROLE_ORGANISATION);
     }
 
-    public OrganisationResponseDto activate() {
-        Organisation organisation = getCurrentUserAsOrganisation();
-        throwIfNotFullyFilled(organisation);
 
-        organisation.setIsActive(true);
-        OrganisationResponseDto dto = organisationMapper.toDto(organisationRepository.save(organisation));
-        dto.setEmail(organisation.getEmail());
-        return dto;
-    }
-
-    private void throwIfNotFullyFilled(Organisation organisation) {
+    @Override
+    protected void throwIfNotFullyFilled(Organisation organisation) {
         if(organisation.getUsername() == null)
             throw new UserException("Username is not set");
     }
 
-    public OrganisationResponseDto signUpGoogle(String token) {
-        User user = googleIdTokenService.getUserFromToken(token);
-        Organisation organisation = Organisation.builder()
-                .email(user.getEmail())
-                .build();
-
-        return saveEmptyOrganisation(organisation);
-    }
-
-    public OrganisationResponseDto signUpApple(String token) {
-        User user = appleIdTokenService.getUserFromToken(token);
-        Organisation organisation = Organisation.builder()
-                .email(user.getEmail())
-                .build();
-        return saveEmptyOrganisation(organisation);
-    }
-
-    private OrganisationResponseDto saveEmptyOrganisation(Organisation organisation) {
-        if(organisationRepository.findByEmail(organisation.getEmail()).isPresent())
-            throw new UserException("Organisation with email %s already exists".formatted(organisation.getEmail()));
-
-        organisation.setIsActive(false);
-        organisation.setCreatedAt(LocalDateTime.now());
-        organisation.setRole(Role.ROLE_ORGANISATION);
-
-        OrganisationResponseDto dto = organisationMapper.toDto(organisationRepository.save(organisation));
-        dto.setEmail(organisation.getEmail());
-        return dto;
-    }
-
-    public Organisation getCurrentUserAsOrganisationIfActive() {
-        User user = userService.getCurrentUserIfActive();
-        return organisationRepository.findById(user.getId()).orElseThrow(
-                () -> new UserException("The authorized user is not aan organisation")
-        );
-    }
-
-    private Organisation getCurrentUserAsOrganisation() {
-        User user = userService.getCurrentUser();
-        return organisationRepository.findById(user.getId()).orElseThrow(
-                () -> new UserException("The authorized user is not aan organisation")
-        );
+    @Override
+    protected void throwIfUniqueConstraintsViolated(Organisation user) {
+       if(userRepository.findByEmail(user.getEmail()).isPresent())
+           throw new UserException("User with email %s already exists".formatted(user.getEmail()));
+       if(user.getUsername() != null && userRepository.findByUsername(user.getUsername()).isPresent())
+           throw new UserException("User with username %s already exists".formatted(user.getUsername()));
     }
 }

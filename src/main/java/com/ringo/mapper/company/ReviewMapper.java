@@ -14,5 +14,5 @@ public interface ReviewMapper extends EntityMapper<ReviewRequestDto, ReviewRespo
     @Mapping(target = "participant", ignore = true)
     @Mapping(target = "organisation", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    Review toEntity(ReviewRequestDto entityDto);
+    Review toEntity(ReviewRequestDto dto);
 }

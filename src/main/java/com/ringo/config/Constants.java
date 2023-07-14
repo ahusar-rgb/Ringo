@@ -9,6 +9,8 @@ public class Constants {
             "/v3/api-docs/**",
             "/api/auth/**",
             "/api/organisations/sign-up/**",
-            "/api/participants/sign-up/**"
+            "/api/participants/sign-up/**",
+            //TODO: REMOVE
+            "/api/photos/**"
     };
 }

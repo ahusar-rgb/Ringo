@@ -5,16 +5,17 @@ import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.*;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
 import com.ringo.mapper.company.EventPersonalizedMapper;
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.Event;
-import com.ringo.model.security.User;
+import com.ringo.model.company.Organisation;
 import com.ringo.repository.CurrencyRepository;
 import com.ringo.repository.EventRepository;
 import com.ringo.service.common.CurrencyExchanger;
-import com.ringo.service.security.UserService;
+import com.ringo.service.company.OrganisationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,7 +33,7 @@ import static com.ringo.utils.Geography.getDistance;
 public class EventSearchService {
 
     private final EventRepository repository;
-    private final UserService userService;
+    private final OrganisationService organisationService;
     private final EventMapper mapper;
     private final EventPersonalizedMapper personalizedMapper;
     private final CurrencyExchanger currencyExchanger;
@@ -43,12 +44,20 @@ public class EventSearchService {
     public EventResponseDto findById(Long id) {
         log.info("findEventById: {}", id);
 
-        Event event = repository.findById(id).orElseThrow(
+        Event event = repository.findFullById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
+
+        Organisation organisation;
+        try {
+            organisation = organisationService.getFullUser();
+        } catch (UserException e) {
+            organisation = null;
+        }
+
         if (!event.getIsActive()) {
-            if (!event.getHost().getId().equals(userService.getCurrentUserIfActive().getId()))
+            if (organisation == null || !event.getHost().getId().equals(organisation.getId()))
                 throw new NotFoundException("Event [id: %d] not found".formatted(id));
         }
 
@@ -69,7 +78,7 @@ public class EventSearchService {
                         .build()
         ).collect(Collectors.toList());
 
-        return groupMapper.toDtos(groupEvents(groups,
+        return groupMapper.toDtoList(groupEvents(groups,
                 getDistance(
                         new Coordinates(latMin, lonMin),
                         new Coordinates(latMax, lonMax)) / config.getMergeDistanceFactor()));
@@ -105,12 +114,24 @@ public class EventSearchService {
     public List<EventSmallDto> search(EventSearchDto searchDto) {
         log.info("searchEvents: {}", searchDto);
 
-        User user = userService.getCurrentUserIfActive();
+        Organisation organisation;
+        try {
+            organisation = organisationService.getFullUser();
+        } catch (UserException e) {
+            organisation = null;
+        }
+
         Specification<Event> specification = searchDto.getSpecification();
-        specification = specification.and((root, query, builder) -> builder.or(
-                builder.equal(root.get("host").get("id"), user.getId()),
-                builder.isTrue(root.get("isActive")))
-        );
+
+        if(organisation != null) {
+            Organisation finalOrganisation = organisation;
+            specification = specification.and((root, query, builder) -> builder.or(
+                    builder.equal(root.get("host").get("id"), finalOrganisation.getId()),
+                    builder.isTrue(root.get("isActive")))
+            );
+        } else {
+            specification = specification.and((root, query, builder) -> builder.isTrue(root.get("isActive")));
+        }
 
         List<Event> events = repository.findAll(specification, searchDto.getPageable()).getContent();
 
@@ -120,7 +141,7 @@ public class EventSearchService {
     }
 
     private EventSmallDto toSmallDtoWithDependencies(Event event, EventSearchDto searchDto) {
-        EventSmallDto dto = mapper.toSmallDto(event);
+        EventSmallDto dto = mapper.toDtoSmall(event);
         if(searchDto.getLatitude() != null
                 && searchDto.getLongitude() != null
                 && dto.getCoordinates().longitude() != null

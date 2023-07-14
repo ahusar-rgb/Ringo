@@ -1,14 +1,22 @@
 package com.ringo.mapper.common;
 
+import org.mapstruct.Named;
+
 import java.util.List;
 
 public interface EntityMapper<RequestDto, ResponseDto,  T> {
 
     ResponseDto toDto(T entity);
 
-    List<ResponseDto> toDtos(List<T> entities);
+    @Named("toDtoDetails")
+    ResponseDto toDtoDetails(T entity);
 
-    T toEntity(RequestDto entityDto);
+    List<ResponseDto> toDtoList(List<T> entities);
 
-    List<T> toEntities(List<RequestDto> entityDtos);
+    @Named("toDtoDetailsList")
+    List<ResponseDto> toDtoDetailsList(List<T> entities);
+
+    T toEntity(RequestDto dto);
+
+    List<T> toEntityList(List<RequestDto> dtoList);
 }

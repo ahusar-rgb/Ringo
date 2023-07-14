@@ -32,7 +32,7 @@ public class CurrencyService {
 
         public List<CurrencyDto> findAll() {
             log.info("findAll currencies");
-            return mapper.toDtos(repository.findAll());
+            return mapper.toDtoList(repository.findAll());
         }
 
         public CurrencyDto saveCurrency(CurrencyDto currencyDto) {

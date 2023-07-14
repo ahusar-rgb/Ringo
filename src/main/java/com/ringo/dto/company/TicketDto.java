@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class TicketDto {
     private ParticipantResponseDto participant;
-    private EventResponseDto event;
+    private EventSmallDto event;
     private String timeOfSubmission;
     private String expiryDate;
     private Boolean isValidated;

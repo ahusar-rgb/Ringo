@@ -50,7 +50,7 @@ public class EventService {
     public EventResponseDto create(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
-        Organisation organisation = organisationService.getCurrentUserAsOrganisationIfActive();
+        Organisation organisation = organisationService.getFullUser();
 
         Currency currency = currencyRepository.findById(eventDto.getCurrencyId()).orElseThrow(
                 () -> new NotFoundException("Currency [id: %d] not found".formatted(eventDto.getCurrencyId()))
@@ -69,13 +69,13 @@ public class EventService {
         event.setIsActive(false);
         event.setCreatedAt(LocalDateTime.now());
 
-        return mapper.toDto(repository.save(event));
+        return mapper.toDtoDetails(repository.save(event));
     }
 
     public EventResponseDto update(Long id, EventRequestDto dto) {
         log.info("updateEvent: {}, {}", id, dto);
 
-        Event event = repository.findById(id).orElseThrow(
+        Event event = repository.findFullById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
         throwIfNotHost(event);
@@ -83,7 +83,7 @@ public class EventService {
         mapper.partialUpdate(event, dto);
         event.setUpdatedAt(LocalDateTime.now());
 
-        return mapper.toDto(repository.save(event));
+        return mapper.toDtoDetails(repository.save(event));
     }
 
     public void delete(Long id) {
@@ -110,7 +110,7 @@ public class EventService {
         log.info("addPhotoToEvent: {}, {}", eventId, photo.getOriginalFilename());
         log.info("photo type: {}", photo.getContentType());
 
-        Event event = repository.findById(eventId).orElseThrow(
+        Event event = repository.findFullById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
         throwIfNotHost(event);
@@ -122,13 +122,13 @@ public class EventService {
         event.setPhotoCount(event.getPhotoCount() + 1);
         repository.save(event);
 
-        return mapper.toDto(event);
+        return mapper.toDtoDetails(event);
     }
 
     public EventResponseDto removePhoto(Long eventId, Long photoId) {
         log.info("removePhotoFromEvent: {}, {}", eventId, photoId);
 
-        Event event = repository.findById(eventId).orElseThrow(
+        Event event = repository.findFullById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
@@ -142,39 +142,39 @@ public class EventService {
         throwIfNotHost(event);
 
         eventPhotoService.delete(photo.getId());
-        return mapper.toDto(repository.save(event));
+        return mapper.toDtoDetails(repository.save(event));
     }
 
     public EventResponseDto setMainPhoto(Long eventId, Long photoId) {
         log.info("setMainPhoto: {}", photoId);
 
-        Event event = repository.findById(eventId).orElseThrow(
+        Event event = repository.findFullById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
         throwIfNotHost(event);
 
         EventMainPhoto eventMainPhoto = eventPhotoService.prepareMainPhoto(event, photoId);
         event.setMainPhoto(eventMainPhoto);
-        return mapper.toDto(event);
+        return mapper.toDtoDetails(event);
     }
 
     public EventResponseDto removeMainPhoto(Long eventId) {
         log.info("removeMainPhoto: {}", eventId);
 
-        Event event = repository.findById(eventId).orElseThrow(
+        Event event = repository.findFullById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
         throwIfNotHost(event);
 
         eventPhotoService.removeMainPhoto(event);
         event.setMainPhoto(null);
-        return mapper.toDto(event);
+        return mapper.toDtoDetails(event);
     }
 
     public EventResponseDto activate(Long eventId) {
         log.info("setActive: {}", eventId);
 
-        Event event = repository.findById(eventId).orElseThrow(
+        Event event = repository.findFullById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
         throwIfNotHost(event);
@@ -183,25 +183,25 @@ public class EventService {
             throw new UserException("Event must have at least one photo");
 
         event.setIsActive(true);
-        return mapper.toDto(repository.save(event));
+        return mapper.toDtoDetails(repository.save(event));
     }
 
     public EventResponseDto deactivate(Long eventId) {
         log.info("setInactive: {}", eventId);
 
-        Event event = repository.findById(eventId).orElseThrow(
+        Event event = repository.findFullActiveById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
         throwIfNotHost(event);
 
         event.setIsActive(false);
-        return mapper.toDto(repository.save(event));
+        return mapper.toDtoDetails(repository.save(event));
     }
 
     public EventResponseDto setRegistrationForm(Long id, RegistrationForm registrationForm) {
         log.info("setRegistrationForm: {}, {}", id, registrationForm);
 
-        Event event = repository.findById(id).orElseThrow(
+        Event event = repository.findFullById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
@@ -210,13 +210,13 @@ public class EventService {
 
         event.setRegistrationForm(registrationForm);
         event = repository.save(event);
-        return mapper.toDto(event);
+        return mapper.toDtoDetails(event);
     }
 
     public EventResponseDto removeRegistrationForm(Long id) {
         log.info("removeRegistrationForm: {}", id);
 
-        Event event = repository.findById(id).orElseThrow(
+        Event event = repository.findFullById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
         throwIfNotHost(event);
@@ -224,7 +224,7 @@ public class EventService {
     }
 
     private void throwIfNotHost(Event event) {
-        if(!event.getHost().equals(userService.getCurrentUserIfActive()))
+        if(!event.getHost().getId().equals(organisationService.getFullUser().getId()))
             throw new UserException("Event [id: %d] is not owned by the organisation".formatted(event.getId()));
     }
 }

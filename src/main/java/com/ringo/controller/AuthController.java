@@ -130,10 +130,10 @@ public class AuthController {
                 .body(authService.loginWithGoogle(token.getIdToken()));
     }
 
-    @PostMapping(value = "login/apple", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<TokenDto> loginWithApple(@RequestBody IdTokenDto token) {
-        return ResponseEntity
-                .ok()
-                .body(authService.loginWithApple(token.getIdToken()));
-    }
+//    @PostMapping(value = "login/apple", consumes = {"application/json"}, produces = {"application/json"})
+//    public ResponseEntity<TokenDto> loginWithApple(@RequestBody IdTokenDto token) {
+//        return ResponseEntity
+//                .ok()
+//                .body(authService.loginWithApple(token.getIdToken()));
+//    }
 }
