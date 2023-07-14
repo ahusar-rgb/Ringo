@@ -1,7 +1,8 @@
 package com.ringo.service.security;
 
-import com.ringo.auth.AppleIdTokenService;
-import com.ringo.auth.GoogleIdTokenService;
+import com.ringo.auth.AppleIdService;
+import com.ringo.auth.GoogleIdService;
+import com.ringo.auth.IdProvider;
 import com.ringo.auth.JwtService;
 import com.ringo.config.Constants;
 import com.ringo.dto.auth.ChangePasswordForm;
@@ -34,8 +35,8 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final GoogleIdTokenService googleIdTokenService;
-    private final AppleIdTokenService appleIdTokenService;
+    private final GoogleIdService googleIdService;
+    private final AppleIdService appleIdService;
     private final UserRepository userRepository;
     private final EmailSender emailSender;
 
@@ -52,9 +53,8 @@ public class AuthService {
             throw new AuthException("Bad credentials");
         }
 
-
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AuthException("Bad credentials");
+            throw new AuthException("Failed to authenticate");
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -68,27 +68,11 @@ public class AuthService {
     }
 
     public TokenDto loginWithGoogle(String token) {
-        String email = googleIdTokenService.getUserFromToken(token).getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserException("User [email: " + email + "] not found")
-        );
-
-        return TokenDto.builder()
-                .accessToken(jwtService.generateAccessToken(user))
-                .refreshToken(jwtService.generateRefreshToken(user))
-                .build();
+        return loginWithIdProvider(token, googleIdService);
     }
 
     public TokenDto loginWithApple(String token) {
-        String email = appleIdTokenService.getUserFromToken(token).getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserException("User [email: " + email + "] not found")
-        );
-
-        return TokenDto.builder()
-                .accessToken(jwtService.generateAccessToken(user))
-                .refreshToken(jwtService.generateRefreshToken(user))
-                .build();
+        return loginWithIdProvider(token, appleIdService);
     }
 
     public TokenDto refreshToken() {
@@ -149,6 +133,18 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(changePasswordForm.getNewPassword()));
         user = userRepository.save(user);
+
+        return TokenDto.builder()
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
+                .build();
+    }
+
+    private TokenDto loginWithIdProvider(String token, IdProvider idProvider) {
+        String email = idProvider.getUserFromToken(token).getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserException("User [email: " + email + "] not found")
+        );
 
         return TokenDto.builder()
                 .accessToken(jwtService.generateAccessToken(user))

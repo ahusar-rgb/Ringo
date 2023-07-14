@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,17 @@ public class ParticipantController {
 
     @PutMapping(produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<ParticipantResponseDto> updateParticipant(@RequestBody ParticipantRequestDto dto) {
-        return ResponseEntity.ok(participantService.update(dto));
+        return ResponseEntity.ok(participantService.partialUpdate(dto));
+    }
+
+    @PutMapping(value = "/profile-picture", produces = {"application/json"}, consumes = {"multipart/form-data"})
+    public ResponseEntity<ParticipantResponseDto> updateProfilePicture(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(participantService.setPhoto(file));
+    }
+
+    @PutMapping(value = "/profile-picture/remove", produces = {"application/json"})
+    public ResponseEntity<ParticipantResponseDto> removeProfilePicture() {
+        return ResponseEntity.ok(participantService.removePhoto());
     }
 
     @PostMapping(value = "/sign-up/google", produces = {"application/json"}, consumes = {"application/json"})
@@ -41,13 +52,19 @@ public class ParticipantController {
         return ResponseEntity.ok(participantService.signUpGoogle(token.getIdToken()));
     }
 
-    @PostMapping(value = "/sign-up/apple", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<ParticipantResponseDto> signInApple(@RequestBody IdTokenDto token) {
-        return ResponseEntity.ok(participantService.signUpApple(token.getIdToken()));
-    }
+//    @PostMapping(value = "/sign-up/apple", produces = {"application/json"}, consumes = {"application/json"})
+//    public ResponseEntity<ParticipantResponseDto> signInApple(@RequestBody IdTokenDto token) {
+//        return ResponseEntity.ok(participantService.signUpApple(token.getIdToken()));
+//    }
 
     @PostMapping(value = "activate", produces = {"application/json"})
     public ResponseEntity<ParticipantResponseDto> activateParticipant() {
         return ResponseEntity.ok(participantService.activate());
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteParticipant() {
+        participantService.delete();
+        return ResponseEntity.ok().build();
     }
 }

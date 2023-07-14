@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/organisations")
@@ -51,7 +52,7 @@ public class OrganisationController {
     )
     @PostMapping(value = "/sign-up", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<OrganisationResponseDto> createOrganisation(@RequestBody OrganisationRequestDto dto) {
-        return ResponseEntity.ok(organisationService.create(dto));
+        return ResponseEntity.ok(organisationService.save(dto));
     }
 
     @Operation(summary = "Update an existing organisation")
@@ -63,7 +64,17 @@ public class OrganisationController {
     )
     @PutMapping(produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<OrganisationResponseDto> updateOrganisation(@RequestBody OrganisationRequestDto dto) {
-        return ResponseEntity.ok(organisationService.update(dto));
+        return ResponseEntity.ok(organisationService.partialUpdate(dto));
+    }
+
+    @PutMapping(value = "/profile-picture", produces = {"application/json"}, consumes = {"multipart/form-data"})
+    public ResponseEntity<OrganisationResponseDto> updateProfilePicture(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(organisationService.setPhoto(file));
+    }
+
+    @PutMapping(value = "/profile-picture/remove", produces = {"application/json"})
+    public ResponseEntity<OrganisationResponseDto> removeProfilePicture() {
+        return ResponseEntity.ok(organisationService.removePhoto());
     }
 
     @PostMapping("/activate")
@@ -76,8 +87,14 @@ public class OrganisationController {
         return ResponseEntity.ok(organisationService.signUpGoogle(token.getIdToken()));
     }
 
-    @PostMapping(value = "sign-in/apple", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> signInApple(@RequestBody IdTokenDto token) {
-        return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
+//    @PostMapping(value = "sign-in/apple", consumes = {"application/json"}, produces = {"application/json"})
+//    public ResponseEntity<OrganisationResponseDto> signInApple(@RequestBody IdTokenDto token) {
+//        return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
+//    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteOrganisation() {
+        organisationService.delete();
+        return ResponseEntity.ok().build();
     }
 }

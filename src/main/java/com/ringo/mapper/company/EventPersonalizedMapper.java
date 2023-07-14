@@ -1,6 +1,7 @@
 package com.ringo.mapper.company;
 
 import com.ringo.dto.company.EventResponseDto;
+import com.ringo.exception.UserException;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
 import com.ringo.service.company.ParticipantService;
@@ -17,11 +18,16 @@ public class EventPersonalizedMapper {
     private final ParticipantService participantService;
 
     public EventResponseDto toPersonalizedDto(Event event) {
-        EventResponseDto dto = eventMapper.toDto(event);
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
+        EventResponseDto dto = eventMapper.toDtoDetails(event);
 
-        dto.setIsRegistered(ticketService.ticketExists(event, participant));
-        dto.setIsSaved(participant.getSavedEvents().contains(event));
+        try {
+            Participant participant = participantService.getFullUser();
+
+            dto.setIsRegistered(ticketService.ticketExists(event, participant));
+            dto.setIsSaved(participant.getSavedEvents().contains(event));
+        } catch (UserException e) {
+            return dto;
+        }
 
         return dto;
     }

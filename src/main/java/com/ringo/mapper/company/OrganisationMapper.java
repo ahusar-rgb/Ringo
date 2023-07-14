@@ -2,63 +2,36 @@ package com.ringo.mapper.company;
 
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.mapper.common.AbstractUserMapper;
 import com.ringo.model.company.Organisation;
-import com.ringo.model.security.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
-@Component
-@RequiredArgsConstructor
-public class OrganisationMapper {
+@Mapper(componentModel = "spring")
+public interface OrganisationMapper extends AbstractUserMapper<OrganisationRequestDto, Organisation, OrganisationResponseDto> {
 
-    private final ReviewMapper reviewMapper;
+    @Override
+    @Mapping(target = "profilePictureId", source = "profilePicture.id")
+    @Mapping(target = "pastEventsCount", ignore = true)
+    @Mapping(target = "upcomingEventsCount", ignore = true)
+    OrganisationResponseDto toDto(Organisation entity);
 
-    public Organisation toEntity(OrganisationRequestDto dto)
-    {
-        return Organisation.builder()
-                .name(dto.getName())
-                .username(dto.getUsername())
-                .description(dto.getDescription())
-                .email(dto.getEmail())
-                .contacts(dto.getContacts())
-                .build();
-    }
+    @Override
+    @Named("toDtoDetails")
+    @Mapping(target = "profilePictureId", source = "profilePicture.id")
+    default OrganisationResponseDto toDtoDetails(Organisation entity) {
+        OrganisationResponseDto dto = toDto(entity);
+        dto.setPastEventsCount((int)entity.getHostedEvents().stream()
+                .filter(event -> event.getEndTime().isBefore(java.time.LocalDateTime.now()))
+                .count()
+        );
+        dto.setUpcomingEventsCount((int)entity.getHostedEvents().stream()
+                .filter(event -> event.getStartTime()
+                        .isAfter(java.time.LocalDateTime.now()))
+                .count()
+        );
 
-    public OrganisationResponseDto toDto(Organisation entity) {
-        OrganisationResponseDto organisation = OrganisationResponseDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .username(entity.getUsername())
-                .description(entity.getDescription())
-                .contacts(entity.getContacts())
-                .rating(entity.getRating())
-                .isActive(entity.getIsActive())
-                .build();
-
-        organisation.setPastEventsCount((int)entity.getHostedEvents().stream().filter(event -> event.getEndTime().isBefore(java.time.LocalDateTime.now())).count());
-        organisation.setUpcomingEventsCount((int)entity.getHostedEvents().stream().filter(event -> event.getStartTime().isAfter(java.time.LocalDateTime.now())).count());
-        if(entity.getProfilePicture() != null)
-            organisation.setProfilePicture(entity.getProfilePicture().getId());
-
-        return organisation;
-    }
-
-
-    public void partialUpdate(Organisation entity, OrganisationRequestDto dto) {
-        if(dto.getName() != null) entity.setName(dto.getName());
-        if(dto.getUsername() != null) entity.setUsername(dto.getUsername());
-        if(dto.getDescription() != null) entity.setDescription(dto.getDescription());
-        if(dto.getContacts() != null) entity.setContacts(dto.getContacts());
-    }
-
-    public Organisation fromUser(User user) {
-        return Organisation.builder()
-                .name(user.getName())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .password(user.getPassword())
-                .profilePicture(user.getProfilePicture())
-                .build();
+        return dto;
     }
 }

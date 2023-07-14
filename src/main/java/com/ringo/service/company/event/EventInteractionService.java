@@ -33,8 +33,8 @@ public class EventInteractionService {
     private final ParticipantRepository participantRepository;
 
     public TicketDto joinEvent(Long id, RegistrationSubmission submission) {
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
-        Event event = repository.findById(id).orElseThrow(
+        Participant participant = participantService.getFullUser();
+        Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
@@ -48,13 +48,13 @@ public class EventInteractionService {
         event.setPeopleCount(event.getPeopleCount() + 1);
         event = repository.save(event);
 
-        ticketDto.setEvent(mapper.toDto(event));
+        ticketDto.setEvent(mapper.toDtoSmall(event));
         return ticketDto;
     }
 
     public TicketDto leaveEvent(Long id) {
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
-        Event event = repository.findById(id).orElseThrow(
+        Participant participant = participantService.getFullUser();
+        Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
@@ -62,13 +62,13 @@ public class EventInteractionService {
         event.setPeopleCount(event.getPeopleCount() - 1);
         event = repository.save(event);
 
-        ticketDto.setEvent(mapper.toDto(event));
+        ticketDto.setEvent(mapper.toDtoSmall(event));
         return ticketDto;
     }
 
     public EventResponseDto saveEvent(Long id) {
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
-        Event event = repository.findById(id).orElseThrow(
+        Participant participant = participantService.getFullUser();
+        Event event = repository.findFullActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
@@ -85,8 +85,8 @@ public class EventInteractionService {
     }
 
     public EventResponseDto unsaveEvent(Long id) {
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
-        Event event = repository.findById(id).orElseThrow(
+        Participant participant = participantService.getFullUser();
+        Event event = repository.findFullActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
@@ -101,19 +101,19 @@ public class EventInteractionService {
     }
 
     public List<EventSmallDto> getSavedEvents() {
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
-        return mapper.toSmallDtos(participant.getSavedEvents());
+        Participant participant = participantService.getFullUser();
+        return mapper.toDtoSmallList(participant.getSavedEvents());
     }
 
     public TicketDto getTicketForEvent(Long id) {
-        Event event = repository.findById(id).orElseThrow(
+        Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        Participant participant = participantService.getCurrentUserAsParticipantIfActive();
+        Participant participant = participantService.getFullUser();
 
         TicketDto ticketDto = ticketService.getTicketWithCode(event, participant);
-        ticketDto.setEvent(mapper.toDto(event));
+        ticketDto.setEvent(mapper.toDtoSmall(event));
         return ticketDto;
     }
 }
