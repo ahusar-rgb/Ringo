@@ -39,14 +39,12 @@ public class ParticipantServiceTest {
     private UserRepository userRepository;
     @Mock
     private AuthenticationService authenticationService;
-    @Mock
-    private PhotoService photoService;
 
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;
 
     @Spy
-    private ParticipantMapper mapper = (ParticipantMapper) new ParticipantMapperImpl();
+    private ParticipantMapper mapper = new ParticipantMapperImpl();
     @InjectMocks
     private ParticipantService service;
 
@@ -55,6 +53,7 @@ public class ParticipantServiceTest {
         ReflectionTestUtils.setField(service, "passwordEncoder", new BCryptPasswordEncoder());
         ReflectionTestUtils.setField(service, "mapper", mapper);
         ReflectionTestUtils.setField(service, "abstractUserMapper", new ParticipantMapperImpl());
+        ReflectionTestUtils.setField(service, "repository", participantRepository);
     }
 
     @Test
@@ -304,18 +303,18 @@ public class ParticipantServiceTest {
         assertThrows(UserException.class, () -> service.activate());
     }
 
-    @Test
-    void setPhotoSuccess() {
-
-    }
-
-    @Test
-    void removePhotoSuccess() {
-
-    }
-
-    @Test
-    void removePhotoAbsent() {
-
-    }
+//    @Test
+//    void setPhotoSuccess() {
+//
+//    }
+//
+//    @Test
+//    void removePhotoSuccess() {
+//
+//    }
+//
+//    @Test
+//    void removePhotoAbsent() {
+//
+//    }
 }

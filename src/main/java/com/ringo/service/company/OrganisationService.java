@@ -31,7 +31,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     @Autowired
     private AppleIdService appleIdService;
 
-    private final OrganisationMapper organisationMapper;
+    private final OrganisationMapper mapper;
     private final OrganisationRepository organisationRepository;
 
     public OrganisationService(UserRepository userRepository,
@@ -41,7 +41,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
                                PhotoService photoService,
                                AuthenticationService authenticationService) {
         super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService);
-        this.organisationMapper = mapper;
+        this.mapper = mapper;
         this.organisationRepository = repository;
     }
 
@@ -51,7 +51,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         Organisation organisation = organisationRepository.findByIdActiveWithEvents(id).orElseThrow(
                 () -> new NotFoundException("Organisation [id: %d] not found".formatted(id)));
 
-        return organisationMapper.toDto(organisation);
+        return mapper.toDto(organisation);
     }
 
     public OrganisationResponseDto save(OrganisationRequestDto dto) {
@@ -60,10 +60,10 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     public OrganisationResponseDto findCurrentOrganisation() {
         log.info("findCurrentOrganisation");
-        Organisation organisation = organisationRepository.findByIdWithEvents(getUserDetails().getId()).orElseThrow(
+        Organisation organisation = organisationRepository.findFullById(getUserDetails().getId()).orElseThrow(
                 () -> new UserException("Authorized user is not an organisation"));
 
-        OrganisationResponseDto dto = organisationMapper.toDto(organisation);
+        OrganisationResponseDto dto = mapper.toDto(organisation);
         dto.setEmail(organisation.getEmail());
         return dto;
     }
@@ -78,22 +78,24 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
 
     @Override
-    protected void throwIfRequiredFieldsNotFilled(Organisation organisation) {
+    public void throwIfRequiredFieldsNotFilled(Organisation organisation) {
         if(organisation.getUsername() == null)
             throw new UserException("Username is not set");
+        if(organisation.getName() == null)
+            throw new UserException("Name is not set");
     }
 
     @Override
-    protected void throwIfUniqueConstraintsViolated(Organisation user) {
+    public void throwIfUniqueConstraintsViolated(Organisation user) {
 
         if(user.getUsername() != null) {
-            User found  = userRepository.findByUsername(user.getUsername()).orElse(null);
+            User found  = userRepository.findActiveByUsername(user.getUsername()).orElse(null);
             if(found != null && !found.getId().equals(user.getId()))
                 throw new UserException("User with username %s already exists".formatted(user.getUsername()));
         }
 
         if(user.getEmail() != null) {
-            User found  = userRepository.findByEmail(user.getEmail()).orElse(null);
+            User found  = userRepository.findActiveByEmail(user.getEmail()).orElse(null);
             if(found != null && !found.getId().equals(user.getId()))
                 throw new UserException("User with email %s already exists".formatted(user.getEmail()));
         }
