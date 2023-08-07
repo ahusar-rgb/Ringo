@@ -8,4 +8,13 @@
       </database-info>
     </database-infos>
   </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default" defaultIncludeChangeLogFile="src/main/resources/liquibase/changelog-master.yaml">
+        <packages>
+          <package value="com.ringo" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
 </project>

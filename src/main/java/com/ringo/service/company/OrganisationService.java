@@ -1,6 +1,7 @@
 package com.ringo.service.company;
 
 import com.ringo.auth.AppleIdService;
+import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.GoogleIdService;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
@@ -9,6 +10,7 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
+import com.ringo.model.security.User;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.AbstractUserService;
@@ -29,7 +31,6 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     @Autowired
     private AppleIdService appleIdService;
 
-    private final UserRepository userRepository;
     private final OrganisationMapper organisationMapper;
     private final OrganisationRepository organisationRepository;
 
@@ -37,11 +38,11 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
                                OrganisationRepository repository,
                                PasswordEncoder passwordEncoder,
                                OrganisationMapper mapper,
-                               PhotoService photoService) {
-        super(userRepository, repository, passwordEncoder, mapper, photoService);
+                               PhotoService photoService,
+                               AuthenticationService authenticationService) {
+        super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService);
         this.organisationMapper = mapper;
         this.organisationRepository = repository;
-        this.userRepository = userRepository;
     }
 
 
@@ -77,16 +78,24 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
 
     @Override
-    protected void throwIfNotFullyFilled(Organisation organisation) {
+    protected void throwIfRequiredFieldsNotFilled(Organisation organisation) {
         if(organisation.getUsername() == null)
             throw new UserException("Username is not set");
     }
 
     @Override
     protected void throwIfUniqueConstraintsViolated(Organisation user) {
-       if(userRepository.findByEmail(user.getEmail()).isPresent())
-           throw new UserException("User with email %s already exists".formatted(user.getEmail()));
-       if(user.getUsername() != null && userRepository.findByUsername(user.getUsername()).isPresent())
-           throw new UserException("User with username %s already exists".formatted(user.getUsername()));
+
+        if(user.getUsername() != null) {
+            User found  = userRepository.findByUsername(user.getUsername()).orElse(null);
+            if(found != null && !found.getId().equals(user.getId()))
+                throw new UserException("User with username %s already exists".formatted(user.getUsername()));
+        }
+
+        if(user.getEmail() != null) {
+            User found  = userRepository.findByEmail(user.getEmail()).orElse(null);
+            if(found != null && !found.getId().equals(user.getId()))
+                throw new UserException("User with email %s already exists".formatted(user.getEmail()));
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.ringo.service.company;
 
 import com.ringo.auth.AppleIdService;
+import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.GoogleIdService;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
@@ -9,6 +10,7 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
 import com.ringo.model.company.Participant;
 import com.ringo.model.security.Role;
+import com.ringo.model.security.User;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.AbstractUserService;
@@ -28,17 +30,16 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
     private AppleIdService appleIdService;
 
     private final ParticipantRepository repository;
-    private final UserRepository userRepository;
     private final ParticipantMapper mapper;
 
     public ParticipantService(UserRepository userRepository,
                               ParticipantRepository repository,
                               PasswordEncoder passwordEncoder,
                               ParticipantMapper mapper,
-                              PhotoService photoService) {
-        super(userRepository, repository, passwordEncoder, mapper, photoService);
+                              PhotoService photoService,
+                              AuthenticationService authenticationService) {
+        super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService);
         this.repository = repository;
-        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
@@ -55,9 +56,7 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
 
     public ParticipantResponseDto findCurrentParticipant() {
         log.info("findCurrentParticipant");
-        Participant participant = repository.findById(getUserDetails().getId()).orElseThrow(
-                () -> new NotFoundException("Participant [id: %d] not found".formatted(getUserDetails().getId()))
-        );
+        Participant participant = getFullUser();
         ParticipantResponseDto dto = mapper.toDto(participant);
         dto.setEmail(participant.getEmail());
         return dto;
@@ -72,7 +71,7 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
     }
 
     @Override
-    public void throwIfNotFullyFilled(Participant participant) {
+    public void throwIfRequiredFieldsNotFilled(Participant participant) {
         if(participant.getGender() == null) {
             throw new UserException("Gender is not specified");
         }
@@ -89,11 +88,18 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
 
     @Override
     public void throwIfUniqueConstraintsViolated(Participant user) {
-        if(user.getUsername() != null && userRepository.findActiveByUsername(user.getUsername()).isPresent()) {
-            throw new UserException("Participant with [username: " + user.getUsername() + "] already exists");
+        if(user.getUsername() != null) {
+            User found = userRepository.findActiveByUsername(user.getUsername()).orElse(null);
+            if(found != null && !found.getId().equals(user.getId())) {
+                throw new UserException("Participant with [username: " + user.getUsername() + "] already exists");
+            }
         }
-        if(userRepository.findActiveByEmail(user.getEmail()).isPresent()) {
-            throw new UserException("Participant with [email: " + user.getEmail() + "] already exists");
+
+        if(user.getEmail() != null) {
+            User found = userRepository.findActiveByEmail(user.getEmail()).orElse(null);
+            if(found != null && !found.getId().equals(user.getId())) {
+                throw new UserException("Participant with [email: " + user.getEmail() + "] already exists");
+            }
         }
     }
 }

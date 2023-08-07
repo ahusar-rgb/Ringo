@@ -8,6 +8,7 @@ import com.ringo.dto.company.TicketDto;
 import com.ringo.exception.InternalException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
+import com.ringo.mapper.company.EventMapper;
 import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
 import com.ringo.model.form.RegistrationSubmission;
@@ -36,6 +37,7 @@ public class TicketService {
     private final TicketRepository repository;
     private final TicketMapper mapper;
     private final EventRepository eventRepository;
+    private final EventMapper eventMapper;
     private final ParticipantService participantService;
     private final ParticipantRepository participantRepository;
     private final OrganisationService organisationService;
@@ -163,7 +165,9 @@ public class TicketService {
         return tickets.stream().map(ticket -> {
             if(eventRepository.findById(ticket.getId().getEvent().getId()).isEmpty())
                 throw new NotFoundException("Event not found");
+
             TicketDto ticketDto = mapper.toDto(ticket);
+            ticketDto.setEvent(eventMapper.toDtoSmall(ticket.getId().getEvent()));
             ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
             return ticketDto;
         }).toList();
