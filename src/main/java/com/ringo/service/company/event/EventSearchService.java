@@ -2,7 +2,10 @@ package com.ringo.service.company.event;
 
 import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.Coordinates;
-import com.ringo.dto.company.*;
+import com.ringo.dto.company.EventGroup;
+import com.ringo.dto.company.EventGroupDto;
+import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;

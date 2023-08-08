@@ -45,6 +45,7 @@ dependencies {
     implementation 'com.google.zxing:javase:3.5.1'
 
     implementation 'com.amazonaws:aws-java-sdk:1.12.449'
+    testImplementation 'org.projectlombok:lombok'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'

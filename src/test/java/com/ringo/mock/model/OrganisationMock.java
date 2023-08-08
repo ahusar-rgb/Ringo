@@ -3,7 +3,6 @@ package com.ringo.mock.model;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 
 public class OrganisationMock {

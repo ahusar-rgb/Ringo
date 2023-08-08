@@ -3,18 +3,12 @@ package com.ringo.unit;
 import com.ringo.auth.AuthenticationService;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.dto.company.ParticipantRequestDto;
-import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.mapper.company.OrganisationMapperImpl;
-import com.ringo.mapper.company.ParticipantMapperImpl;
 import com.ringo.mock.dto.OrganisationDtoMock;
 import com.ringo.mock.model.OrganisationMock;
-import com.ringo.mock.dto.ParticipantDtoMock;
-import com.ringo.mock.model.ParticipantMock;
-import com.ringo.model.company.Organisation;
 import com.ringo.model.company.Organisation;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.UserRepository;
@@ -34,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class OrganisationServiceTest {
