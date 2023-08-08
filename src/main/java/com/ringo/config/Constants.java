@@ -10,7 +10,6 @@ public class Constants {
             "/api/auth/**",
             "/api/organisations/sign-up/**",
             "/api/participants/sign-up/**",
-            //TODO: REMOVE
             "/api/photos/**"
     };
 }

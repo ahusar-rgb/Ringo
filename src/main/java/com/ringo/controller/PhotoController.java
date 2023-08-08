@@ -1,8 +1,11 @@
 package com.ringo.controller;
 
+import com.ringo.exception.InternalException;
+import com.ringo.model.photo.Photo;
 import com.ringo.service.common.PhotoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,21 @@ public class PhotoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> findEventPhotoById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(photoService.findBytes(id));
+        Photo photo = photoService.findById(id);
+        MediaType mediaType;
+        if(photo.getContentType().equals("jpeg") || photo.getContentType().equals("jpg")) {
+            mediaType = MediaType.IMAGE_JPEG;
+        } else if(photo.getContentType().equals("png")) {
+            mediaType = MediaType.IMAGE_PNG;
+        } else {
+            throw new InternalException("Unexpected value: " + photo.getContentType());
+        }
+
+        byte[] content = photoService.findBytes(id);
+        return ResponseEntity
+                .ok()
+                .contentType(mediaType)
+                .contentLength(content.length)
+                .body(content);
     }
 }

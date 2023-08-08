@@ -2,10 +2,14 @@ package com.ringo.service.company.event;
 
 import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.Coordinates;
-import com.ringo.dto.company.*;
+import com.ringo.dto.company.EventGroup;
+import com.ringo.dto.company.EventGroupDto;
+import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
+import com.ringo.mapper.company.CurrencyMapper;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
 import com.ringo.mapper.company.EventPersonalizedMapper;
@@ -38,6 +42,7 @@ public class EventSearchService {
     private final EventPersonalizedMapper personalizedMapper;
     private final CurrencyExchanger currencyExchanger;
     private final CurrencyRepository currencyRepository;
+    private final CurrencyMapper currencyMapper;
     private final ApplicationProperties config;
     private final EventGroupMapper groupMapper;
 
@@ -144,13 +149,14 @@ public class EventSearchService {
         EventSmallDto dto = mapper.toDtoSmall(event);
         if(searchDto.getLatitude() != null
                 && searchDto.getLongitude() != null
+                && dto.getCoordinates() != null
                 && dto.getCoordinates().longitude() != null
                 && dto.getCoordinates().latitude() != null)
             dto.setDistance(
                     getDistance(new Coordinates(searchDto.getLatitude(), searchDto.getLongitude()),
                             dto.getCoordinates())
             );
-        if(searchDto.getCurrencyId() != null && (searchDto.getPriceMin() != null || searchDto.getPriceMax() != null)) {
+        if(searchDto.getCurrencyId() != null) {
             dto.setPrice(
                     currencyExchanger.exchange(
                             event.getCurrency(),
@@ -161,7 +167,7 @@ public class EventSearchService {
             );
             Currency currency = currencyRepository.findById(searchDto.getCurrencyId()).orElseThrow(
                     () -> new NotFoundException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId())));
-            dto.setCurrency(CurrencyDto.builder().name(currency.getName()).id(currency.getId()).symbol(currency.getSymbol()).build());
+            dto.setCurrency(currencyMapper.toDto(currency));
         }
 
         return dto;

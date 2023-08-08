@@ -1,9 +1,11 @@
 package com.ringo.service.common;
 
+import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.IdProvider;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.InternalException;
+import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.common.AbstractUserMapper;
 import com.ringo.model.photo.Photo;
@@ -13,7 +15,6 @@ import com.ringo.repository.UserRepository;
 import com.ringo.repository.common.AbstractUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,13 +28,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public abstract class AbstractUserService<S extends UserRequestDto, T extends User, R extends UserResponseDto> {
 
-    private final UserRepository userRepository;
+    protected final UserRepository userRepository;
     private final AbstractUserRepository<T> repository;
     private final PasswordEncoder passwordEncoder;
     private final AbstractUserMapper<S, T, R> abstractUserMapper;
     private final PhotoService photoService;
+    private final AuthenticationService authenticationService;
 
-    protected abstract void throwIfNotFullyFilled(T user);
+    protected abstract void throwIfRequiredFieldsNotFilled(T user);
     protected abstract void throwIfUniqueConstraintsViolated(T user);
 
     public R save(S dto, Role role) {
@@ -46,7 +48,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         abstractUserMapper.partialUpdate(user, dto);
 
         throwIfUniqueConstraintsViolated(user);
-        throwIfNotFullyFilled(user);
+        throwIfRequiredFieldsNotFilled(user);
 
         user.setRole(role);
         user.setCreatedAt(LocalDateTime.now());
@@ -72,22 +74,23 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     protected T getUserDetails() {
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = authenticationService.getCurrentUser();
         return abstractUserMapper.fromUser(user);
     }
 
     public T getFullUser() {
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = authenticationService.getCurrentUser();
 
         Optional<T> result = repository.findFullById(user.getId());
         if(result.isEmpty())
-            throw new UserException("User not found");
+            throw new NotFoundException("User is not found");
 
         return result.get();
     }
 
     private User buildFromDto(S dto) {
         User user = abstractUserMapper.toEntity(dto);
+        user.setId(null);
         throwIfUniqueConstraintsViolated(abstractUserMapper.fromUser(user));
 
         if(dto.getPassword() == null)
@@ -98,14 +101,14 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     public R activate() {
-        T user = getUserDetails();
+        T user = getFullUser();
 
         log.info("activateParticipant: {}", user.getEmail());
 
         if(user.getIsActive()) {
             throw new UserException("User [email: %s] is already active".formatted(user.getEmail()));
         }
-        throwIfNotFullyFilled(user);
+        throwIfRequiredFieldsNotFilled(user);
 
         user.setIsActive(true);
         R dto = abstractUserMapper.toDto(repository.save(user));
@@ -114,11 +117,11 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     public R partialUpdate(S dto) {
-        T user = getUserDetails();
+        T user = getFullUser();
         abstractUserMapper.partialUpdate(user, dto);
 
         throwIfUniqueConstraintsViolated(user);
-        throwIfNotFullyFilled(user);
+        throwIfRequiredFieldsNotFilled(user);
 
         user.setUpdatedAt(LocalDateTime.now());
 
@@ -132,7 +135,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     public R setPhoto(MultipartFile photo) {
-        T user = getUserDetails();
+        T user = getFullUser();
 
         log.info("email: {}, setPhoto: {}", user.getEmail(), photo.getOriginalFilename());
 
@@ -156,16 +159,16 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     public R removePhoto() {
-        User user = getUserDetails();
+        T user = getFullUser();
 
         if (user.getProfilePicture() != null) {
             long photoId = user.getProfilePicture().getId();
             user.setProfilePicture(null);
-            userRepository.save(user);
+            repository.save(user);
             photoService.delete(photoId);
         }
 
-        R dto = abstractUserMapper.toDto(getUserDetails());
+        R dto = abstractUserMapper.toDto(user);
         dto.setEmail(user.getEmail());
         return dto;
     }

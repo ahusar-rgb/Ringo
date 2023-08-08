@@ -10,8 +10,8 @@ import org.mapstruct.Mapping;
 public interface TicketMapper extends SingleDtoEntityMapper<TicketDto, Ticket> {
 
     @Override
-    @Mapping(source = "id.participant", target = "participant")
-    @Mapping(source = "id.event", target = "event")
+    @Mapping(target = "participant", source = "id.participant")
+    @Mapping(target = "event", ignore = true)
     @Mapping(target = "ticketCode", ignore = true)
     TicketDto toDto(Ticket entity);
 }
