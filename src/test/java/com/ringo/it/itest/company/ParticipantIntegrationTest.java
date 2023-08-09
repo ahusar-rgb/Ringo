@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.File;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -57,4 +59,36 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         participantTemplate.delete(token);
     }
 
+    @Test
+    void setPhotoSuccess() {
+        ParticipantRequestDto requestDto = ParticipantDtoMock.getParticipantMockDto();
+        ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
+
+        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+
+        File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
+
+        ParticipantResponseDto actual = participantTemplate.setPhoto(token, profilePicture, "image/jpeg");
+        assertThat(actual.getProfilePictureId()).isNotNull();
+        assertThat(actual).usingRecursiveComparison().ignoringFields("profilePictureId").isEqualTo(responseDto);
+
+        participantTemplate.delete(token);
+    }
+
+    @Test
+    void removePhotoSuccess() {
+        ParticipantRequestDto requestDto = ParticipantDtoMock.getParticipantMockDto();
+        ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
+
+        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+
+        File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
+        participantTemplate.setPhoto(token, profilePicture, "image/jpeg");
+
+        ParticipantResponseDto actual = participantTemplate.removePhoto(token);
+        assertThat(actual.getProfilePictureId()).isNull();
+        assertThat(actual).usingRecursiveComparison().ignoringFields("profilePictureId").isEqualTo(responseDto);
+
+        participantTemplate.delete(token);
+    }
 }

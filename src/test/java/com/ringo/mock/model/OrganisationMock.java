@@ -8,6 +8,7 @@ import java.util.HashSet;
 public class OrganisationMock {
     public static Organisation getOrganisationMock() {
         return Organisation.builder()
+                .id(System.currentTimeMillis())
                 .isActive(true)
                 .email("test@test.com")
                 .name("Test")

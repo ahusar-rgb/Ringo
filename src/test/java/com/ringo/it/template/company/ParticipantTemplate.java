@@ -4,8 +4,12 @@ import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.springframework.stereotype.Component;
+
+import java.io.File;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -44,5 +48,22 @@ public class ParticipantTemplate extends EndpointTemplate {
 
     public void delete(String token) {
         httpDelete(token, ItTestConsts.HTTP_SUCCESS);
+    }
+
+    public ParticipantResponseDto setPhoto(String token, File file, String contentType) {
+        RequestSpecification request = RestAssured.given();
+        request.header("Authorization", "Bearer " + token);
+        request.contentType("multipart/form-data");
+        request.multiPart("file", file, contentType);
+
+        Response response = request.put(getEndpointUrl() + "/profile-picture");
+        assertThat(response.statusCode()).isEqualTo(ItTestConsts.HTTP_SUCCESS);
+
+        return response.getBody().as(ParticipantResponseDto.class);
+    }
+
+    public ParticipantResponseDto removePhoto(String token) {
+        Response response = httpPut(token, "profile-picture/remove", null, ItTestConsts.HTTP_SUCCESS);
+        return response.getBody().as(ParticipantResponseDto.class);
     }
 }

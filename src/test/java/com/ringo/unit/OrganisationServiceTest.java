@@ -7,11 +7,14 @@ import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.mapper.company.OrganisationMapperImpl;
+import com.ringo.mock.common.MultipartFileMock;
 import com.ringo.mock.dto.OrganisationDtoMock;
 import com.ringo.mock.model.OrganisationMock;
 import com.ringo.model.company.Organisation;
+import com.ringo.model.photo.Photo;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.UserRepository;
+import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.OrganisationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +23,9 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -37,6 +42,8 @@ public class OrganisationServiceTest {
     private UserRepository userRepository;
     @Mock
     private AuthenticationService authenticationService;
+    @Mock
+    private PhotoService photoService;
 
     @Captor
     private ArgumentCaptor<Organisation> organisationCaptor;
@@ -279,5 +286,65 @@ public class OrganisationServiceTest {
         when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
         //then
         assertThrows(UserException.class, () -> service.activate());
+    }
+
+    @Test
+    void setPhotoSuccess() {
+        //given
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        MultipartFile file = MultipartFileMock.getMockMultipartFile();
+
+        //when
+        when(authenticationService.getCurrentUser()).thenReturn(organisation);
+        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationRepository.save(organisation)).thenReturn(organisation);
+
+        //then
+        OrganisationResponseDto dto = service.setPhoto(file);
+        assertThat(dto).isEqualTo(mapper.toDto(organisation));
+
+        verify(organisationRepository, times(1)).save(any(Organisation.class));
+
+        try {
+            verify(photoService, times(1)).save("profilePictures/user#" + organisation.getId(), "png", file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void removePhotoSuccess() {
+        //given
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        Photo photo = new Photo();
+        photo.setId(System.currentTimeMillis());
+        organisation.setProfilePicture(photo);
+
+        //when
+        when(authenticationService.getCurrentUser()).thenReturn(organisation);
+        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationRepository.save(organisation)).thenReturn(organisation);
+
+        //then
+        OrganisationResponseDto dto = service.removePhoto();
+        assertThat(dto).isEqualTo(mapper.toDto(organisation));
+
+        verify(organisationRepository, times(1)).save(any(Organisation.class));
+        verify(photoService, times(1)).delete(photo.getId());
+    }
+
+    @Test
+    void removePhotoAbsent() {
+        //given
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setProfilePicture(null);
+        //when
+        when(authenticationService.getCurrentUser()).thenReturn(organisation);
+        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
+
+        //then
+        assertThrows(UserException.class, () -> service.removePhoto());
+
+        verify(photoService, never()).delete(anyLong());
     }
 }

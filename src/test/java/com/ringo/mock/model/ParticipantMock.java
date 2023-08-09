@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public class ParticipantMock {
     public static Participant getParticipantMock() {
         return Participant.builder()
+                .id(System.currentTimeMillis())
                 .isActive(true)
                 .email("test@test.com")
                 .dateOfBirth(LocalDate.of(2000, 1, 1))

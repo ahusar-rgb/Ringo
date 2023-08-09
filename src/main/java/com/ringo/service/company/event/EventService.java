@@ -97,7 +97,7 @@ public class EventService {
                 photo -> {
                     try {
                         eventPhotoService.delete(photo);
-                    } catch (UserException ignored) {}
+                    } catch (NotFoundException ignored) {}
                 }
         );
 

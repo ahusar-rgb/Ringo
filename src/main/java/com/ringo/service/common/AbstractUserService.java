@@ -144,7 +144,8 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         String contentType = photo.getContentType().split("/")[1];
 
         try {
-            removePhoto();
+            if(user.getProfilePicture() != null)
+                removePhoto();
             Photo profilePicture = photoService.save("profilePictures/user#" + user.getId(), contentType, photo.getBytes());
             user.setProfilePicture(profilePicture);
         } catch (IOException e) {
@@ -161,12 +162,13 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     public R removePhoto() {
         T user = getFullUser();
 
-        if (user.getProfilePicture() != null) {
-            long photoId = user.getProfilePicture().getId();
-            user.setProfilePicture(null);
-            repository.save(user);
-            photoService.delete(photoId);
-        }
+        if(user.getProfilePicture() == null)
+            throw new UserException("User does not have a photo");
+
+        long photoId = user.getProfilePicture().getId();
+        user.setProfilePicture(null);
+        repository.save(user);
+        photoService.delete(photoId);
 
         R dto = abstractUserMapper.toDto(user);
         dto.setEmail(user.getEmail());

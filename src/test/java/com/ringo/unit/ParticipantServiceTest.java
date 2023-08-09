@@ -7,11 +7,14 @@ import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
 import com.ringo.mapper.company.ParticipantMapperImpl;
+import com.ringo.mock.common.MultipartFileMock;
 import com.ringo.mock.dto.ParticipantDtoMock;
 import com.ringo.mock.model.ParticipantMock;
 import com.ringo.model.company.Participant;
+import com.ringo.model.photo.Photo;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.UserRepository;
+import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.ParticipantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +23,9 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -37,6 +42,8 @@ public class ParticipantServiceTest {
     private UserRepository userRepository;
     @Mock
     private AuthenticationService authenticationService;
+    @Mock
+    private PhotoService photoService;
 
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;
@@ -301,18 +308,63 @@ public class ParticipantServiceTest {
         assertThrows(UserException.class, () -> service.activate());
     }
 
-//    @Test
-//    void setPhotoSuccess() {
-//
-//    }
-//
-//    @Test
-//    void removePhotoSuccess() {
-//
-//    }
-//
-//    @Test
-//    void removePhotoAbsent() {
-//
-//    }
+    @Test
+    void setPhotoSuccess() {
+        //given
+        Participant participant = ParticipantMock.getParticipantMock();
+        MultipartFile file = MultipartFileMock.getMockMultipartFile();
+
+        //when
+        when(authenticationService.getCurrentUser()).thenReturn(participant);
+        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        when(participantRepository.save(participant)).thenReturn(participant);
+
+        //then
+        ParticipantResponseDto dto = service.setPhoto(file);
+        assertThat(dto).isEqualTo(mapper.toDto(participant));
+
+        verify(participantRepository, times(1)).save(any(Participant.class));
+
+        try {
+            verify(photoService, times(1)).save("profilePictures/user#" + participant.getId(), "png", file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void removePhotoSuccess() {
+        //given
+        Participant participant = ParticipantMock.getParticipantMock();
+        Photo photo = new Photo();
+        photo.setId(System.currentTimeMillis());
+        participant.setProfilePicture(photo);
+
+        //when
+        when(authenticationService.getCurrentUser()).thenReturn(participant);
+        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        when(participantRepository.save(participant)).thenReturn(participant);
+
+        //then
+        ParticipantResponseDto dto = service.removePhoto();
+        assertThat(dto).isEqualTo(mapper.toDto(participant));
+
+        verify(participantRepository, times(1)).save(any(Participant.class));
+        verify(photoService, times(1)).delete(photo.getId());
+    }
+
+    @Test
+    void removePhotoAbsent() {
+        //given
+        Participant participant = ParticipantMock.getParticipantMock();
+        participant.setProfilePicture(null);
+        //when
+        when(authenticationService.getCurrentUser()).thenReturn(participant);
+        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+
+        //then
+        assertThrows(UserException.class, () -> service.removePhoto());
+
+        verify(photoService, never()).delete(anyLong());
+    }
 }

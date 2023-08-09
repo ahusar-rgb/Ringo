@@ -64,6 +64,7 @@ public abstract class EndpointTemplate {
     public  <T> Response httpPut(String token, String path, T data, int expectedHttpCode) {
 
         RequestSpecification request = setupRequest(token, data);
+
         Response response = request.put(getEndpointUrl() + "/" + path);
         assertThat(response.getStatusCode()).isEqualTo(expectedHttpCode);
         return response;
@@ -134,7 +135,8 @@ public abstract class EndpointTemplate {
 
     private <T> RequestSpecification setupRequest(String token, T data) {
         RequestSpecification request = setupRequest(token);
-        request.body(data);
+        if(data != null)
+            request.body(data);
         return request;
     }
 
