@@ -28,7 +28,7 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     }
 
     @Named("toDtoSmall")
-    @Mapping(target = "mainPhotoId", expression = "java(entity.getMainPhoto() == null ? null : entity.getMainPhoto().getId())")
+    @Mapping(target = "mainPhotoId", expression = "java(entity.getMainPhoto() == null ? null : entity.getMainPhoto().getHighQualityPhoto().getId())")
     @Mapping(target = "coordinates", expression = "java(new Coordinates(entity.getLatitude(), entity.getLongitude()))")
     @Mapping(target = "hostId", source = "host.id")
     public abstract EventSmallDto toDtoSmall(Event entity);

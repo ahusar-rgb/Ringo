@@ -20,7 +20,6 @@ import com.ringo.repository.EventRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
 import com.ringo.service.company.OrganisationService;
 import com.ringo.service.company.RegistrationValidator;
-import com.ringo.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +43,6 @@ public class EventService {
     private final OrganisationService organisationService;
     private final CurrencyRepository currencyRepository;
     private final CategoryRepository categoryRepository;
-    private final UserService userService;
     private final RegistrationValidator registrationValidator;
 
     public EventResponseDto create(EventRequestDto eventDto) {

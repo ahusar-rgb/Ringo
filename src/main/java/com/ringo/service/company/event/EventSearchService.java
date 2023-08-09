@@ -122,7 +122,7 @@ public class EventSearchService {
         Organisation organisation;
         try {
             organisation = organisationService.getFullUser();
-        } catch (UserException e) {
+        } catch (NotFoundException e) {
             organisation = null;
         }
 
