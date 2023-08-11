@@ -15,7 +15,10 @@ import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
 @Component
-public class AppleIdService implements IdProvider{
+public class AppleIdService implements IdProvider {
+
+    private static final String PUBLIC_KEY_STRING = "1JiU4l3YCeT4o0gVmxGTEK1IXR-Ghdg5Bzka12tzmtdCxU00ChH66aV-4HRBjF1t95IsaeHeDFRgmF0lJbTDTqa6_VZo2hc0zTiUAsGLacN6slePvDcR1IMucQGtPP5tGhIbU-HKabsKOFdD4VQ5PCXifjpN9R-1qOR571BxCAl4u1kUUIePAAJcBcqGRFSI_I1j_jbN3gflK_8ZNmgnPrXA0kZXzj1I7ZHgekGbZoxmDrzYm2zmja1MsE5A_JX7itBYnlR41LOtvLRCNtw7K3EFlbfB6hkPL-Swk5XNGbWZdTROmaTNzJhV-lWT0gGm6V1qWAK2qOZoIDa_3Ud0Gw";
+    private static final String PUBLIC_KEY_EXPONENT = "AQAB";
 
     @Override
     public User getUserFromToken(String token) {
@@ -30,11 +33,8 @@ public class AppleIdService implements IdProvider{
     }
 
     private PublicKey getPublicKey() throws Exception {
-        String publicKeyString = "1JiU4l3YCeT4o0gVmxGTEK1IXR-Ghdg5Bzka12tzmtdCxU00ChH66aV-4HRBjF1t95IsaeHeDFRgmF0lJbTDTqa6_VZo2hc0zTiUAsGLacN6slePvDcR1IMucQGtPP5tGhIbU-HKabsKOFdD4VQ5PCXifjpN9R-1qOR571BxCAl4u1kUUIePAAJcBcqGRFSI_I1j_jbN3gflK_8ZNmgnPrXA0kZXzj1I7ZHgekGbZoxmDrzYm2zmja1MsE5A_JX7itBYnlR41LOtvLRCNtw7K3EFlbfB6hkPL-Swk5XNGbWZdTROmaTNzJhV-lWT0gGm6V1qWAK2qOZoIDa_3Ud0Gw";
-        String publicKeyExponent = "AQAB";
-
-        BigInteger n = new BigInteger(1, Decoders.BASE64URL.decode(publicKeyString));
-        BigInteger e = new BigInteger(1, Decoders.BASE64URL.decode(publicKeyExponent));
+        BigInteger n = new BigInteger(1, Decoders.BASE64URL.decode(PUBLIC_KEY_STRING));
+        BigInteger e = new BigInteger(1, Decoders.BASE64URL.decode(PUBLIC_KEY_EXPONENT));
 
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         KeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
