@@ -5,6 +5,7 @@ import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.it.itest.common.AbstractIntegrationTest;
 import com.ringo.it.template.company.OrganisationTemplate;
 import com.ringo.it.template.security.LoginTemplate;
+import com.ringo.it.util.ItTestConsts;
 import com.ringo.mock.dto.OrganisationDtoMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +29,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
         OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
         OrganisationResponseDto actual = organisationTemplate.findById(token, responseDto.getId());
 
         assertThat(actual).isEqualTo(responseDto);
@@ -41,7 +42,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
         OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
 
         OrganisationRequestDto updateDto = new OrganisationRequestDto();
         updateDto.setName("new name");
@@ -63,7 +64,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
         OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
 
         File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
 
@@ -79,7 +80,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
         OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
 
         File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
         organisationTemplate.setPhoto(token, profilePicture, "image/jpeg");

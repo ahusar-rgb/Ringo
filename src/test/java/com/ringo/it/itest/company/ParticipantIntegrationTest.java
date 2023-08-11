@@ -5,6 +5,7 @@ import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.it.itest.common.AbstractIntegrationTest;
 import com.ringo.it.template.company.ParticipantTemplate;
 import com.ringo.it.template.security.LoginTemplate;
+import com.ringo.it.util.ItTestConsts;
 import com.ringo.mock.dto.ParticipantDtoMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         ParticipantRequestDto requestDto = ParticipantDtoMock.getParticipantMockDto();
         ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
         ParticipantResponseDto actual = participantTemplate.findById(token, responseDto.getId());
 
         assertThat(actual).isEqualTo(responseDto);
@@ -42,7 +43,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         ParticipantRequestDto requestDto = ParticipantDtoMock.getParticipantMockDto();
         ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
 
         ParticipantRequestDto updateDto = new ParticipantRequestDto();
         updateDto.setName("new name");
@@ -64,7 +65,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         ParticipantRequestDto requestDto = ParticipantDtoMock.getParticipantMockDto();
         ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
 
         File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
 
@@ -80,7 +81,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         ParticipantRequestDto requestDto = ParticipantDtoMock.getParticipantMockDto();
         ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
 
-        String token = loginTemplate.getToken(requestDto.getEmail(), requestDto.getPassword());
+        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
 
         File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
         participantTemplate.setPhoto(token, profilePicture, "image/jpeg");

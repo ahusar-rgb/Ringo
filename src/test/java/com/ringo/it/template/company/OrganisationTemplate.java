@@ -22,7 +22,7 @@ public class OrganisationTemplate extends EndpointTemplate {
     }
 
     public OrganisationResponseDto create(OrganisationRequestDto dto) {
-        Response response = httpPostWithParams(null, dto, "sign-up", ItTestConsts.HTTP_SUCCESS);
+        Response response = httpPostWithParams(ItTestConsts.NO_TOKEN, dto, "sign-up", ItTestConsts.HTTP_SUCCESS);
         OrganisationResponseDto actual = response.getBody().as(OrganisationResponseDto.class);
 
         assertThat(actual.getEmail()).isEqualTo(dto.getEmail());
