@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/auth")
+@RequestMapping("api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthenticationService authenticationService;
@@ -32,14 +33,14 @@ public class AuthController {
                     @ApiResponse(responseCode = "401", description = "User is not authenticated", content = @Content)
             }
     )
-    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<TokenDto> login(@RequestBody UserRequestDto login) {
         return ResponseEntity
                 .ok()
                 .body(authenticationService.login(login));
     }
 
-    @GetMapping(value = "/refresh-token", produces = "application/json")
+    @GetMapping(value = "refresh-token", produces = "application/json")
     public ResponseEntity<TokenDto> refreshToken() {
         return ResponseEntity
                 .ok()
@@ -54,7 +55,7 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "User not found", content = @Content)
             }
     )
-    @PostMapping(value = "/forgot-password", produces = {"application/json"})
+    @PostMapping(value = "forgot-password", produces = {"application/json"})
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordForm form) {
         authenticationService.forgotPassword(form);
         return ResponseEntity.ok("Password reset link was sent to your email");
@@ -69,9 +70,9 @@ public class AuthController {
                     @ApiResponse(responseCode = "401", description = "Invalid token", content = @Content)
             }
     )
-    @GetMapping(value = "/reset-password-form/{id}/{token}", produces = {"text/html"})
-    public ResponseEntity<String> resetPasswordForm(@PathVariable("id") Long id, @PathVariable("token") String token) {
-       return ResponseEntity.ok(authenticationService.getResetPasswordForm(id, token));
+    @GetMapping(value = "reset-password-form", produces = {"text/html"})
+    public ResponseEntity<String> resetPasswordForm(@RequestParam("token") String token) {
+       return ResponseEntity.ok(authenticationService.getResetPasswordForm(token));
     }
 
 
@@ -83,10 +84,10 @@ public class AuthController {
                     @ApiResponse(responseCode = "401", description = "Invalid token", content = @Content)
             }
     )
-    @PostMapping(value = "/reset-password/{id}/{token}", produces = {"application/json"})
-    public ResponseEntity<String> resetPassword(@PathVariable("id") Long id, @PathVariable("token") String token, @RequestBody String newPassword) {
-        authenticationService.resetPassword(id, token, newPassword);
-        return ResponseEntity.ok("Password reset successfully");
+    @PostMapping(value = "reset-password", produces = {"text/html"})
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody String newPassword) {
+        authenticationService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("<h1>Password reset successfully</h1>");
     }
 
 
@@ -119,4 +120,10 @@ public class AuthController {
 //                .ok()
 //                .body(authService.loginWithApple(token.getIdToken()));
 //    }
+
+    @GetMapping(value = "verify-email", produces = {"text/html"})
+    public ResponseEntity<String> verifyEmail(@PathParam("token") String token) {
+        authenticationService.verifyEmail(token);
+        return ResponseEntity.ok("<h1>Email verified successfully</h1>");
+    }
 }

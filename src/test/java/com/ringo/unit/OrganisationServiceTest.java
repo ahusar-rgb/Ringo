@@ -1,6 +1,7 @@
 package com.ringo.unit;
 
 import com.ringo.auth.AuthenticationService;
+import com.ringo.auth.JwtService;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -15,6 +16,7 @@ import com.ringo.model.company.Organisation;
 import com.ringo.model.photo.Photo;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.UserRepository;
+import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.OrganisationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +47,10 @@ public class OrganisationServiceTest {
     private AuthenticationService authenticationService;
     @Mock
     private PhotoService photoService;
+    @Mock
+    private JwtService jwtService;
+    @Mock
+    private EmailSender emailSender;
 
     @Captor
     private ArgumentCaptor<Organisation> organisationCaptor;
@@ -112,14 +118,16 @@ public class OrganisationServiceTest {
         // given
         Organisation organisation = OrganisationMock.getOrganisationMock();
         OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
+        final String emailVerificationToken = "token";
         // when
         when(organisationRepository.save(organisationCaptor.capture())).thenReturn(organisation);
-        when(userRepository.findActiveByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
         when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
+        when(jwtService.generateEmailVerificationToken(organisationCaptor.capture())).thenReturn(emailVerificationToken);
         // then
         OrganisationResponseDto responseDto = service.save(dto);
         // assert
-        Organisation saved = organisationCaptor.getValue();
+        Organisation saved = organisationCaptor.getAllValues().get(0);
         assertThat(saved).isNotNull();
         assertThat(saved).usingRecursiveComparison().ignoringFields("createdAt", "id", "password").isEqualTo(organisation);
         assertThat(saved.getPassword()).isNotNull();
@@ -133,6 +141,9 @@ public class OrganisationServiceTest {
 
         assertThat(responseDto).isEqualTo(expectedDto);
         verify(organisationRepository, times(1)).save(saved);
+
+        assertThat(organisationCaptor.getAllValues().get(1)).isEqualTo(saved);
+        verify(emailSender, times(1)).sendEmailVerificationEmail(saved.getEmail(), emailVerificationToken);
     }
 
     @Test
@@ -142,7 +153,7 @@ public class OrganisationServiceTest {
         OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
         //when
         when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findActiveByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
         when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(organisationRepository.save(organisationCaptor.capture())).thenReturn(organisation);
@@ -218,7 +229,7 @@ public class OrganisationServiceTest {
         Organisation found = OrganisationMock.getOrganisationMock();
         found.setId(System.currentTimeMillis());
         //when
-        when(userRepository.findActiveByEmail(organisation.getEmail())).thenReturn(Optional.of(found));
+        when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.of(found));
         when(userRepository.findActiveByUsername(organisation.getUsername())).thenReturn(Optional.empty());
         //then
         assertThrows(UserException.class, () -> service.throwIfUniqueConstraintsViolated(organisation));

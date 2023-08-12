@@ -71,4 +71,16 @@ public class EmailSender {
         }
     }
 
+    public void sendEmailVerificationEmail(String email, String verificationToken) {
+        String subject = "Email verification";
+        String text = "Please verify your email by clicking on the link below:\n" +
+                "http://localhost:8080/api/auth/verify-email?token=%s".formatted(verificationToken);
+        send(email, subject, text);
+    }
+
+    public void sendRecoveredPasswordEmail(String email, String recoveryToken) {
+        String subject = "Password Reset";
+        String text = "To reset your password, click here: http://localhost:8080/api/auth/reset-password-form?token=%s".formatted(recoveryToken);
+        send(email, subject, text);
+    }
 }

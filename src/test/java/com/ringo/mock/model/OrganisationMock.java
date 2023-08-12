@@ -17,6 +17,7 @@ public class OrganisationMock {
                 .role(Role.ROLE_ORGANISATION)
                 .description("Test description")
                 .rating(null)
+                .emailVerified(false)
                 .contacts(new ArrayList<>())
                 .hostedEvents(new HashSet<>())
                 .reviews(new HashSet<>())

@@ -18,6 +18,7 @@ public class ParticipantMock {
                 .role(Role.ROLE_PARTICIPANT)
                 .gender(Gender.MALE)
                 .password("test")
+                .emailVerified(false)
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.ringo.mock.model;
 
+import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
 
 public class UserMock {
@@ -11,6 +12,7 @@ public class UserMock {
                 .name("Test")
                 .username("test")
                 .password("test")
+                .role(Role.ROLE_ORGANISATION)
                 .build();
     }
 }
