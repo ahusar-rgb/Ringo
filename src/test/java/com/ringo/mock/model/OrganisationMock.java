@@ -3,6 +3,7 @@ package com.ringo.mock.model;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class OrganisationMock {
@@ -16,7 +17,7 @@ public class OrganisationMock {
                 .role(Role.ROLE_ORGANISATION)
                 .description("Test description")
                 .rating(null)
-                .contacts("Test contacts")
+                .contacts(new ArrayList<>())
                 .hostedEvents(new HashSet<>())
                 .reviews(new HashSet<>())
                 .build();

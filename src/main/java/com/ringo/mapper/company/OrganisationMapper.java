@@ -8,18 +8,20 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {LabelMapper.class})
 public interface OrganisationMapper extends AbstractUserMapper<OrganisationRequestDto, Organisation, OrganisationResponseDto> {
 
     @Override
     @Mapping(target = "profilePictureId", source = "profilePicture.id")
     @Mapping(target = "pastEventsCount", ignore = true)
     @Mapping(target = "upcomingEventsCount", ignore = true)
+    @Mapping(target = "contacts", source = "contacts")
     OrganisationResponseDto toDto(Organisation entity);
 
     @Override
     @Named("toDtoDetails")
     @Mapping(target = "profilePictureId", source = "profilePicture.id")
+    @Mapping(target = "contacts", source = "contacts")
     default OrganisationResponseDto toDtoDetails(Organisation entity) {
         OrganisationResponseDto dto = toDto(entity);
         dto.setPastEventsCount((int)entity.getHostedEvents().stream()

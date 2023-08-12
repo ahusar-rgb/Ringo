@@ -29,7 +29,7 @@ public class OrganisationTemplate extends EndpointTemplate {
         assertThat(actual.getName()).isEqualTo(dto.getName());
         assertThat(actual.getUsername()).isEqualTo(dto.getUsername());
         assertThat(actual.getDescription()).isEqualTo(dto.getDescription());
-        assertThat(actual.getContacts()).isEqualTo(dto.getContacts());
+        assertThat(actual.getContacts()).usingRecursiveComparison().ignoringFields("id").isEqualTo(dto.getContacts());
 
         return actual;
     }

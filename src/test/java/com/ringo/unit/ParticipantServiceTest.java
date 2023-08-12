@@ -261,6 +261,7 @@ public class ParticipantServiceTest {
         Participant participant = ParticipantMock.getParticipantMock();
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
+        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
         //then
         service.delete();
         verify(participantRepository, times(1)).delete(any(Participant.class));
