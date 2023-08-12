@@ -6,13 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "event_main_photo")
-@Data
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 public class EventMainPhoto extends AbstractEntity {

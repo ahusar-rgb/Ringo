@@ -46,6 +46,7 @@ public class GoogleIdService implements IdProvider{
         return User.builder()
                 .email(email)
                 .name(name)
+                .emailVerified(emailVerified)
                 .build();
     }
 }

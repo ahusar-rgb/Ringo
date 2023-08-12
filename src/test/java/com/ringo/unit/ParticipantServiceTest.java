@@ -1,7 +1,6 @@
 package com.ringo.unit;
 
 import com.ringo.auth.AuthenticationService;
-import com.ringo.auth.JwtService;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -15,7 +14,6 @@ import com.ringo.model.company.Participant;
 import com.ringo.model.photo.Photo;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.UserRepository;
-import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.ParticipantService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,10 +44,6 @@ public class ParticipantServiceTest {
     private AuthenticationService authenticationService;
     @Mock
     private PhotoService photoService;
-    @Mock
-    private JwtService jwtService;
-    @Mock
-    private EmailSender emailSender;
 
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;
@@ -121,7 +115,6 @@ public class ParticipantServiceTest {
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
         when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
         when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
-        when(jwtService.generateEmailVerificationToken(participantCaptor.capture())).thenReturn(emailVerificationToken);
         // then
         ParticipantResponseDto responseDto = service.save(dto);
         // assert
@@ -138,10 +131,10 @@ public class ParticipantServiceTest {
         ParticipantResponseDto expectedDto = mapper.toDto(participant);
 
         assertThat(responseDto).isEqualTo(expectedDto);
+        verify(authenticationService, times(1)).sendVerificationEmail(participantCaptor.capture());
         verify(participantRepository, times(1)).save(saved);
 
-        assertThat(participantCaptor.getAllValues().get(1)).isEqualTo(saved);
-        verify(emailSender, times(1)).sendEmailVerificationEmail(participant.getEmail(), emailVerificationToken);
+        assertThat(participantCaptor.getAllValues().get(1).getEmail()).isEqualTo(saved.getEmail());
     }
 
     @Test
@@ -283,6 +276,7 @@ public class ParticipantServiceTest {
         //given
         Participant participant = ParticipantMock.getParticipantMock();
         participant.setIsActive(false);
+        participant.setEmailVerified(true);
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
@@ -303,6 +297,20 @@ public class ParticipantServiceTest {
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
         when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        //then
+        assertThrows(UserException.class, () -> service.activate());
+    }
+
+    @Test
+    void activateEmailNotVerified() {
+        //given
+        Participant participant = ParticipantMock.getParticipantMock();
+        participant.setIsActive(false);
+        participant.setEmailVerified(false);
+        //when
+        when(authenticationService.getCurrentUser()).thenReturn(participant);
+        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+
         //then
         assertThrows(UserException.class, () -> service.activate());
     }

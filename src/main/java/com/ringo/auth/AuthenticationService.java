@@ -170,4 +170,9 @@ public class AuthenticationService {
         user.setEmailVerified(true);
         userRepository.save(user);
     }
+
+    public void sendVerificationEmail(User user) {
+        String verificationToken = jwtService.generateEmailVerificationToken(user);
+        emailSender.sendEmailVerificationEmail(user.getEmail(), verificationToken);
+    }
 }

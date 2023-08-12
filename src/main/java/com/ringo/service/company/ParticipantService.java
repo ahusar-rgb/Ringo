@@ -3,7 +3,6 @@ package com.ringo.service.company;
 import com.ringo.auth.AppleIdService;
 import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.GoogleIdService;
-import com.ringo.auth.JwtService;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -15,7 +14,6 @@ import com.ringo.model.security.User;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.AbstractUserService;
-import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.PhotoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +37,8 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
                               PasswordEncoder passwordEncoder,
                               ParticipantMapper mapper,
                               PhotoService photoService,
-                              AuthenticationService authenticationService,
-                              EmailSender emailSender,
-                              JwtService jwtService) {
-        super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService, emailSender, jwtService);
+                              AuthenticationService authenticationService) {
+        super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService);
         this.repository = repository;
         this.mapper = mapper;
     }

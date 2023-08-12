@@ -7,6 +7,7 @@ import com.ringo.model.company.Event;
 import com.ringo.model.company.ExchangeRate;
 import jakarta.persistence.criteria.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class EventSearchDto extends GenericSearchDto<Event>{
 

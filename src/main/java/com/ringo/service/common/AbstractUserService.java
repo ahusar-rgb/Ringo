@@ -2,7 +2,6 @@ package com.ringo.service.common;
 
 import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.IdProvider;
-import com.ringo.auth.JwtService;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.InternalException;
@@ -35,8 +34,6 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     private final AbstractUserMapper<S, T, R> abstractUserMapper;
     private final PhotoService photoService;
     private final AuthenticationService authenticationService;
-    private final EmailSender emailSender;
-    private final JwtService jwtService;
 
     protected abstract void throwIfRequiredFieldsNotFilled(T user);
     protected abstract void throwIfUniqueConstraintsViolated(T user);
@@ -66,8 +63,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         R savedDto = abstractUserMapper.toDto(repository.save(user));
         savedDto.setEmail(_user.getEmail());
 
-        String verificationToken = jwtService.generateEmailVerificationToken(user);
-        emailSender.sendEmailVerificationEmail(user.getEmail(), verificationToken);
+        authenticationService.sendVerificationEmail(_user);
 
         return savedDto;
     }
@@ -80,9 +76,13 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         user.setCreatedAt(LocalDateTime.now());
         user.setIsActive(false);
 
-        R saved = abstractUserMapper.toDto(repository.save(user));
-        saved.setEmail(user.getEmail());
-        return saved;
+        R savedDto = abstractUserMapper.toDto(repository.save(user));
+
+        if(!user.getEmailVerified())
+            authenticationService.sendVerificationEmail(user);
+
+        savedDto.setEmail(user.getEmail());
+        return savedDto;
     }
 
     protected T getUserDetails() {
@@ -117,10 +117,13 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
 
         log.info("activateParticipant: {}", user.getEmail());
 
-        if(user.getIsActive()) {
+        if(user.getIsActive())
             throw new UserException("User [email: %s] is already active".formatted(user.getEmail()));
-        }
+
         throwIfRequiredFieldsNotFilled(user);
+        if(!user.getEmailVerified()) {
+            throw new UserException("Email is not verified");
+        }
 
         user.setIsActive(true);
         R dto = abstractUserMapper.toDto(repository.save(user));

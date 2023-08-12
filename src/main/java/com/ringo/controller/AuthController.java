@@ -6,6 +6,7 @@ import com.ringo.dto.auth.ForgotPasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.security.IdTokenDto;
 import com.ringo.dto.security.TokenDto;
+import com.ringo.model.security.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -55,10 +56,10 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "User not found", content = @Content)
             }
     )
-    @PostMapping(value = "forgot-password", produces = {"application/json"})
+    @PostMapping(value = "forgot-password", produces = {"text/html"})
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordForm form) {
         authenticationService.forgotPassword(form);
-        return ResponseEntity.ok("Password reset link was sent to your email");
+        return ResponseEntity.ok("<h1>Password reset link was sent to %s<h1>".formatted(form.getEmail()));
     }
 
 
@@ -120,6 +121,14 @@ public class AuthController {
 //                .ok()
 //                .body(authService.loginWithApple(token.getIdToken()));
 //    }
+
+    @GetMapping(value = "send-verification-email", produces = {"text/html"})
+    public ResponseEntity<String> sendVerificationEmail() {
+        User user = authenticationService.getCurrentUser();
+        authenticationService.sendVerificationEmail(user);
+        return ResponseEntity.ok("<h1>Verification email was sent to %s</h1>".formatted(user.getEmail()));
+    }
+
 
     @GetMapping(value = "verify-email", produces = {"text/html"})
     public ResponseEntity<String> verifyEmail(@PathParam("token") String token) {

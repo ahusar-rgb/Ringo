@@ -3,13 +3,15 @@ package com.ringo.model.photo;
 import com.ringo.model.common.AbstractEntity;
 import com.ringo.model.company.Event;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "event_photo")
-@Data
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 public class EventPhoto extends AbstractEntity {
