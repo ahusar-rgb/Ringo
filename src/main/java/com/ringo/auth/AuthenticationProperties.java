@@ -11,4 +11,5 @@ public class AuthenticationProperties {
     private long accessTokenExpirationMillis;
     private long refreshTokenExpirationMillis;
     private long recoverPasswordTokenExpirationMillis;
+    private long emailVerificationTokenExpirationMillis;
 }

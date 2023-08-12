@@ -1,6 +1,7 @@
 package com.ringo.unit;
 
 import com.ringo.auth.AuthenticationService;
+import com.ringo.auth.JwtService;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -14,6 +15,7 @@ import com.ringo.model.company.Participant;
 import com.ringo.model.photo.Photo;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.UserRepository;
+import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.ParticipantService;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +46,10 @@ public class ParticipantServiceTest {
     private AuthenticationService authenticationService;
     @Mock
     private PhotoService photoService;
+    @Mock
+    private JwtService jwtService;
+    @Mock
+    private EmailSender emailSender;
 
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;
@@ -110,14 +116,16 @@ public class ParticipantServiceTest {
         // given
         Participant participant = ParticipantMock.getParticipantMock();
         ParticipantRequestDto dto = ParticipantDtoMock.getParticipantMockDto();
+        final String emailVerificationToken = "token";
         // when
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
-        when(userRepository.findActiveByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
         when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
+        when(jwtService.generateEmailVerificationToken(participantCaptor.capture())).thenReturn(emailVerificationToken);
         // then
         ParticipantResponseDto responseDto = service.save(dto);
         // assert
-        Participant saved = participantCaptor.getValue();
+        Participant saved = participantCaptor.getAllValues().get(0);
         assertThat(saved).isNotNull();
         assertThat(saved).usingRecursiveComparison().ignoringFields("createdAt", "id", "password").isEqualTo(participant);
         assertThat(saved.getPassword()).isNotNull();
@@ -131,6 +139,9 @@ public class ParticipantServiceTest {
 
         assertThat(responseDto).isEqualTo(expectedDto);
         verify(participantRepository, times(1)).save(saved);
+
+        assertThat(participantCaptor.getAllValues().get(1)).isEqualTo(saved);
+        verify(emailSender, times(1)).sendEmailVerificationEmail(participant.getEmail(), emailVerificationToken);
     }
 
     @Test
@@ -140,7 +151,7 @@ public class ParticipantServiceTest {
         ParticipantRequestDto dto = ParticipantDtoMock.getParticipantMockDto();
         //when
         when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findActiveByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
         when(authenticationService.getCurrentUser()).thenReturn(participant);
         when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
@@ -236,7 +247,7 @@ public class ParticipantServiceTest {
         Participant found = ParticipantMock.getParticipantMock();
         found.setId(System.currentTimeMillis());
         //when
-        when(userRepository.findActiveByEmail(participant.getEmail())).thenReturn(Optional.of(found));
+        when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.of(found));
         when(userRepository.findActiveByUsername(participant.getUsername())).thenReturn(Optional.empty());
         //then
         assertThrows(UserException.class, () -> service.throwIfUniqueConstraintsViolated(participant));

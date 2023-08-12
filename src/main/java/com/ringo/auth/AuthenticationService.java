@@ -6,8 +6,6 @@ import com.ringo.dto.auth.ForgotPasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.exception.AuthException;
-import com.ringo.exception.NotFoundException;
-import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.EmailSender;
@@ -82,7 +80,7 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException("User [email: %s] not found".formatted(email)));
 
-        if(!jwtService.isTokenValid(user, refreshToken)) {
+        if(!jwtService.isTokenValid(user, refreshToken, TokenType.REFRESH)) {
             throw new AuthException("Invalid token");
         }
 
@@ -94,18 +92,17 @@ public class AuthenticationService {
 
     public void forgotPassword(ForgotPasswordForm form) {
         User user = userRepository.findActiveByEmail(form.getEmail()).orElseThrow(
-                () -> new NotFoundException("User not found")
+                () -> new AuthException("User not found")
         );
         String token = jwtService.generateRecoverPasswordToken(user);
-        String link = FORGOT_PASSWORD_URL + "/" + user.getId() + "/" + token;
-        emailSender.send(form.getEmail(), "Password Reset", "To reset your password, click here: " + link);
+        emailSender.sendRecoveredPasswordEmail(user.getEmail(), token);
     }
 
-    public void resetPassword(Long userId, String token, String newPassword) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new AuthException("User does not exist"));
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
+                () -> new AuthException("User not found"));
 
-        if(!jwtService.isTokenValid(user, token))
+        if(!jwtService.isTokenValid(user, token, TokenType.RECOVER))
             throw new AuthException("Invalid token");
 
         if(newPassword.contains("="))
@@ -137,7 +134,7 @@ public class AuthenticationService {
     private TokenDto loginWithIdProvider(String token, IdProvider idProvider) {
         String email = idProvider.getUserFromToken(token).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserException("User [email: " + email + "] not found")
+                () -> new AuthException("User [email: " + email + "] not found")
         );
 
         return TokenDto.builder()
@@ -146,14 +143,13 @@ public class AuthenticationService {
                 .build();
     }
 
-    public String getResetPasswordForm(Long id, String token) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new AuthException("Invalid token")
-        );
-        if(!jwtService.isTokenValid(user, token))
+    public String getResetPasswordForm(String token) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
+                .orElseThrow(() -> new AuthException("User does not exist"));
+        if(!jwtService.isTokenValid(user, token, TokenType.RECOVER))
             throw new AuthException("Invalid token");
 
-        return "<form action=\"/api/auth/reset-password/" + id + "/" + token + "\" method=\"post\">\n" +
+        return "<form action=\"/api/auth/reset-password?token=" + token + "\" method=\"post\">\n" +
                 "    <label for=\"newPassword\">New password:</label><br>\n" +
                 "    <input type=\"password\" id=\"newPassword\" name=\"newPassword\"><br>\n" +
                 "    <input type=\"submit\" value=\"Submit\">\n" +
@@ -162,5 +158,16 @@ public class AuthenticationService {
 
     public User getCurrentUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public void verifyEmail(String token) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
+                .orElseThrow(() -> new AuthException("User does not exist"));
+
+        if(!jwtService.isTokenValid(user, token, TokenType.EMAIL_VERIFICATION))
+            throw new AuthException("Invalid token");
+
+        user.setEmailVerified(true);
+        userRepository.save(user);
     }
 }

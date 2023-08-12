@@ -2,6 +2,7 @@ package com.ringo.service.common;
 
 import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.IdProvider;
+import com.ringo.auth.JwtService;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.company.UserResponseDto;
 import com.ringo.exception.InternalException;
@@ -34,6 +35,8 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     private final AbstractUserMapper<S, T, R> abstractUserMapper;
     private final PhotoService photoService;
     private final AuthenticationService authenticationService;
+    private final EmailSender emailSender;
+    private final JwtService jwtService;
 
     protected abstract void throwIfRequiredFieldsNotFilled(T user);
     protected abstract void throwIfUniqueConstraintsViolated(T user);
@@ -57,10 +60,14 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         user.setRole(role);
         user.setCreatedAt(LocalDateTime.now());
         user.setIsActive(true);
+        user.setEmailVerified(false);
         prepareForSave(user);
 
         R savedDto = abstractUserMapper.toDto(repository.save(user));
         savedDto.setEmail(_user.getEmail());
+
+        String verificationToken = jwtService.generateEmailVerificationToken(user);
+        emailSender.sendEmailVerificationEmail(user.getEmail(), verificationToken);
 
         return savedDto;
     }
