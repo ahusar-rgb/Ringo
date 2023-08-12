@@ -58,6 +58,12 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         return save(dto, Role.ROLE_ORGANISATION);
     }
 
+    @Override
+    protected void prepareForSave(Organisation user) {
+        if(user.getContacts() != null)
+            user.getContacts().forEach(contact -> contact.setOrganisation(user));
+    }
+
     public OrganisationResponseDto findCurrentOrganisation() {
         log.info("findCurrentOrganisation");
         Organisation organisation = organisationRepository.findFullById(getUserDetails().getId()).orElseThrow(

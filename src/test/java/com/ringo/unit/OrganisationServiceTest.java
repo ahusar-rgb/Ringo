@@ -5,6 +5,7 @@ import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
+import com.ringo.mapper.company.LabelMapperImpl;
 import com.ringo.mapper.company.OrganisationMapper;
 import com.ringo.mapper.company.OrganisationMapperImpl;
 import com.ringo.mock.common.MultipartFileMock;
@@ -57,7 +58,8 @@ public class OrganisationServiceTest {
     void init() {
         ReflectionTestUtils.setField(service, "passwordEncoder", new BCryptPasswordEncoder());
         ReflectionTestUtils.setField(service, "mapper", mapper);
-        ReflectionTestUtils.setField(service, "abstractUserMapper", new OrganisationMapperImpl());
+        ReflectionTestUtils.setField(mapper, "labelMapper", new LabelMapperImpl());
+        ReflectionTestUtils.setField(service, "abstractUserMapper", mapper);
         ReflectionTestUtils.setField(service, "repository", organisationRepository);
     }
 
@@ -241,6 +243,7 @@ public class OrganisationServiceTest {
         Organisation organisation = OrganisationMock.getOrganisationMock();
         //when
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
+        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
         //then
         service.delete();
         verify(organisationRepository, times(1)).delete(any(Organisation.class));

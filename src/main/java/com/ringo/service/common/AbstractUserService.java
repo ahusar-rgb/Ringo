@@ -38,6 +38,10 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     protected abstract void throwIfRequiredFieldsNotFilled(T user);
     protected abstract void throwIfUniqueConstraintsViolated(T user);
 
+//    This method is called before saving the user to the database.
+//    It can be used to set additional fields.
+    protected void prepareForSave(T user) {}
+
     public R save(S dto, Role role) {
         log.info("save: {}, role: {}", dto.getEmail(), role);
         User _user = buildFromDto(dto);
@@ -53,6 +57,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         user.setRole(role);
         user.setCreatedAt(LocalDateTime.now());
         user.setIsActive(true);
+        prepareForSave(user);
 
         R savedDto = abstractUserMapper.toDto(repository.save(user));
         savedDto.setEmail(_user.getEmail());
@@ -124,6 +129,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfRequiredFieldsNotFilled(user);
 
         user.setUpdatedAt(LocalDateTime.now());
+        prepareForSave(user);
 
         R responseDto = abstractUserMapper.toDto(repository.save(user));
         responseDto.setEmail(user.getEmail());
@@ -131,7 +137,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     public void delete() {
-        repository.delete(getUserDetails());
+        repository.delete(getFullUser());
     }
 
     public R setPhoto(MultipartFile photo) {

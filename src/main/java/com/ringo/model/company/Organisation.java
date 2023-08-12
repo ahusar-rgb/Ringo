@@ -1,10 +1,7 @@
 package com.ringo.model.company;
 
 import com.ringo.model.security.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,14 +26,15 @@ public class Organisation extends User {
     @Column(name = "rating")
     private Float rating;
 
-    @Column(name = "contacts")
-    private String contacts;
+    @OrderBy("ordinal")
+    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Label> contacts;
 
     @OneToMany(mappedBy = "host")
     @Builder.Default
     private Set<Event> hostedEvents = new HashSet<>();
 
-    @OneToMany(mappedBy = "organisation")
+    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<Review> reviews = new HashSet<>();
 }

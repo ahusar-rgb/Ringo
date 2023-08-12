@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -14,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class OrganisationResponseDto extends UserResponseDto {
     private String description;
     private Float rating;
-    private String contacts;
+    private List<LabelDto> contacts;
     private Integer pastEventsCount;
     private Integer upcomingEventsCount;
 }

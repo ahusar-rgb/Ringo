@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -13,5 +15,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class OrganisationRequestDto extends UserRequestDto {
     private String description;
-    private String contacts;
+    private List<LabelDto> contacts;
 }
