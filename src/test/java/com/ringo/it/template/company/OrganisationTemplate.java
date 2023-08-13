@@ -42,7 +42,7 @@ public class OrganisationTemplate extends EndpointTemplate {
     }
 
     public OrganisationResponseDto findById(String token, Long id) {
-        Response response = httpGetPathParams(token, String.valueOf(id), ItTestConsts.HTTP_SUCCESS);
+        Response response = httpGetWithParams(token, String.valueOf(id), ItTestConsts.HTTP_SUCCESS);
         return response.getBody().as(OrganisationResponseDto.class);
     }
 
@@ -63,7 +63,12 @@ public class OrganisationTemplate extends EndpointTemplate {
     }
 
     public OrganisationResponseDto removePhoto(String token) {
-        Response response = httpPut(token, "profile-picture/remove", null, ItTestConsts.HTTP_SUCCESS);
+        Response response = httpPutWithParams(token, "profile-picture/remove", null, ItTestConsts.HTTP_SUCCESS);
+        return response.getBody().as(OrganisationResponseDto.class);
+    }
+
+    public OrganisationResponseDto getCurrentOrganisation(String accessToken) {
+        Response response = httpGetWithParams(accessToken, "", ItTestConsts.HTTP_SUCCESS);
         return response.getBody().as(OrganisationResponseDto.class);
     }
 }

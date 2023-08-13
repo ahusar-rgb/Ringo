@@ -34,7 +34,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
 
         String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
-        OrganisationResponseDto actual = organisationTemplate.findById(token, responseDto.getId());
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
 
         assertThat(actual).isEqualTo(responseDto);
 
@@ -55,7 +55,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
 
         String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
-        OrganisationResponseDto actual = organisationTemplate.findById(token, responseDto.getId());
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
 
         requestDto.getContacts().sort(Comparator.comparingInt(LabelDto::getOrdinal));
         assertThat(actual.getContacts()).usingRecursiveComparison().ignoringFields("id").isEqualTo(requestDto.getContacts());
@@ -86,7 +86,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         updateDto.setContacts(updatedContacts);
 
         OrganisationResponseDto updatedDto = organisationTemplate.update(token, updateDto);
-        OrganisationResponseDto actual = organisationTemplate.findById(token, responseDto.getId());
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
 
         updatedDto.getContacts().sort(Comparator.comparingInt(LabelDto::getOrdinal));
         assertThat(actual.getContacts()).isEqualTo(updatedDto.getContacts());
@@ -107,7 +107,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         updateDto.setDescription("new description");
 
         OrganisationResponseDto updatedDto = organisationTemplate.update(token, updateDto);
-        OrganisationResponseDto actual = organisationTemplate.findById(token, responseDto.getId());
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
 
         assertThat(actual.getName()).isEqualTo(updatedDto.getName());
         assertThat(actual.getContacts()).isEqualTo(updatedDto.getContacts());

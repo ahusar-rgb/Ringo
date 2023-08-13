@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
 
@@ -16,4 +18,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
 
     @Query("SELECT COUNT(r) > 0 FROM Review r WHERE r.organisation = :organisation AND r.participant = :participant")
     boolean existsByOrganisationAndParticipant(Organisation organisation, Participant participant);
+
+    @Query("SELECT r FROM Review r WHERE r.organisation = :organisation AND r.participant = :participant")
+    Optional<Review> findByOrganisationAndParticipant(Organisation organisation, Participant participant);
 }

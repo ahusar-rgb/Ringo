@@ -36,11 +36,13 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     private final AuthenticationService authenticationService;
 
     protected abstract void throwIfRequiredFieldsNotFilled(T user);
+
     protected abstract void throwIfUniqueConstraintsViolated(T user);
 
-//    This method is called before saving the user to the database.
+    //    This method is called before saving the user to the database.
 //    It can be used to set additional fields.
-    protected void prepareForSave(T user) {}
+    protected void prepareForSave(T user) {
+    }
 
     public R save(S dto, Role role) {
         log.info("save: {}, role: {}", dto.getEmail(), role);
@@ -56,7 +58,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
 
         user.setRole(role);
         user.setCreatedAt(LocalDateTime.now());
-        user.setIsActive(true);
+        user.setIsActive(false);
         user.setEmailVerified(false);
         prepareForSave(user);
 
@@ -78,7 +80,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
 
         R savedDto = abstractUserMapper.toDto(repository.save(user));
 
-        if(!user.getEmailVerified())
+        if (!user.getEmailVerified())
             authenticationService.sendVerificationEmail(user);
 
         savedDto.setEmail(user.getEmail());
@@ -94,7 +96,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         User user = authenticationService.getCurrentUser();
 
         Optional<T> result = repository.findFullById(user.getId());
-        if(result.isEmpty())
+        if (result.isEmpty())
             throw new NotFoundException("User is not found");
 
         return result.get();
@@ -105,7 +107,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         user.setId(null);
         throwIfUniqueConstraintsViolated(abstractUserMapper.fromUser(user));
 
-        if(dto.getPassword() == null)
+        if (dto.getPassword() == null)
             throw new UserException("Password is required");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -117,11 +119,11 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
 
         log.info("activateParticipant: {}", user.getEmail());
 
-        if(user.getIsActive())
+        if (user.getIsActive())
             throw new UserException("User [email: %s] is already active".formatted(user.getEmail()));
 
         throwIfRequiredFieldsNotFilled(user);
-        if(!user.getEmailVerified()) {
+        if (!user.getEmailVerified()) {
             throw new UserException("Email is not verified");
         }
 
@@ -155,12 +157,12 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
 
         log.info("email: {}, setPhoto: {}", user.getEmail(), photo.getOriginalFilename());
 
-        if(photo.getContentType() == null)
+        if (photo.getContentType() == null)
             throw new UserException("Photo is not valid");
         String contentType = photo.getContentType().split("/")[1];
 
         try {
-            if(user.getProfilePicture() != null)
+            if (user.getProfilePicture() != null)
                 removePhoto();
             Photo profilePicture = photoService.save("profilePictures/user#" + user.getId(), contentType, photo.getBytes());
             user.setProfilePicture(profilePicture);
@@ -178,7 +180,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     public R removePhoto() {
         T user = getFullUser();
 
-        if(user.getProfilePicture() == null)
+        if (user.getProfilePicture() == null)
             throw new UserException("User does not have a photo");
 
         long photoId = user.getProfilePicture().getId();

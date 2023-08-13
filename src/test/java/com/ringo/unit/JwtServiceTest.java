@@ -31,6 +31,7 @@ public class JwtServiceTest {
 
         when(config.getAccessTokenExpirationMillis()).thenReturn(10000L);
         when(config.getSecret()).thenReturn("secret");
+        when(config.isUsePasswordHash()).thenReturn(true);
 
         String accessToken = jwtService.generateAccessToken(user);
 
@@ -43,6 +44,7 @@ public class JwtServiceTest {
 
         when(config.getRefreshTokenExpirationMillis()).thenReturn(10000L);
         when(config.getSecret()).thenReturn("secret");
+        when(config.isUsePasswordHash()).thenReturn(true);
 
         String refreshToken = jwtService.generateRefreshToken(user);
 
@@ -55,6 +57,7 @@ public class JwtServiceTest {
 
         when(config.getRecoverPasswordTokenExpirationMillis()).thenReturn(10000L);
         when(config.getSecret()).thenReturn("secret");
+        when(config.isUsePasswordHash()).thenReturn(true);
 
         String recoverPasswordToken = jwtService.generateRecoverPasswordToken(user);
 
@@ -67,6 +70,7 @@ public class JwtServiceTest {
 
         when(config.getEmailVerificationTokenExpirationMillis()).thenReturn(10000L);
         when(config.getSecret()).thenReturn("secret");
+        when(config.isUsePasswordHash()).thenReturn(true);
 
         String emailVerificationToken = jwtService.generateEmailVerificationToken(user);
 
@@ -78,6 +82,7 @@ public class JwtServiceTest {
         Ticket ticket = TicketMock.getTicketMock();
 
         when(config.getSecret()).thenReturn("secret");
+        when(config.isUsePasswordHash()).thenReturn(true);
 
         String ticketToken = jwtService.generateTicketCode(ticket);
 

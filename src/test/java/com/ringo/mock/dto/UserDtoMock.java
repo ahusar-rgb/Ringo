@@ -5,7 +5,7 @@ import com.ringo.dto.company.UserRequestDto;
 public class UserDtoMock {
     public static UserRequestDto getUserDtoMock() {
         return UserRequestDto.builder()
-                .email("test@test.com")
+                .email("test" + System.currentTimeMillis() + "@test.com")
                 .password("test")
                 .build();
     }
