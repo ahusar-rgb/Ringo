@@ -8692,3 +8692,454 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 2023-08-13 21:00:44.091 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-08-13 21:00:44.097 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2023-08-13 21:00:44.101 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-08-14 08:52:11.919 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 54261 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-08-14 08:52:11.924 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-08-14 08:52:13.699 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-14 08:52:13.900 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 183 ms. Found 13 JPA repository interfaces.
+2023-08-14 08:52:15.087 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-08-14 08:52:15.120 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-08-14 08:52:15.121 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-08-14 08:52:15.380 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-08-14 08:52:15.381 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3020 ms
+2023-08-14 08:52:15.557 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-08-14 08:52:15.948 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@561d88ee
+2023-08-14 08:52:15.952 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-08-14 08:52:16.366 [main] INFO  liquibase.database - Set default schema name to public
+2023-08-14 08:52:16.501 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+2023-08-14 08:52:16.622 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
+2023-08-14 08:52:17.056 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-category.sql
+2023-08-14 08:52:17.060 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/002-currency.sql
+2023-08-14 08:52:17.062 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/009-get_distance.sql
+2023-08-14 08:52:17.205 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2023-08-14 08:52:17.361 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2023-08-14 08:52:17.546 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-14 08:52:17.662 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-08-14 08:52:18.162 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-08-14 08:52:19.681 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-14 08:52:19.695 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-14 08:52:24.871 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
+2023-08-14 08:52:25.412 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
+2023-08-14 08:52:26.319 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
+2023-08-14 08:52:29.091 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@10b51115, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@56967355, org.springframework.security.web.context.SecurityContextHolderFilter@98243dc, org.springframework.security.web.header.HeaderWriterFilter@213488e6, org.springframework.web.filter.CorsFilter@6d17cd8b, org.springframework.security.web.authentication.logout.LogoutFilter@2295b060, com.ringo.auth.JwtFilter@290ebbbe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5ec4d81b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@31d31620, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5c04d23e, org.springframework.security.web.session.SessionManagementFilter@1e35e4d9, org.springframework.security.web.access.ExceptionTranslationFilter@187f6ac7, org.springframework.security.web.access.intercept.AuthorizationFilter@3a8f9d53]
+2023-08-14 08:52:29.555 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-14 08:52:29.569 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 18.347 seconds (process running for 19.393)
+2023-08-14 08:52:48.712 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-14 08:52:48.713 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-08-14 08:52:48.716 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2023-08-14 08:52:48.815 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1691992366689@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:52:52.236 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-14 08:52:52.369 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992366689@test.com] is authenticated
+2023-08-14 08:52:52.630 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1691992372580@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:52:54.376 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992372580@test.com] is authenticated
+2023-08-14 08:52:54.832 [http-nio-8080-exec-8] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-14 08:52:54.953 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992372580@test.com] is authenticated
+2023-08-14 08:52:55.059 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1691992375033@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:52:56.834 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992375033@test.com] is authenticated
+2023-08-14 08:52:56.950 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - save: test1691992376923@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:52:58.672 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992376923@test.com] is authenticated
+2023-08-14 08:52:59.023 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-14 08:52:59.128 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992376923@test.com] is authenticated
+2023-08-14 08:52:59.221 [http-nio-8080-exec-9] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception
+com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 parts, but got 0.
+	at com.auth0.jwt.TokenUtils.wrongNumberOfParts(TokenUtils.java:45)
+	at com.auth0.jwt.TokenUtils.splitToken(TokenUtils.java:23)
+	at com.auth0.jwt.JWTDecoder.<init>(JWTDecoder.java:37)
+	at com.auth0.jwt.JWTDecoder.<init>(JWTDecoder.java:33)
+	at com.auth0.jwt.JWT.decode(JWT.java:52)
+	at com.ringo.auth.JwtService.getEmailFromToken(JwtService.java:113)
+	at com.ringo.auth.JwtFilter.doFilterInternal(JwtFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:859)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1734)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-08-14 08:52:59.284 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1691992379259@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:00.908 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992379259@test.com] is authenticated
+2023-08-14 08:53:01.021 [http-nio-8080-exec-3] WARN  c.r.exception.GlobalExceptionHandler - Wrong password
+2023-08-14 08:53:01.138 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992379259@test.com] is authenticated
+2023-08-14 08:53:01.220 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1691992381199@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:02.941 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992381199@test.com] is authenticated
+2023-08-14 08:53:03.043 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - save: test1691992383023@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:04.899 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992383023@test.com] is authenticated
+2023-08-14 08:53:04.967 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1691992384947@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:06.653 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992384947@test.com] is authenticated
+2023-08-14 08:53:06.762 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Wrong password
+2023-08-14 08:53:06.873 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992384947@test.com] is authenticated
+2023-08-14 08:53:06.939 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1691992386920@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:08.614 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992386920@test.com] is authenticated
+2023-08-14 08:53:08.730 [http-nio-8080-exec-8] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-14 08:53:08.782 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1691992388761@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:10.521 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992388761@test.com] is authenticated
+2023-08-14 08:53:10.748 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - email: test1691992388761@test.com, setPhoto: test_profile_picture.jpeg
+2023-08-14 08:53:10.751 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-14 08:53:10.773 [http-nio-8080-exec-2] WARN  c.a.services.s3.AmazonS3Client - No content length specified for stream data.  Stream contents will be buffered in memory and could result in out of memory errors.
+2023-08-14 08:53:12.006 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - save: test1691992391988@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:13.712 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992391988@test.com] is authenticated
+2023-08-14 08:53:13.767 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - email: test1691992391988@test.com, setPhoto: test_profile_picture.jpeg
+2023-08-14 08:53:13.770 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-14 08:53:13.775 [http-nio-8080-exec-3] WARN  c.a.services.s3.AmazonS3Client - No content length specified for stream data.  Stream contents will be buffered in memory and could result in out of memory errors.
+2023-08-14 08:53:14.260 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 14
+2023-08-14 08:53:14.398 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - save: test1691992394379@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:16.039 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992394379@test.com] is authenticated
+2023-08-14 08:53:16.142 [http-nio-8080-exec-5] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-14 08:53:16.251 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - save: test1691992396242@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:18.011 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992396242@test.com] is authenticated
+2023-08-14 08:53:18.032 [http-nio-8080-exec-3] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-14 08:53:18.108 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1691992398093@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:19.859 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992398093@test.com] is authenticated
+2023-08-14 08:53:19.938 [http-nio-8080-exec-6] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-14 08:53:20.010 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - save: test1691992399996@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:21.698 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992399996@test.com] is authenticated
+2023-08-14 08:53:21.723 [http-nio-8080-exec-4] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-14 08:53:21.801 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: test1691992401788@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:23.434 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992401788@test.com] is authenticated
+2023-08-14 08:53:23.481 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - email: test1691992401788@test.com, setPhoto: test_profile_picture.jpeg
+2023-08-14 08:53:23.482 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-14 08:53:23.487 [http-nio-8080-exec-9] WARN  c.a.services.s3.AmazonS3Client - No content length specified for stream data.  Stream contents will be buffered in memory and could result in out of memory errors.
+2023-08-14 08:53:24.450 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1691992404436@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:26.183 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992404436@test.com] is authenticated
+2023-08-14 08:53:26.231 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - email: test1691992404436@test.com, setPhoto: test_profile_picture.jpeg
+2023-08-14 08:53:26.232 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-14 08:53:26.236 [http-nio-8080-exec-10] WARN  c.a.services.s3.AmazonS3Client - No content length specified for stream data.  Stream contents will be buffered in memory and could result in out of memory errors.
+2023-08-14 08:53:26.660 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - deletePhoto: 16
+2023-08-14 08:53:26.789 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - save: test1691992406775@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:28.550 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992406775@test.com] is authenticated
+2023-08-14 08:53:28.567 [http-nio-8080-exec-1] INFO  c.r.s.company.ParticipantService - findCurrentParticipant
+2023-08-14 08:53:28.620 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1691992408608@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:30.243 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992408608@test.com] is authenticated
+2023-08-14 08:53:30.304 [http-nio-8080-exec-10] INFO  c.r.s.company.ParticipantService - findCurrentParticipant
+2023-08-14 08:53:30.373 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: test1691992410360@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:32.036 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992410360@test.com] is authenticated
+2023-08-14 08:53:32.097 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:32.127 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1691992412117@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:33.749 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992412117@test.com] is authenticated
+2023-08-14 08:53:33.773 [http-nio-8080-exec-5] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:33.801 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: test1691992413783@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:35.535 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992413783@test.com] is authenticated
+2023-08-14 08:53:35.557 [http-nio-8080-exec-10] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:35.579 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - save: test1691992415566@test.com, role: ROLE_PARTICIPANT
+2023-08-14 08:53:37.256 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992415566@test.com] is authenticated
+2023-08-14 08:53:37.285 [http-nio-8080-exec-4] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:37.326 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - save: test1691992417300@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:39.066 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992417300@test.com] is authenticated
+2023-08-14 08:53:39.086 [http-nio-8080-exec-9] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:39.109 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1691992419094@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:40.742 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992419094@test.com] is authenticated
+2023-08-14 08:53:40.768 [http-nio-8080-exec-6] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:40.799 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - save: test1691992420780@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:42.471 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992420780@test.com] is authenticated
+2023-08-14 08:53:42.493 [http-nio-8080-exec-8] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:42.522 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - save: test1691992422504@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:44.272 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992422504@test.com] is authenticated
+2023-08-14 08:53:44.297 [http-nio-8080-exec-1] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:44.325 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - save: test1691992424311@test.com, role: ROLE_ORGANISATION
+2023-08-14 08:53:45.963 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1691992424311@test.com] is authenticated
+2023-08-14 08:53:45.992 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Invalid token
+2023-08-14 08:53:49.192 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-14 08:53:49.198 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-08-14 08:53:49.202 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-08-14 08:54:09.613 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 54330 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-08-14 08:54:09.619 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-08-14 08:54:11.698 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-14 08:54:11.938 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 223 ms. Found 13 JPA repository interfaces.
+2023-08-14 08:54:13.274 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-08-14 08:54:13.294 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-08-14 08:54:13.295 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-08-14 08:54:13.508 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-08-14 08:54:13.509 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3356 ms
+2023-08-14 08:54:13.750 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-08-14 08:54:14.074 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@360d41d0
+2023-08-14 08:54:14.081 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-08-14 08:54:14.323 [main] INFO  liquibase.database - Set default schema name to public
+2023-08-14 08:54:14.501 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+2023-08-14 08:54:14.669 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
+2023-08-14 08:54:15.235 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-category.sql
+2023-08-14 08:54:15.239 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/002-currency.sql
+2023-08-14 08:54:15.243 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/009-get_distance.sql
+2023-08-14 08:54:15.383 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2023-08-14 08:54:15.681 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2023-08-14 08:54:16.002 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-14 08:54:16.156 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-08-14 08:54:17.100 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-08-14 08:54:19.994 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-14 08:54:20.007 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-14 08:54:27.099 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
+2023-08-14 08:54:27.982 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
+2023-08-14 08:54:29.216 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
+2023-08-14 08:54:33.681 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3338057a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2288342c, org.springframework.security.web.context.SecurityContextHolderFilter@69d2cffb, org.springframework.security.web.header.HeaderWriterFilter@2541c84, org.springframework.web.filter.CorsFilter@4a3d4cd2, org.springframework.security.web.authentication.logout.LogoutFilter@236a641a, com.ringo.auth.JwtFilter@4528a871, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4e670245, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4790a29a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@10b21a2b, org.springframework.security.web.session.SessionManagementFilter@5ca64b79, org.springframework.security.web.access.ExceptionTranslationFilter@6cf4325b, org.springframework.security.web.access.intercept.AuthorizationFilter@34d4aea7]
+2023-08-14 08:54:34.177 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-14 08:54:34.192 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 25.173 seconds (process running for 25.902)
+2023-08-14 08:54:58.178 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-14 08:54:58.179 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-08-14 08:54:58.181 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2023-08-14 08:54:58.272 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: aahusar@gmail.com, role: ROLE_PARTICIPANT
+2023-08-14 08:55:02.573 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - save: esn@taltech.ee, role: ROLE_ORGANISATION
+2023-08-14 08:57:00.522 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: aahusar@gmail.com] is authenticated
+2023-08-14 08:57:07.155 [http-nio-8080-exec-9] INFO  c.r.s.c.event.EventSearchService - findEventById: 1156
+2023-08-14 08:57:07.171 [http-nio-8080-exec-9] WARN  c.r.exception.GlobalExceptionHandler - Event [id: 1156] not found
+2023-08-14 08:57:40.331 [http-nio-8080-exec-4] INFO  c.r.s.company.OrganisationService - findOrganisationById: 1
+2023-08-14 08:57:40.342 [http-nio-8080-exec-4] WARN  c.r.exception.GlobalExceptionHandler - Organisation [id: 1] not found
+2023-08-14 08:58:05.095 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: andriikuiava0511@gmail.com, role: ROLE_ORGANISATION
+2023-08-14 08:59:27.102 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: andriykuiava0511@gmail.com, role: ROLE_ORGANISATION
+2023-08-14 08:59:56.222 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - save: andriykuiava0511@gmail.com, role: ROLE_ORGANISATION
+2023-08-14 09:00:05.994 [http-nio-8080-exec-1] ERROR c.r.exception.GlobalExceptionHandler - org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2
+2023-08-14 09:00:15.863 [http-nio-8080-exec-2] ERROR c.r.exception.GlobalExceptionHandler - org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2
+2023-08-14 09:00:18.258 [http-nio-8080-exec-3] ERROR c.r.exception.GlobalExceptionHandler - org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2
+2023-08-14 09:02:16.077 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-14 09:02:16.083 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-08-14 09:02:16.085 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-08-14 09:02:22.132 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 54583 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-08-14 09:02:22.137 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-08-14 09:02:24.300 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-14 09:02:24.549 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 230 ms. Found 13 JPA repository interfaces.
+2023-08-14 09:02:25.595 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-08-14 09:02:25.614 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-08-14 09:02:25.614 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-08-14 09:02:25.819 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-08-14 09:02:25.821 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3169 ms
+2023-08-14 09:02:26.011 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-08-14 09:02:26.268 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1b8fa2fa
+2023-08-14 09:02:26.271 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-08-14 09:02:26.611 [main] INFO  liquibase.database - Set default schema name to public
+2023-08-14 09:02:26.789 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+2023-08-14 09:02:26.897 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
+2023-08-14 09:02:27.289 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-category.sql
+2023-08-14 09:02:27.292 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/002-currency.sql
+2023-08-14 09:02:27.294 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/009-get_distance.sql
+2023-08-14 09:02:27.315 [main] INFO  liquibase.changelog - Creating database history table with name: public.databasechangelog
+2023-08-14 09:02:27.334 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2023-08-14 09:02:27.579 [main] INFO  liquibase.changelog - Table category created
+2023-08-14 09:02:27.582 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-1::aleksandr (generated) ran successfully in 17ms
+2023-08-14 09:02:27.600 [main] INFO  liquibase.changelog - Table currency created
+2023-08-14 09:02:27.606 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-2::aleksandr (generated) ran successfully in 13ms
+2023-08-14 09:02:27.630 [main] INFO  liquibase.changelog - Table event created
+2023-08-14 09:02:27.634 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-3::aleksandr (generated) ran successfully in 21ms
+2023-08-14 09:02:27.649 [main] INFO  liquibase.changelog - Table event_category created
+2023-08-14 09:02:27.654 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-4::aleksandr (generated) ran successfully in 9ms
+2023-08-14 09:02:27.673 [main] INFO  liquibase.changelog - Table event_main_photo created
+2023-08-14 09:02:27.677 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-5::aleksandr (generated) ran successfully in 14ms
+2023-08-14 09:02:27.693 [main] INFO  liquibase.changelog - Table event_photo created
+2023-08-14 09:02:27.697 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-6::aleksandr (generated) ran successfully in 13ms
+2023-08-14 09:02:27.709 [main] INFO  liquibase.changelog - Table event_save created
+2023-08-14 09:02:27.712 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-7::aleksandr (generated) ran successfully in 8ms
+2023-08-14 09:02:27.732 [main] INFO  liquibase.changelog - Table exchange_rates created
+2023-08-14 09:02:27.736 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-8::aleksandr (generated) ran successfully in 16ms
+2023-08-14 09:02:27.762 [main] INFO  liquibase.changelog - Table label created
+2023-08-14 09:02:27.765 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-9::aleksandr (generated) ran successfully in 21ms
+2023-08-14 09:02:27.781 [main] INFO  liquibase.changelog - Table organisation created
+2023-08-14 09:02:27.784 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-10::aleksandr (generated) ran successfully in 12ms
+2023-08-14 09:02:27.799 [main] INFO  liquibase.changelog - Table participant created
+2023-08-14 09:02:27.803 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-11::aleksandr (generated) ran successfully in 12ms
+2023-08-14 09:02:27.829 [main] INFO  liquibase.changelog - Table photo created
+2023-08-14 09:02:27.833 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-12::aleksandr (generated) ran successfully in 24ms
+2023-08-14 09:02:27.882 [main] INFO  liquibase.changelog - Table review created
+2023-08-14 09:02:27.886 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-13::aleksandr (generated) ran successfully in 43ms
+2023-08-14 09:02:27.908 [main] INFO  liquibase.changelog - Table ticket created
+2023-08-14 09:02:27.912 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-14::aleksandr (generated) ran successfully in 18ms
+2023-08-14 09:02:27.928 [main] INFO  liquibase.changelog - Table users created
+2023-08-14 09:02:27.932 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-15::aleksandr (generated) ran successfully in 15ms
+2023-08-14 09:02:27.944 [main] INFO  liquibase.changelog - Unique constraint added to category(name)
+2023-08-14 09:02:27.946 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-16::aleksandr (generated) ran successfully in 8ms
+2023-08-14 09:02:27.961 [main] INFO  liquibase.changelog - Unique constraint added to currency(name)
+2023-08-14 09:02:27.963 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-17::aleksandr (generated) ran successfully in 11ms
+2023-08-14 09:02:27.976 [main] INFO  liquibase.changelog - Unique constraint added to currency(symbol)
+2023-08-14 09:02:27.978 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-18::aleksandr (generated) ran successfully in 9ms
+2023-08-14 09:02:27.994 [main] INFO  liquibase.changelog - Unique constraint added to review(participant_id, organisation_id)
+2023-08-14 09:02:27.997 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-19::aleksandr (generated) ran successfully in 11ms
+2023-08-14 09:02:28.013 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (event_id)
+2023-08-14 09:02:28.016 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-20::aleksandr (generated) ran successfully in 10ms
+2023-08-14 09:02:28.029 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (high_quality_photo_id)
+2023-08-14 09:02:28.033 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-21::aleksandr (generated) ran successfully in 9ms
+2023-08-14 09:02:28.049 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (lazy_photo_id)
+2023-08-14 09:02:28.053 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-22::aleksandr (generated) ran successfully in 10ms
+2023-08-14 09:02:28.069 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (low_quality_photo_id)
+2023-08-14 09:02:28.074 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-23::aleksandr (generated) ran successfully in 13ms
+2023-08-14 09:02:28.088 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (medium_quality_photo_id)
+2023-08-14 09:02:28.093 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-24::aleksandr (generated) ran successfully in 11ms
+2023-08-14 09:02:28.110 [main] INFO  liquibase.changelog - Foreign key constraint added to event (currency_id)
+2023-08-14 09:02:28.113 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-25::aleksandr (generated) ran successfully in 15ms
+2023-08-14 09:02:28.126 [main] INFO  liquibase.changelog - Foreign key constraint added to event (host_id)
+2023-08-14 09:02:28.129 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-26::aleksandr (generated) ran successfully in 8ms
+2023-08-14 09:02:28.142 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (event_id)
+2023-08-14 09:02:28.146 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-27::aleksandr (generated) ran successfully in 11ms
+2023-08-14 09:02:28.160 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (lazy_photo_id)
+2023-08-14 09:02:28.163 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-28::aleksandr (generated) ran successfully in 10ms
+2023-08-14 09:02:28.179 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (photo_id)
+2023-08-14 09:02:28.182 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-29::aleksandr (generated) ran successfully in 10ms
+2023-08-14 09:02:28.198 [main] INFO  liquibase.changelog - Foreign key constraint added to exchange_rates (from_id)
+2023-08-14 09:02:28.202 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-30::aleksandr (generated) ran successfully in 8ms
+2023-08-14 09:02:28.212 [main] INFO  liquibase.changelog - Foreign key constraint added to exchange_rates (to_id)
+2023-08-14 09:02:28.215 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-31::aleksandr (generated) ran successfully in 8ms
+2023-08-14 09:02:28.229 [main] INFO  liquibase.changelog - Foreign key constraint added to label (organisation_id)
+2023-08-14 09:02:28.231 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-32::aleksandr (generated) ran successfully in 7ms
+2023-08-14 09:02:28.242 [main] INFO  liquibase.changelog - Foreign key constraint added to organisation (id)
+2023-08-14 09:02:28.245 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-33::aleksandr (generated) ran successfully in 7ms
+2023-08-14 09:02:28.258 [main] INFO  liquibase.changelog - Foreign key constraint added to participant (id)
+2023-08-14 09:02:28.260 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-34::aleksandr (generated) ran successfully in 9ms
+2023-08-14 09:02:28.272 [main] INFO  liquibase.changelog - Foreign key constraint added to review (organisation_id)
+2023-08-14 09:02:28.275 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-35::aleksandr (generated) ran successfully in 10ms
+2023-08-14 09:02:28.288 [main] INFO  liquibase.changelog - Foreign key constraint added to review (participant_id)
+2023-08-14 09:02:28.291 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-36::aleksandr (generated) ran successfully in 10ms
+2023-08-14 09:02:28.302 [main] INFO  liquibase.changelog - Foreign key constraint added to ticket (event_id)
+2023-08-14 09:02:28.309 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-37::aleksandr (generated) ran successfully in 13ms
+2023-08-14 09:02:28.324 [main] INFO  liquibase.changelog - Foreign key constraint added to ticket (participant_id)
+2023-08-14 09:02:28.328 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-38::aleksandr (generated) ran successfully in 12ms
+2023-08-14 09:02:28.345 [main] INFO  liquibase.changelog - Foreign key constraint added to users (profile_picture)
+2023-08-14 09:02:28.349 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-39::aleksandr (generated) ran successfully in 9ms
+2023-08-14 09:02:28.367 [main] INFO  liquibase.changelog - Foreign key constraint added to event_category (category_id)
+2023-08-14 09:02:28.373 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-40::aleksandr (generated) ran successfully in 13ms
+2023-08-14 09:02:28.389 [main] INFO  liquibase.changelog - Foreign key constraint added to event_category (event_id)
+2023-08-14 09:02:28.394 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-41::aleksandr (generated) ran successfully in 12ms
+2023-08-14 09:02:28.412 [main] INFO  liquibase.changelog - Foreign key constraint added to event_save (event_id)
+2023-08-14 09:02:28.416 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-42::aleksandr (generated) ran successfully in 13ms
+2023-08-14 09:02:28.427 [main] INFO  liquibase.changelog - Foreign key constraint added to event_save (participant_id)
+2023-08-14 09:02:28.430 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1691946566350-43::aleksandr (generated) ran successfully in 8ms
+2023-08-14 09:02:28.451 [main] INFO  liquibase.changelog - Custom SQL executed
+2023-08-14 09:02:28.454 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/001-category.sql::raw::includeAll ran successfully in 19ms
+2023-08-14 09:02:28.472 [main] INFO  liquibase.changelog - Custom SQL executed
+2023-08-14 09:02:28.475 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/002-currency.sql::raw::includeAll ran successfully in 15ms
+2023-08-14 09:02:28.505 [main] INFO  liquibase.changelog - Custom SQL executed
+2023-08-14 09:02:28.509 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/009-get_distance.sql::raw::includeAll ran successfully in 26ms
+2023-08-14 09:02:28.528 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2023-08-14 09:02:28.692 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-14 09:02:28.754 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-08-14 09:02:29.245 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-08-14 09:02:30.810 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-14 09:02:30.823 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-14 09:02:35.151 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
+2023-08-14 09:02:35.690 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
+2023-08-14 09:02:36.577 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
+2023-08-14 09:02:40.013 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3718f26a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@24d84d1e, org.springframework.security.web.context.SecurityContextHolderFilter@bca34d, org.springframework.security.web.header.HeaderWriterFilter@62418263, org.springframework.web.filter.CorsFilter@59df8444, org.springframework.security.web.authentication.logout.LogoutFilter@1966ec08, com.ringo.auth.JwtFilter@38682845, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@152e530d, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5c51515f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@30428572, org.springframework.security.web.session.SessionManagementFilter@4a57cec1, org.springframework.security.web.access.ExceptionTranslationFilter@77cfbbba, org.springframework.security.web.access.intercept.AuthorizationFilter@334412ed]
+2023-08-14 09:02:40.467 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-14 09:02:40.480 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 19.054 seconds (process running for 19.764)
+2023-08-14 09:02:43.087 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-14 09:02:43.088 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-08-14 09:02:43.089 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2023-08-14 09:02:43.204 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: andriykuiava0511@gmail.com, role: ROLE_ORGANISATION
+2023-08-14 09:03:19.110 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: andriykuiava0511@gmail.com] is authenticated
+2023-08-14 09:03:41.257 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - activateParticipant: andriykuiava0511@gmail.com
+2023-08-14 09:03:47.941 [http-nio-8080-exec-6] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception
+com.ringo.exception.NotFoundException: User [email: aahusar@gmail.com] not found
+	at com.ringo.service.security.UserService.lambda$loadUserByUsername$0(UserService.java:20)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at com.ringo.service.security.UserService.loadUserByUsername(UserService.java:19)
+	at com.ringo.auth.JwtFilter.doFilterInternal(JwtFilter.java:45)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:859)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1734)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-08-14 09:03:50.603 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=null)
+2023-08-14 09:04:27.802 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 1, Screenshot 2023-08-07 at 12.33.06.png
+2023-08-14 09:04:27.803 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - photo type: image/png
+2023-08-14 09:04:28.370 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: png
+2023-08-14 09:04:28.390 [http-nio-8080-exec-9] WARN  c.a.services.s3.AmazonS3Client - No content length specified for stream data.  Stream contents will be buffered in memory and could result in out of memory errors.
+2023-08-14 09:04:29.810 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: png
+2023-08-14 09:04:29.813 [http-nio-8080-exec-9] WARN  c.a.services.s3.AmazonS3Client - No content length specified for stream data.  Stream contents will be buffered in memory and could result in out of memory errors.
+2023-08-14 09:04:47.253 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - setActive: 1
+2023-08-14 09:04:54.363 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: aahusar@gmail.com, role: ROLE_PARTICIPANT
+2023-08-14 09:05:17.166 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: aahusar@gmail.com] is authenticated
+2023-08-14 09:05:39.628 [http-nio-8080-exec-4] INFO  c.r.s.c.event.EventSearchService - findEventById: 1
+2023-08-14 09:05:45.695 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-14 09:05:45.699 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-08-14 09:05:45.702 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

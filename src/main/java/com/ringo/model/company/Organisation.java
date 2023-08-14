@@ -27,7 +27,7 @@ public class Organisation extends User {
     private Float rating;
 
     @OrderBy("ordinal")
-    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Label> contacts;
 
     @OneToMany(mappedBy = "host")
