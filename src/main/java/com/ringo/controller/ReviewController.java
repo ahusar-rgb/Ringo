@@ -42,12 +42,10 @@ public class ReviewController {
                     @ApiResponse(responseCode = "400", description = "Review not found")
             }
     )
-    @PutMapping(value = "{id}/reviews/{review_id}", produces = {"application/json"})
+    @DeleteMapping(value = "{org_id}/reviews", produces = {"application/json"})
     public ResponseEntity<OrganisationResponseDto> deleteReview(
-            @PathVariable("id") Long id,
-            @PathVariable("review_id") Long reviewId
-    ) {
-        return ResponseEntity.ok(reviewService.deleteReview(reviewId));
+            @PathVariable("org_id") Long organisationId) {
+        return ResponseEntity.ok(reviewService.deleteReview(organisationId));
     }
 
     @Operation(summary = "Update review")
@@ -57,11 +55,10 @@ public class ReviewController {
                     @ApiResponse(responseCode = "400", description = "Review not found")
             }
     )
-    @PutMapping(value = "{id}/reviews", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> updateReview(
-            @PathVariable("id") Long id,
-            @RequestBody ReviewRequestDto dto) {
-        return ResponseEntity.ok(reviewService.updateReview(id, dto));
+    @PutMapping(value = "{org_id}/reviews", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<OrganisationResponseDto> updateReview(@RequestBody ReviewRequestDto dto,
+                                                                @PathVariable("org_id") Long organisationId) {
+        return ResponseEntity.ok(reviewService.updateReview(organisationId, dto));
     }
 
     @Operation(summary = "Find all reviews")

@@ -1,17 +1,25 @@
 package com.ringo.it.template.security;
 
+import com.ringo.auth.JwtService;
 import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
+import com.ringo.model.security.User;
 import io.restassured.response.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Component
+@Import(JwtService.class)
 public class LoginTemplate extends EndpointTemplate {
+
+    @Autowired
+    private JwtService jwtService;
 
     public TokenDto login(String email, String password, int expectedStatusCode) {
         UserRequestDto userRequestDto = new UserRequestDto();
@@ -31,7 +39,7 @@ public class LoginTemplate extends EndpointTemplate {
     }
 
     public TokenDto refreshToken(String token, int expectedStatusCode) {
-        Response response = httpGetPathParams(token, "refresh-token", expectedStatusCode);
+        Response response = httpGetWithParams(token, "refresh-token", expectedStatusCode);
         if(expectedStatusCode != ItTestConsts.HTTP_SUCCESS) {
             return null;
         }
@@ -56,6 +64,13 @@ public class LoginTemplate extends EndpointTemplate {
             assertThat(response.getBody().as(TokenDto.class).getRefreshToken()).isNotNull();
         }
         return response.getBody().as(TokenDto.class);
+    }
+
+    public void verifyEmail(String email, String password) {
+        User user = new User();
+        user.setEmail(email);
+        String token = jwtService.generateEmailVerificationToken(user);
+        httpGetWithParams(ItTestConsts.NO_TOKEN, "verify-email?token=" + token, ItTestConsts.HTTP_SUCCESS);
     }
 
     @Override

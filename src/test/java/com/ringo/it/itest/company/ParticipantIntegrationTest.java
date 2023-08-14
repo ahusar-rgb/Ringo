@@ -31,7 +31,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
 
         String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
-        ParticipantResponseDto actual = participantTemplate.findById(token, responseDto.getId());
+        ParticipantResponseDto actual = participantTemplate.getCurrentParticipant(token);
 
         assertThat(actual).isEqualTo(responseDto);
 
@@ -41,7 +41,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
     @Test
     void updateSuccess() {
         ParticipantRequestDto requestDto = ParticipantDtoMock.getParticipantMockDto();
-        ParticipantResponseDto responseDto = participantTemplate.create(requestDto);
+        participantTemplate.create(requestDto);
 
         String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
 
@@ -51,7 +51,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         updateDto.setDateOfBirth("1990-01-01");
 
         ParticipantResponseDto updatedDto = participantTemplate.update(token, updateDto);
-        ParticipantResponseDto actual = participantTemplate.findById(token, responseDto.getId());
+        ParticipantResponseDto actual = participantTemplate.getCurrentParticipant(token);
 
         assertThat(actual.getName()).isEqualTo(updatedDto.getName());
         assertThat(actual.getGender()).isEqualTo(updatedDto.getGender());

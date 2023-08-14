@@ -34,4 +34,12 @@ public class Participant extends User {
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     @Builder.Default
     private List<Event> savedEvents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.PERSIST)
+    private List<Review> reviews;
+
+    @PreRemove
+    private void preRemove() {
+        reviews.forEach(review -> review.setParticipant(null));
+    }
 }

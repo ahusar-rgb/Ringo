@@ -21,7 +21,7 @@ public class JwtService {
     private final String TYPE_CLAIM = "type";
 
     public String generateAccessToken(User user) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
+        Algorithm algorithm = config.isUsePasswordHash() ? getAlgorithmWithPasswordHash(user) : getAlgorithmWithoutPasswordHash();
 
         return JWT.create()
                 .withIssuer(config.getIssuer())
@@ -34,7 +34,7 @@ public class JwtService {
     }
 
     public String generateTicketCode(Ticket ticket) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret());
+        Algorithm algorithm = getAlgorithmWithoutPasswordHash();
 
         return JWT.create()
                 .withIssuer(config.getIssuer())
@@ -47,7 +47,7 @@ public class JwtService {
     }
 
     public String generateRefreshToken(User user) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
+        Algorithm algorithm = config.isUsePasswordHash() ? getAlgorithmWithPasswordHash(user) : getAlgorithmWithoutPasswordHash();
 
         return JWT.create()
                 .withIssuer(config.getIssuer())
@@ -71,7 +71,7 @@ public class JwtService {
     }
 
     public String generateEmailVerificationToken(User user) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
+        Algorithm algorithm = config.isUsePasswordHash() ? getAlgorithmWithPasswordHash(user) : getAlgorithmWithoutPasswordHash();
 
         return JWT.create()
                 .withIssuer(config.getIssuer())
@@ -82,8 +82,13 @@ public class JwtService {
     }
 
     public boolean isTokenValid(User user, String token, TokenType type) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret() + user.getPassword());
-        JWTVerifier verifier = JWT.require(algorithm).withIssuer(config.getIssuer()).build();
+        JWTVerifier verifier;
+        if(type == TokenType.RECOVER) {
+            verifier = getVerifierWithPasswordHash(user);
+        } else {
+            verifier = config.isUsePasswordHash() ? getVerifierWithPasswordHash(user) : getVerifierWithoutPasswordHash();
+        }
+
         try {
             DecodedJWT jwt = verifier.verify(token);
             Claim typeClaim = jwt.getClaim(TYPE_CLAIM);
@@ -96,8 +101,7 @@ public class JwtService {
     }
 
     public DecodedJWT verifyTicketCode(String ticketCode) {
-        Algorithm algorithm = Algorithm.HMAC512(config.getSecret());
-        JWTVerifier verifier = JWT.require(algorithm).withIssuer(config.getIssuer()).build();
+        JWTVerifier verifier = getVerifierWithoutPasswordHash();
         try {
             return verifier.verify(ticketCode);
         } catch (Exception e) {
@@ -108,5 +112,23 @@ public class JwtService {
     public String getEmailFromToken(String token) {
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getSubject();
+    }
+
+    private JWTVerifier getVerifierWithPasswordHash(User user) {
+        Algorithm algorithm = getAlgorithmWithPasswordHash(user);
+        return JWT.require(algorithm).withIssuer(config.getIssuer()).build();
+    }
+
+    private Algorithm getAlgorithmWithPasswordHash(User user) {
+        return Algorithm.HMAC512(config.getSecret() + user.getPassword());
+    }
+
+    private JWTVerifier getVerifierWithoutPasswordHash() {
+        Algorithm algorithm = getAlgorithmWithoutPasswordHash();
+        return JWT.require(algorithm).withIssuer(config.getIssuer()).build();
+    }
+
+    private Algorithm getAlgorithmWithoutPasswordHash() {
+        return Algorithm.HMAC512(config.getSecret());
     }
 }

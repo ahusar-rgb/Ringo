@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 public class Review extends AbstractAuditableEntity {
 
     @ManyToOne
-    @JoinColumn(name = "participant_id", nullable = false)
+    @JoinColumn(name = "participant_id")
     private Participant participant;
 
     @ManyToOne

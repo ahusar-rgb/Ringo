@@ -24,8 +24,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
@@ -36,6 +36,7 @@ public class AuthenticationService {
     private final EmailSender emailSender;
 
     private static final String FORGOT_PASSWORD_URL = "http://localhost:8080/api/auth/reset-password-form";
+
     private final PasswordEncoder passwordEncoder;
 
     public TokenDto login(UserRequestDto login) {
@@ -80,7 +81,7 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException("User [email: %s] not found".formatted(email)));
 
-        if(!jwtService.isTokenValid(user, refreshToken, TokenType.REFRESH)) {
+        if (!jwtService.isTokenValid(user, refreshToken, TokenType.REFRESH)) {
             throw new AuthException("Invalid token");
         }
 
@@ -102,10 +103,10 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
                 () -> new AuthException("User not found"));
 
-        if(!jwtService.isTokenValid(user, token, TokenType.RECOVER))
+        if (!jwtService.isTokenValid(user, token, TokenType.RECOVER))
             throw new AuthException("Invalid token");
 
-        if(newPassword.contains("="))
+        if (newPassword.contains("="))
             newPassword = newPassword.split("=")[1]; //TODO: Remove this when frontend is ready
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
@@ -114,12 +115,12 @@ public class AuthenticationService {
     public TokenDto changePassword(ChangePasswordForm changePasswordForm) {
 
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(principal == null)
+        if (principal == null)
             throw new AuthException("User is not authenticated");
 
         User user = (User) principal;
 
-        if(!passwordEncoder.matches(changePasswordForm.getPassword(), user.getPassword()))
+        if (!passwordEncoder.matches(changePasswordForm.getPassword(), user.getPassword()))
             throw new AuthException("Wrong password");
 
         user.setPassword(passwordEncoder.encode(changePasswordForm.getNewPassword()));
@@ -146,7 +147,7 @@ public class AuthenticationService {
     public String getResetPasswordForm(String token) {
         User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
                 .orElseThrow(() -> new AuthException("User does not exist"));
-        if(!jwtService.isTokenValid(user, token, TokenType.RECOVER))
+        if (!jwtService.isTokenValid(user, token, TokenType.RECOVER))
             throw new AuthException("Invalid token");
 
         return "<form action=\"/api/auth/reset-password?token=" + token + "\" method=\"post\">\n" +
@@ -164,7 +165,7 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
                 .orElseThrow(() -> new AuthException("User does not exist"));
 
-        if(!jwtService.isTokenValid(user, token, TokenType.EMAIL_VERIFICATION))
+        if (!jwtService.isTokenValid(user, token, TokenType.EMAIL_VERIFICATION))
             throw new AuthException("Invalid token");
 
         user.setEmailVerified(true);

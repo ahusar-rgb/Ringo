@@ -6,8 +6,8 @@ public class ParticipantDtoMock {
     public static ParticipantRequestDto getParticipantMockDto() {
         return ParticipantRequestDto.builder()
                 .name("Test")
-                .username("test")
-                .email("test@test.com")
+                .username("test" + System.currentTimeMillis())
+                .email("test" + System.currentTimeMillis() + "@test.com")
                 .password("test")
                 .dateOfBirth("2000-01-01")
                 .gender("MALE")

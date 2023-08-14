@@ -8,8 +8,8 @@ public class OrganisationDtoMock {
     public static OrganisationRequestDto getOrganisationMockDto() {
         return OrganisationRequestDto.builder()
                 .name("Test")
-                .username("test")
-                .email("test@test.com")
+                .username("test" + System.currentTimeMillis())
+                .email("test" + System.currentTimeMillis() + "@test.com")
                 .password("test")
                 .description("Test description")
                 .contacts(new ArrayList<>())

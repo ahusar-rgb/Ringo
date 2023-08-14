@@ -109,8 +109,10 @@ public class ParticipantServiceTest {
     void saveSuccess() {
         // given
         Participant participant = ParticipantMock.getParticipantMock();
+        participant.setIsActive(false);
         ParticipantRequestDto dto = ParticipantDtoMock.getParticipantMockDto();
-        final String emailVerificationToken = "token";
+        dto.setEmail(participant.getEmail());
+        dto.setUsername(participant.getUsername());
         // when
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
         when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
@@ -142,9 +144,11 @@ public class ParticipantServiceTest {
         //given
         Participant participant = ParticipantMock.getParticipantMock();
         ParticipantRequestDto dto = ParticipantDtoMock.getParticipantMockDto();
+        dto.setEmail(participant.getEmail());
+        dto.setUsername(participant.getUsername());
         //when
         when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.empty());
         when(authenticationService.getCurrentUser()).thenReturn(participant);
         when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);

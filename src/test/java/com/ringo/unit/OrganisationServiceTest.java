@@ -111,7 +111,10 @@ public class OrganisationServiceTest {
     void saveSuccess() {
         // given
         Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setIsActive(false);
         OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
+        dto.setEmail(organisation.getEmail());
+        dto.setUsername(organisation.getUsername());
         final String emailVerificationToken = "token";
         // when
         when(organisationRepository.save(organisationCaptor.capture())).thenReturn(organisation);
@@ -144,9 +147,10 @@ public class OrganisationServiceTest {
         //given
         Organisation organisation = OrganisationMock.getOrganisationMock();
         OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
+        dto.setEmail(organisation.getEmail());
         //when
         when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.empty());
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
         when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(organisationRepository.save(organisationCaptor.capture())).thenReturn(organisation);
