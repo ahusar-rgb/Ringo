@@ -115,12 +115,12 @@ public class AuthController {
                 .body(authenticationService.loginWithGoogle(token.getIdToken()));
     }
 
-//    @PostMapping(value = "login/apple", consumes = {"application/json"}, produces = {"application/json"})
-//    public ResponseEntity<TokenDto> loginWithApple(@RequestBody IdTokenDto token) {
-//        return ResponseEntity
-//                .ok()
-//                .body(authService.loginWithApple(token.getIdToken()));
-//    }
+    @PostMapping(value = "login/apple", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<TokenDto> loginWithApple(@RequestBody IdTokenDto token) {
+        return ResponseEntity
+                .ok()
+                .body(authenticationService.loginWithApple(token.getIdToken()));
+    }
 
     @GetMapping(value = "send-verification-email", produces = {"text/html"})
     public ResponseEntity<String> sendVerificationEmail(@PathParam("username") String username) {

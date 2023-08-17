@@ -1,11 +1,16 @@
 package com.ringo.auth;
 
+import com.auth0.jwt.JWT;
+import com.ringo.exception.AuthException;
 import com.ringo.exception.InternalException;
-import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -13,47 +18,80 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Arrays;
 
 @Component
 public class AppleIdService implements IdProvider {
 
-    private static final String PUBLIC_KEY_STRING = "1JiU4l3YCeT4o0gVmxGTEK1IXR-Ghdg5Bzka12tzmtdCxU00ChH66aV-4HRBjF1t95IsaeHeDFRgmF0lJbTDTqa6_VZo2hc0zTiUAsGLacN6slePvDcR1IMucQGtPP5tGhIbU-HKabsKOFdD4VQ5PCXifjpN9R-1qOR571BxCAl4u1kUUIePAAJcBcqGRFSI_I1j_jbN3gflK_8ZNmgnPrXA0kZXzj1I7ZHgekGbZoxmDrzYm2zmja1MsE5A_JX7itBYnlR41LOtvLRCNtw7K3EFlbfB6hkPL-Swk5XNGbWZdTROmaTNzJhV-lWT0gGm6V1qWAK2qOZoIDa_3Ud0Gw";
-    private static final String PUBLIC_KEY_EXPONENT = "AQAB";
+    private final String appleKeysUrl = "https://appleid.apple.com/auth/keys";
 
     @Override
     public User getUserFromToken(String token) {
+        Claims claims = decodeJwt(token);
+        String email = claims.get("email").toString();
+        boolean emailVerified = Boolean.parseBoolean(claims.get("email_verified").toString());
+        return User.builder()
+                .email(email)
+                .emailVerified(emailVerified)
+                .build();
+    }
+
+    private PublicKey getPublicKey(String publicKeyString, String publicKeyExponent) {
+        BigInteger n = new BigInteger(1, Decoders.BASE64URL.decode(publicKeyString));
+        BigInteger e = new BigInteger(1, Decoders.BASE64URL.decode(publicKeyExponent));
+
         try {
-            Claims claims = decodeJwt(token);
-            String email = claims.get("email").toString();
-            return User.builder().email(email).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new UserException("Invalid token");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+
+            return keyFactory.generatePublic(publicKeySpec);
+        } catch (Exception ex) {
+            throw new InternalException("Error while composing public key");
         }
     }
 
-    private PublicKey getPublicKey() throws Exception {
-        BigInteger n = new BigInteger(1, Decoders.BASE64URL.decode(PUBLIC_KEY_STRING));
-        BigInteger e = new BigInteger(1, Decoders.BASE64URL.decode(PUBLIC_KEY_EXPONENT));
+    private Claims decodeJwt(String jwt) {
+        PublicKey publicKey = getPublicKeyFromJwt(jwt);
 
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        KeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
-
-        return keyFactory.generatePublic(publicKeySpec);
-    }
-
-    private Claims decodeJwt(String jwt) throws Exception {
-        PublicKey publicKey = getPublicKey();
-        Claims claims =  Jwts.parser()
+        Claims claims = Jwts.parser()
                 .setSigningKey(publicKey)
                 .parseClaimsJws(jwt)
                 .getBody(); // will throw exception if token is expired, etc.
 
         if(!claims.get("iss").equals("https://appleid.apple.com"))
-            throw new InternalException("Invalid issuer");
+            throw new AuthException("Invalid issuer");
         if(!claims.get("aud").equals("com.andrii-kuiava.RingoApp"))
-            throw new InternalException("Invalid audience");
+            throw new AuthException("Invalid audience");
 
         return claims;
+    }
+
+    private PublicKey getPublicKeyFromJwt(String jwt) {
+        String kid = JWT.decode(jwt).getKeyId();
+        Response response = RestAssured.given().get(appleKeysUrl);
+
+        KeySet keySet = response.getBody().as(KeySet.class);
+
+        KeyDto key = Arrays.stream(keySet.keys).filter(k -> k.kid.equals(kid)).findFirst().orElseThrow(
+                () -> new InternalException("Key not found"));
+
+        return getPublicKey(key.n, key.e);
+    }
+
+    @Getter
+    @Setter
+    private static class KeyDto {
+        private String kty;
+        private String kid;
+        private String use;
+        private String alg;
+        private String n;
+        private String e;
+    }
+
+    @Getter
+    @Setter
+    private static class KeySet {
+        private KeyDto[] keys;
     }
 }

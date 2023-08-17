@@ -87,10 +87,10 @@ public class OrganisationController {
         return ResponseEntity.ok(organisationService.signUpGoogle(token.getIdToken()));
     }
 
-//    @PostMapping(value = "sign-in/apple", consumes = {"application/json"}, produces = {"application/json"})
-//    public ResponseEntity<OrganisationResponseDto> signInApple(@RequestBody IdTokenDto token) {
-//        return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
-//    }
+    @PostMapping(value = "sign-up/apple", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<OrganisationResponseDto> signInApple(@RequestBody IdTokenDto token) {
+        return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
+    }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteOrganisation() {
