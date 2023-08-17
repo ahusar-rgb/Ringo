@@ -1,18 +1,11 @@
 package com.ringo.it.itest.company;
 
-import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ReviewRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.itest.common.AbstractIntegrationTest;
-import com.ringo.it.template.company.OrganisationTemplate;
-import com.ringo.it.template.company.ParticipantTemplate;
 import com.ringo.it.template.company.ReviewTemplate;
-import com.ringo.it.template.security.LoginTemplate;
 import com.ringo.it.util.ItTestConsts;
-import com.ringo.mock.dto.OrganisationDtoMock;
-import com.ringo.mock.dto.ParticipantDtoMock;
 import com.ringo.mock.dto.ReviewDtoMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,23 +16,16 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ExtendWith(SpringExtension.class)
 public class ReviewIntegrationTest extends AbstractIntegrationTest {
-
-    @Autowired
-    private ParticipantTemplate participantTemplate;
-    @Autowired
-    private OrganisationTemplate organisationTemplate;
     @Autowired
     private ReviewTemplate reviewTemplate;
-    @Autowired
-    private LoginTemplate loginTemplate;
 
 
     @Test
     void createReviewSuccess() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         reviewDto.setRate(5);
@@ -58,11 +44,11 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createMultipleReviews() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
         //review 1
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         reviewDto.setRate(5);
@@ -73,7 +59,7 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
         assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating").isEqualTo(organisation);
 
         //review 2
-        TokenDto participantToken2 = createParticipant();
+        TokenDto participantToken2 = createParticipantActivated();
 
         ReviewRequestDto reviewDto2 = ReviewDtoMock.getReviewDtoMock();
         reviewDto2.setRate(1);
@@ -90,11 +76,11 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createReviewAlreadyRated() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
         //review 1
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         OrganisationResponseDto responseDto = reviewTemplate.createReview(participantToken.getAccessToken(), organisation.getId(), reviewDto, ItTestConsts.HTTP_SUCCESS);
@@ -113,10 +99,10 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createReviewUserIsNotParticipant() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
-        TokenDto organisationToken2 = createOrganisation();
+        TokenDto organisationToken2 = createOrganisationActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         reviewTemplate.createReview(organisationToken2.getAccessToken(), organisation.getId(), reviewDto, ItTestConsts.HTTP_NOT_FOUND);
@@ -127,7 +113,7 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createReviewOrganisationNotFound() {
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         reviewTemplate.createReview(participantToken.getAccessToken(), System.currentTimeMillis(), reviewDto, ItTestConsts.HTTP_NOT_FOUND);
@@ -137,11 +123,11 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void updateReviewSuccess() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
         //create review
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         reviewDto.setRate(5);
@@ -166,11 +152,11 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void updateReviewDoesntExist() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
         //update review
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         reviewDto.setRate(1);
@@ -182,10 +168,10 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void deleteReviewSuccess() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         ReviewRequestDto reviewDto = ReviewDtoMock.getReviewDtoMock();
         reviewDto.setRate(5);
@@ -204,36 +190,14 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void deleteReviewParticipantDoesntExist() {
-        TokenDto organisationToken = createOrganisation();
+        TokenDto organisationToken = createOrganisationActivated();
         OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
-        TokenDto participantToken = createParticipant();
+        TokenDto participantToken = createParticipantActivated();
 
         reviewTemplate.deleteReview(participantToken.getAccessToken(), organisation.getId(), ItTestConsts.HTTP_NOT_FOUND);
 
         participantTemplate.delete(participantToken.getAccessToken());
         organisationTemplate.delete(organisationToken.getAccessToken());
-    }
-
-    private TokenDto createOrganisation() {
-        OrganisationRequestDto organisationRequestDto = OrganisationDtoMock.getOrganisationMockDto();
-        organisationTemplate.create(organisationRequestDto);
-
-        TokenDto organisationToken = loginTemplate.login(organisationRequestDto.getEmail(), organisationRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        loginTemplate.verifyEmail(organisationRequestDto.getEmail(), organisationRequestDto.getPassword());
-        organisationTemplate.activate(organisationToken.getAccessToken());
-
-        return organisationToken;
-    }
-
-    private TokenDto createParticipant() {
-        ParticipantRequestDto participantRequestDto = ParticipantDtoMock.getParticipantMockDto();
-        participantTemplate.create(participantRequestDto);
-
-        TokenDto participantToken = loginTemplate.login(participantRequestDto.getEmail(), participantRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        loginTemplate.verifyEmail(participantRequestDto.getEmail(), participantRequestDto.getPassword());
-        participantTemplate.activate(participantToken.getAccessToken());
-
-        return participantToken;
     }
 }

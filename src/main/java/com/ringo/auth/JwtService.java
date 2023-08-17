@@ -76,6 +76,7 @@ public class JwtService {
         return JWT.create()
                 .withIssuer(config.getIssuer())
                 .withSubject(user.getEmail())
+                .withClaim("username", user.getUsername())
                 .withClaim(TYPE_CLAIM, TokenType.EMAIL_VERIFICATION.getValue())
                 .withExpiresAt(new Date((new Date()).getTime() + config.getEmailVerificationTokenExpirationMillis()))
                 .sign(algorithm);
@@ -112,6 +113,11 @@ public class JwtService {
     public String getEmailFromToken(String token) {
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getSubject();
+    }
+
+    public String getUsernameFromToken(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getClaim("username").asString();
     }
 
     private JWTVerifier getVerifierWithPasswordHash(User user) {

@@ -66,9 +66,10 @@ public class LoginTemplate extends EndpointTemplate {
         return response.getBody().as(TokenDto.class);
     }
 
-    public void verifyEmail(String email, String password) {
+    public void verifyEmail(String email, String username) {
         User user = new User();
         user.setEmail(email);
+        user.setUsername(username);
         String token = jwtService.generateEmailVerificationToken(user);
         httpGetWithParams(ItTestConsts.NO_TOKEN, "verify-email?token=" + token, ItTestConsts.HTTP_SUCCESS);
     }

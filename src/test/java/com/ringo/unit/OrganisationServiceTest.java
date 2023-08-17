@@ -1,6 +1,7 @@
 package com.ringo.unit;
 
 import com.ringo.auth.AuthenticationService;
+import com.ringo.auth.IdProvider;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -13,6 +14,7 @@ import com.ringo.mock.dto.OrganisationDtoMock;
 import com.ringo.mock.model.OrganisationMock;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.photo.Photo;
+import com.ringo.model.security.Role;
 import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.PhotoService;
@@ -45,6 +47,8 @@ public class OrganisationServiceTest {
     private AuthenticationService authenticationService;
     @Mock
     private PhotoService photoService;
+    @Mock
+    private IdProvider idProvider;
 
     @Captor
     private ArgumentCaptor<Organisation> organisationCaptor;
@@ -115,11 +119,10 @@ public class OrganisationServiceTest {
         OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
         dto.setEmail(organisation.getEmail());
         dto.setUsername(organisation.getUsername());
-        final String emailVerificationToken = "token";
         // when
         when(organisationRepository.save(organisationCaptor.capture())).thenReturn(organisation);
         when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
-        when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
         // then
         OrganisationResponseDto responseDto = service.save(dto);
         // assert
@@ -143,13 +146,52 @@ public class OrganisationServiceTest {
     }
 
     @Test
+    void signUpWithIdProviderSuccess() {
+        //given
+        String idToken = "idToken";
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setEmailVerified(true);
+
+        //when
+        when(organisationRepository.save(organisationCaptor.capture())).thenReturn(organisation);
+        when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(organisation.getUsername())).thenReturn(Optional.empty());
+        when(idProvider.getUserFromToken(idToken)).thenReturn(organisation);
+
+        //then
+        OrganisationResponseDto responseDto = service.signUpWithIdProvider(idToken, idProvider, Role.ROLE_ORGANISATION);
+        assertThat(responseDto).isEqualTo(mapper.toDto(organisation));
+
+        Organisation saved = organisationCaptor.getValue();
+        assertThat(saved.getUsername()).startsWith("user");
+        assertThat(saved.getEmail()).isEqualTo(organisation.getEmail());
+        assertThat(saved.getIsActive()).isFalse();
+        assertThat(saved.getEmailVerified()).isTrue();
+    }
+
+    @Test
+    void signUpWithIdProviderEmailTaken() {
+        //given
+        String idToken = "idToken";
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+
+        //when
+        when(userRepository.findByUsername(organisation.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.of(Organisation.builder().id(System.currentTimeMillis()).build()));
+        when(idProvider.getUserFromToken(idToken)).thenReturn(organisation);
+
+        //then
+        assertThrows(UserException.class, () -> service.signUpWithIdProvider(idToken, idProvider, Role.ROLE_ORGANISATION));
+    }
+
+    @Test
     void partialUpdateSuccess() {
         //given
         Organisation organisation = OrganisationMock.getOrganisationMock();
         OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
         dto.setEmail(organisation.getEmail());
         //when
-        when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
         when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.empty());
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
         when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
@@ -227,7 +269,7 @@ public class OrganisationServiceTest {
         found.setId(System.currentTimeMillis());
         //when
         when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.of(found));
-        when(userRepository.findActiveByUsername(organisation.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(organisation.getUsername())).thenReturn(Optional.empty());
         //then
         assertThrows(UserException.class, () -> service.throwIfUniqueConstraintsViolated(organisation));
     }
@@ -240,7 +282,7 @@ public class OrganisationServiceTest {
         Organisation found = OrganisationMock.getOrganisationMock();
         found.setId(System.currentTimeMillis());
         //when
-        when(userRepository.findActiveByUsername(organisation.getUsername())).thenReturn(Optional.of(found));
+        when(userRepository.findByUsername(organisation.getUsername())).thenReturn(Optional.of(found));
         //then
         assertThrows(UserException.class, () -> service.throwIfUniqueConstraintsViolated(organisation));
     }

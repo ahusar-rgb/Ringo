@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.ringo.config.ApplicationProperties;
 import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import org.springframework.stereotype.Component;
@@ -11,13 +12,15 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 
 @Component
-public class GoogleIdService implements IdProvider{
+public class GoogleIdService implements IdProvider {
 
-    private static final String CLIENT_ID = "546639981524-u4a1kdbkmndq1ms0fo7s3ldtrmsufg4k.apps.googleusercontent.com";
-    private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
-            .setAudience(Collections.singletonList(CLIENT_ID))
-            .build();
+    private final GoogleIdTokenVerifier verifier;
 
+    public GoogleIdService(ApplicationProperties applicationProperties) {
+        verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
+                .setAudience(Collections.singletonList(applicationProperties.getGoogleClientId()))
+                .build();
+    }
 
     @Override
     public User getUserFromToken(String token) {
@@ -28,7 +31,7 @@ public class GoogleIdService implements IdProvider{
             throw new UserException("Invalid Google Id Token");
         }
 
-        if(idToken == null) {
+        if (idToken == null) {
             throw new UserException("Invalid Google Id Token");
         }
 

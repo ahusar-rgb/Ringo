@@ -70,12 +70,13 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         return savedDto;
     }
 
-    protected R signUpWithIdProvider(String token, IdProvider idProvider, Role role) {
+    public R signUpWithIdProvider(String token, IdProvider idProvider, Role role) {
         T user = abstractUserMapper.fromUser(idProvider.getUserFromToken(token));
         throwIfUniqueConstraintsViolated(user);
 
         user.setRole(role);
         user.setCreatedAt(LocalDateTime.now());
+        user.setUsername("user" + System.currentTimeMillis());
         user.setIsActive(false);
 
         R savedDto = abstractUserMapper.toDto(repository.save(user));

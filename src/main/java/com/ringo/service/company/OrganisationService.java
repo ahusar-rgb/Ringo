@@ -95,7 +95,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     public void throwIfUniqueConstraintsViolated(Organisation user) {
 
         if(user.getUsername() != null) {
-            User found  = userRepository.findActiveByUsername(user.getUsername()).orElse(null);
+            User found  = userRepository.findByUsername(user.getUsername()).orElse(null);
             if(found != null && !found.getId().equals(user.getId()))
                 throw new UserException("User with username %s already exists".formatted(user.getUsername()));
         }
