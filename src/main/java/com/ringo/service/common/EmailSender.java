@@ -71,10 +71,10 @@ public class EmailSender {
         }
     }
 
-    public void sendEmailVerificationEmail(String email, String verificationToken) {
+    public void sendVerificationEmail(String email, String username, String verificationToken) {
         String subject = "Email verification";
-        String text = "Please verify your email by clicking on the link below:\n" +
-                "http://localhost:8080/api/auth/verify-email?token=%s".formatted(verificationToken);
+        String text = "Username: %s\nPlease verify your email by clicking on the link below:\nhttp://localhost:8080/api/auth/verify-email?token=%s"
+                .formatted(username, verificationToken);
         send(email, subject, text);
     }
 

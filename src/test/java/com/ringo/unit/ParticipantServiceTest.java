@@ -1,6 +1,7 @@
 package com.ringo.unit;
 
 import com.ringo.auth.AuthenticationService;
+import com.ringo.auth.IdProvider;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
@@ -10,8 +11,10 @@ import com.ringo.mapper.company.ParticipantMapperImpl;
 import com.ringo.mock.common.MultipartFileMock;
 import com.ringo.mock.dto.ParticipantDtoMock;
 import com.ringo.mock.model.ParticipantMock;
+import com.ringo.model.company.Organisation;
 import com.ringo.model.company.Participant;
 import com.ringo.model.photo.Photo;
+import com.ringo.model.security.Role;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.PhotoService;
@@ -44,6 +47,8 @@ public class ParticipantServiceTest {
     private AuthenticationService authenticationService;
     @Mock
     private PhotoService photoService;
+    @Mock
+    private IdProvider idProvider;
 
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;
@@ -116,7 +121,7 @@ public class ParticipantServiceTest {
         // when
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
         when(userRepository.findVerifiedByEmail(dto.getEmail())).thenReturn(Optional.empty());
-        when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
         // then
         ParticipantResponseDto responseDto = service.save(dto);
         // assert
@@ -140,6 +145,45 @@ public class ParticipantServiceTest {
     }
 
     @Test
+    void signUpWithIdProviderSuccess() {
+        //given
+        String idToken = "idToken";
+        Participant participant = ParticipantMock.getParticipantMock();
+        participant.setEmailVerified(true);
+
+        //when
+        when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
+        when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(participant.getUsername())).thenReturn(Optional.empty());
+        when(idProvider.getUserFromToken(idToken)).thenReturn(participant);
+
+        //then
+        ParticipantResponseDto responseDto = service.signUpWithIdProvider(idToken, idProvider, Role.ROLE_PARTICIPANT);
+        assertThat(responseDto).isEqualTo(mapper.toDto(participant));
+
+        Participant saved = participantCaptor.getValue();
+        assertThat(saved.getUsername()).startsWith("user");
+        assertThat(saved.getEmail()).isEqualTo(participant.getEmail());
+        assertThat(saved.getIsActive()).isFalse();
+        assertThat(saved.getEmailVerified()).isTrue();
+    }
+
+    @Test
+    void signUpWithIdProviderEmailTaken() {
+        //given
+        String idToken = "idToken";
+        Participant participant = ParticipantMock.getParticipantMock();
+
+        //when
+        when(userRepository.findByUsername(participant.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.of(Organisation.builder().id(System.currentTimeMillis()).build()));
+        when(idProvider.getUserFromToken(idToken)).thenReturn(participant);
+
+        //then
+        assertThrows(UserException.class, () -> service.signUpWithIdProvider(idToken, idProvider, Role.ROLE_PARTICIPANT));
+    }
+
+    @Test
     void partialUpdateSuccess() {
         //given
         Participant participant = ParticipantMock.getParticipantMock();
@@ -147,7 +191,7 @@ public class ParticipantServiceTest {
         dto.setEmail(participant.getEmail());
         dto.setUsername(participant.getUsername());
         //when
-        when(userRepository.findActiveByUsername(dto.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
         when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.empty());
         when(authenticationService.getCurrentUser()).thenReturn(participant);
         when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
@@ -245,7 +289,7 @@ public class ParticipantServiceTest {
         found.setId(System.currentTimeMillis());
         //when
         when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.of(found));
-        when(userRepository.findActiveByUsername(participant.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(participant.getUsername())).thenReturn(Optional.empty());
         //then
         assertThrows(UserException.class, () -> service.throwIfUniqueConstraintsViolated(participant));
     }
@@ -258,7 +302,7 @@ public class ParticipantServiceTest {
         Participant found = ParticipantMock.getParticipantMock();
         found.setId(System.currentTimeMillis());
         //when
-        when(userRepository.findActiveByUsername(participant.getUsername())).thenReturn(Optional.of(found));
+        when(userRepository.findByUsername(participant.getUsername())).thenReturn(Optional.of(found));
         //then
         assertThrows(UserException.class, () -> service.throwIfUniqueConstraintsViolated(participant));
     }

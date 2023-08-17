@@ -6,6 +6,7 @@ import com.ringo.dto.auth.ForgotPasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.exception.AuthException;
+import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.EmailSender;
@@ -78,7 +79,7 @@ public class AuthenticationService {
         refreshToken = refreshToken.substring(Constants.TOKEN_PREFIX.length());
         String email = jwtService.getEmailFromToken(refreshToken);
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findVerifiedByEmail(email)
                 .orElseThrow(() -> new AuthException("User [email: %s] not found".formatted(email)));
 
         if (!jwtService.isTokenValid(user, refreshToken, TokenType.REFRESH)) {
@@ -100,7 +101,7 @@ public class AuthenticationService {
     }
 
     public void resetPassword(String token, String newPassword) {
-        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
+        User user = userRepository.findVerifiedByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
                 () -> new AuthException("User not found"));
 
         if (!jwtService.isTokenValid(user, token, TokenType.RECOVER))
@@ -134,7 +135,7 @@ public class AuthenticationService {
 
     private TokenDto loginWithIdProvider(String token, IdProvider idProvider) {
         String email = idProvider.getUserFromToken(token).getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findVerifiedByEmail(email).orElseThrow(
                 () -> new AuthException("User [email: " + email + "] not found")
         );
 
@@ -145,7 +146,7 @@ public class AuthenticationService {
     }
 
     public String getResetPasswordForm(String token) {
-        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
+        User user = userRepository.findVerifiedByEmail(jwtService.getEmailFromToken(token))
                 .orElseThrow(() -> new AuthException("User does not exist"));
         if (!jwtService.isTokenValid(user, token, TokenType.RECOVER))
             throw new AuthException("Invalid token");
@@ -162,8 +163,12 @@ public class AuthenticationService {
     }
 
     public void verifyEmail(String token) {
-        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
-                .orElseThrow(() -> new AuthException("User does not exist"));
+        if(userRepository.findVerifiedByEmail(jwtService.getEmailFromToken(token)).isPresent())
+            throw new UserException("Email is already verified");
+
+        User user = userRepository.findByUsername(jwtService.getUsernameFromToken(token)).orElseThrow(
+                () -> new AuthException("User not found")
+        );
 
         if (!jwtService.isTokenValid(user, token, TokenType.EMAIL_VERIFICATION))
             throw new AuthException("Invalid token");
@@ -172,8 +177,21 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
+    public User requestVerificationEmail(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UserException("User not found")
+        );
+
+        if (user.getEmailVerified())
+            throw new UserException("Email is already verified");
+
+        sendVerificationEmail(user);
+
+        return user;
+    }
+
     public void sendVerificationEmail(User user) {
         String verificationToken = jwtService.generateEmailVerificationToken(user);
-        emailSender.sendEmailVerificationEmail(user.getEmail(), verificationToken);
+        emailSender.sendVerificationEmail(user.getEmail(), user.getUsername(), verificationToken);
     }
 }

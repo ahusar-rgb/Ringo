@@ -123,10 +123,9 @@ public class AuthController {
 //    }
 
     @GetMapping(value = "send-verification-email", produces = {"text/html"})
-    public ResponseEntity<String> sendVerificationEmail() {
-        User user = authenticationService.getCurrentUser();
-        authenticationService.sendVerificationEmail(user);
-        return ResponseEntity.ok("<h1>Verification email was sent to %s</h1>".formatted(user.getEmail()));
+    public ResponseEntity<String> sendVerificationEmail(@PathParam("username") String username) {
+        User sentTo = authenticationService.requestVerificationEmail(username);
+        return ResponseEntity.ok("<h1>Verification email was sent to %s</h1>".formatted(sentTo.getEmail()));
     }
 
 

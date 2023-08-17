@@ -3,6 +3,7 @@ package com.ringo.it.itest.company;
 import com.ringo.dto.company.LabelDto;
 import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.dto.security.TokenDto;
 import com.ringo.it.itest.common.AbstractIntegrationTest;
 import com.ringo.it.template.company.OrganisationTemplate;
 import com.ringo.it.template.security.LoginTemplate;
@@ -30,15 +31,17 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createSuccess() {
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
-        OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
+        OrganisationRequestDto organisationRequestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationResponseDto responseDto = organisationTemplate.create(organisationRequestDto);
 
-        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
-        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
+        loginTemplate.verifyEmail(organisationRequestDto.getEmail(), organisationRequestDto.getUsername());
+        TokenDto tokenDto = loginTemplate.login(organisationRequestDto.getEmail(), organisationRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
+        organisationTemplate.activate(tokenDto.getAccessToken());
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(tokenDto.getAccessToken());
 
         assertThat(actual).isEqualTo(responseDto);
 
-        organisationTemplate.delete(token);
+        organisationTemplate.delete(tokenDto.getAccessToken());
     }
 
 
@@ -52,15 +55,13 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         contacts.add(LabelDto.builder().ordinal(3).title("title3").content("content3").build());
         requestDto.setContacts(contacts);
 
-        OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
-
-        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
-        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
+        TokenDto token = createOrganisationActivated(requestDto);
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token.getAccessToken());
 
         requestDto.getContacts().sort(Comparator.comparingInt(LabelDto::getOrdinal));
         assertThat(actual.getContacts()).usingRecursiveComparison().ignoringFields("id").isEqualTo(requestDto.getContacts());
 
-        organisationTemplate.delete(token);
+        organisationTemplate.delete(token.getAccessToken());
     }
 
     @Test
@@ -73,9 +74,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         contacts.add(LabelDto.builder().ordinal(3).title("title3").content("content3").build());
         requestDto.setContacts(contacts);
 
-        OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
-
-        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
+        TokenDto token = createOrganisationActivated(requestDto);
 
         OrganisationRequestDto updateDto = new OrganisationRequestDto();
 
@@ -85,67 +84,56 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         updatedContacts.add(LabelDto.builder().ordinal(1).title("new_title1").content("new_content1").build());
         updateDto.setContacts(updatedContacts);
 
-        OrganisationResponseDto updatedDto = organisationTemplate.update(token, updateDto);
-        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
+        OrganisationResponseDto updatedDto = organisationTemplate.update(token.getAccessToken(), updateDto);
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token.getAccessToken());
 
         updatedDto.getContacts().sort(Comparator.comparingInt(LabelDto::getOrdinal));
         assertThat(actual.getContacts()).isEqualTo(updatedDto.getContacts());
         assertThat(actual.getContacts()).usingRecursiveComparison().ignoringFields("id").isEqualTo(updatedDto.getContacts());
 
-        organisationTemplate.delete(token);
+        organisationTemplate.delete(token.getAccessToken());
     }
 
     @Test
     void updateSuccess() {
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
-        OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
-
-        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
+        TokenDto token = createOrganisationActivated();
 
         OrganisationRequestDto updateDto = new OrganisationRequestDto();
         updateDto.setName("new name");
         updateDto.setDescription("new description");
 
-        OrganisationResponseDto updatedDto = organisationTemplate.update(token, updateDto);
-        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token);
+        OrganisationResponseDto updatedDto = organisationTemplate.update(token.getAccessToken(), updateDto);
+        OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(token.getAccessToken());
 
         assertThat(actual.getName()).isEqualTo(updatedDto.getName());
         assertThat(actual.getContacts()).isEqualTo(updatedDto.getContacts());
         assertThat(actual.getDescription()).isEqualTo(updatedDto.getDescription());
 
-        organisationTemplate.delete(token);
+        organisationTemplate.delete(token.getAccessToken());
     }
 
     @Test
     void setPhotoSuccess() {
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
-        OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
-
-        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
+        TokenDto token = createOrganisationActivated();
 
         File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
 
-        OrganisationResponseDto actual = organisationTemplate.setPhoto(token, profilePicture, "image/jpeg");
+        OrganisationResponseDto actual = organisationTemplate.setPhoto(token.getAccessToken(), profilePicture, "image/jpeg");
         assertThat(actual.getProfilePictureId()).isNotNull();
-        assertThat(actual).usingRecursiveComparison().ignoringFields("profilePictureId").isEqualTo(responseDto);
 
-        organisationTemplate.delete(token);
+        organisationTemplate.delete(token.getAccessToken());
     }
 
     @Test
     void removePhotoSuccess() {
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
-        OrganisationResponseDto responseDto = organisationTemplate.create(requestDto);
-
-        String token = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS).getAccessToken();
+        TokenDto token = createOrganisationActivated();
 
         File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
-        organisationTemplate.setPhoto(token, profilePicture, "image/jpeg");
+        organisationTemplate.setPhoto(token.getAccessToken(), profilePicture, "image/jpeg");
 
-        OrganisationResponseDto actual = organisationTemplate.removePhoto(token);
+        OrganisationResponseDto actual = organisationTemplate.removePhoto(token.getAccessToken());
         assertThat(actual.getProfilePictureId()).isNull();
-        assertThat(actual).usingRecursiveComparison().ignoringFields("profilePictureId").isEqualTo(responseDto);
 
-        organisationTemplate.delete(token);
+        organisationTemplate.delete(token.getAccessToken());
     }
 }

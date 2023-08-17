@@ -72,7 +72,7 @@ public class AuthenticationServiceTest {
         User user = UserMock.getUserMock();
         final String token = "token";
         //when
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findVerifiedByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(jwtService.getEmailFromToken(token)).thenReturn(user.getEmail());
         when(jwtService.isTokenValid(user, token, TokenType.RECOVER)).thenReturn(true);
         when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
@@ -89,7 +89,7 @@ public class AuthenticationServiceTest {
         User user = UserMock.getUserMock();
         final String token = "wrongToken";
         //when
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findVerifiedByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(jwtService.getEmailFromToken(token)).thenReturn(user.getEmail());
         when(jwtService.isTokenValid(user, token, TokenType.RECOVER)).thenReturn(false);
         //then
@@ -103,7 +103,7 @@ public class AuthenticationServiceTest {
         final String token = "wrongToken";
         //when
         when(jwtService.getEmailFromToken(token)).thenReturn(user.getEmail());
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail(user.getEmail())).thenReturn(Optional.empty());
         //then
         assertThrows(AuthException.class, () -> authenticationService.resetPassword(token, "password"));
     }
@@ -114,8 +114,10 @@ public class AuthenticationServiceTest {
         User user = UserMock.getUserMock();
         final String token = "token";
         //when
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
         when(jwtService.getEmailFromToken(token)).thenReturn(user.getEmail());
+        when(jwtService.getUsernameFromToken(token)).thenReturn(user.getUsername());
+        when(userRepository.findVerifiedByEmail(user.getEmail())).thenReturn(Optional.empty());
         when(jwtService.isTokenValid(user, token, TokenType.EMAIL_VERIFICATION)).thenReturn(true);
         //then
         authenticationService.verifyEmail(token);
@@ -133,7 +135,7 @@ public class AuthenticationServiceTest {
         final String token = "token";
         //when
         when(jwtService.getEmailFromToken(token)).thenReturn("email");
-        when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
+        when(userRepository.findVerifiedByEmail("email")).thenReturn(Optional.empty());
         //then
         assertThrows(AuthException.class, () -> authenticationService.verifyEmail(token));
     }
@@ -145,9 +147,21 @@ public class AuthenticationServiceTest {
         final String token = "token";
         //when
         when(jwtService.getEmailFromToken(token)).thenReturn(user.getEmail());
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(jwtService.getUsernameFromToken(token)).thenReturn(user.getUsername());
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
         when(jwtService.isTokenValid(user, token, TokenType.EMAIL_VERIFICATION)).thenReturn(false);
         //then
         assertThrows(AuthException.class, () -> authenticationService.verifyEmail(token));
+    }
+
+    @Test
+    void sendVerificationEmailSuccess() {
+        //given
+        User user = UserMock.getUserMock();
+        //when
+        when(jwtService.generateEmailVerificationToken(user)).thenReturn("token");
+        //then
+        authenticationService.sendVerificationEmail(user);
+        verify(emailSender, times(1)).sendVerificationEmail(user.getEmail(), user.getUsername(), "token");
     }
 }
