@@ -25,6 +25,7 @@ public class DataInitializer {
                 .username(config.getAdminLogin())
                 .email(config.getAdminLogin())
                 .emailVerified(true)
+                .withIdProvider(false)
                 .createdAt(LocalDateTime.now())
                 .name("Admin")
                 .isActive(true)

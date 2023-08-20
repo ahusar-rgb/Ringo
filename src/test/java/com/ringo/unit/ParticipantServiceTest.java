@@ -115,6 +115,9 @@ public class ParticipantServiceTest {
         // given
         Participant participant = ParticipantMock.getParticipantMock();
         participant.setIsActive(false);
+        participant.setEmailVerified(false);
+        participant.setWithIdProvider(false);
+
         ParticipantRequestDto dto = ParticipantDtoMock.getParticipantMockDto();
         dto.setEmail(participant.getEmail());
         dto.setUsername(participant.getUsername());
@@ -133,6 +136,7 @@ public class ParticipantServiceTest {
         assertThat(saved.getCreatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
         assertThat(saved.getCreatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
         assertThat(saved.getUpdatedAt()).isNull();
+        assertThat(saved.getWithIdProvider()).isFalse();
 
         assertThat(responseDto).isNotNull();
         ParticipantResponseDto expectedDto = mapper.toDto(participant);
@@ -150,6 +154,7 @@ public class ParticipantServiceTest {
         String idToken = "idToken";
         Participant participant = ParticipantMock.getParticipantMock();
         participant.setEmailVerified(true);
+        participant.setWithIdProvider(true);
 
         //when
         when(participantRepository.save(participantCaptor.capture())).thenReturn(participant);
@@ -166,6 +171,7 @@ public class ParticipantServiceTest {
         assertThat(saved.getEmail()).isEqualTo(participant.getEmail());
         assertThat(saved.getIsActive()).isFalse();
         assertThat(saved.getEmailVerified()).isTrue();
+        assertThat(saved.getWithIdProvider()).isTrue();
     }
 
     @Test

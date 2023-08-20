@@ -116,6 +116,7 @@ public class OrganisationServiceTest {
         // given
         Organisation organisation = OrganisationMock.getOrganisationMock();
         organisation.setIsActive(false);
+        organisation.setWithIdProvider(false);
         OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationDtoMock();
         dto.setEmail(organisation.getEmail());
         dto.setUsername(organisation.getUsername());
@@ -134,6 +135,7 @@ public class OrganisationServiceTest {
         assertThat(saved.getCreatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
         assertThat(saved.getCreatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
         assertThat(saved.getUpdatedAt()).isNull();
+        assertThat(saved.getWithIdProvider()).isFalse();
 
         assertThat(responseDto).isNotNull();
         OrganisationResponseDto expectedDto = mapper.toDto(organisation);
@@ -151,6 +153,7 @@ public class OrganisationServiceTest {
         String idToken = "idToken";
         Organisation organisation = OrganisationMock.getOrganisationMock();
         organisation.setEmailVerified(true);
+        organisation.setWithIdProvider(true);
 
         //when
         when(organisationRepository.save(organisationCaptor.capture())).thenReturn(organisation);
@@ -167,6 +170,7 @@ public class OrganisationServiceTest {
         assertThat(saved.getEmail()).isEqualTo(organisation.getEmail());
         assertThat(saved.getIsActive()).isFalse();
         assertThat(saved.getEmailVerified()).isTrue();
+        assertThat(saved.getWithIdProvider()).isTrue();
     }
 
     @Test

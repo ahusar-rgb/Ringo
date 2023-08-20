@@ -1,8 +1,6 @@
 package com.ringo.model.company;
 
-import com.ringo.exception.NotFoundException;
 import com.ringo.model.common.AbstractActiveEntity;
-import com.ringo.model.common.AbstractEntity;
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
@@ -14,7 +12,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.OnDelete;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;

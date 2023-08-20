@@ -19,6 +19,7 @@ public class OrganisationMock {
                 .description("Test description")
                 .rating(null)
                 .emailVerified(false)
+                .withIdProvider(false)
                 .contacts(new ArrayList<>())
                 .hostedEvents(new HashSet<>())
                 .reviews(new ArrayList<>())

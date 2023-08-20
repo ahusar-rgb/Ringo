@@ -20,6 +20,7 @@ public class ParticipantMock {
                 .gender(Gender.MALE)
                 .password("test")
                 .emailVerified(false)
+                .withIdProvider(false)
                 .build();
     }
 }

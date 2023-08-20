@@ -17,8 +17,6 @@ import com.ringo.repository.UserRepository;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.event.EventCleanUpService;
-import com.ringo.service.company.event.EventPhotoService;
-import com.ringo.service.company.event.EventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

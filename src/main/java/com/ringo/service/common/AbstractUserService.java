@@ -62,6 +62,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         user.setCreatedAt(LocalDateTime.now());
         user.setIsActive(false);
         user.setEmailVerified(false);
+        user.setWithIdProvider(false);
         prepareForSave(user);
 
         R savedDto = abstractUserMapper.toDto(repository.save(user));
@@ -80,6 +81,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         user.setCreatedAt(LocalDateTime.now());
         user.setUsername("user" + System.currentTimeMillis());
         user.setIsActive(false);
+        user.setWithIdProvider(true);
 
         R savedDto = abstractUserMapper.toDto(repository.save(user));
 

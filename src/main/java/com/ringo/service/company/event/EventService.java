@@ -6,7 +6,6 @@ import com.ringo.dto.company.EventResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
-import com.ringo.model.common.AbstractEntity;
 import com.ringo.model.company.Category;
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.Event;

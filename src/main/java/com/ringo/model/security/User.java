@@ -38,6 +38,9 @@ public class User extends AbstractActiveEntity implements UserDetails {
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified;
 
+    @Column(name = "with_id_provider", nullable = false)
+    private Boolean withIdProvider;
+
     @Column(name = "role", nullable = false)
     private Role role;
 
