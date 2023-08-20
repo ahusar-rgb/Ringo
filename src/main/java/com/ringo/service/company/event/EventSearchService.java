@@ -46,6 +46,7 @@ public class EventSearchService {
     private final ApplicationProperties config;
     private final EventGroupMapper groupMapper;
 
+
     public EventResponseDto findById(Long id) {
         log.info("findEventById: {}", id);
 
@@ -68,6 +69,7 @@ public class EventSearchService {
 
         return personalizedMapper.toPersonalizedDto(event);
     }
+
 
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {
 
@@ -116,27 +118,18 @@ public class EventSearchService {
         return result;
     }
 
+
     public List<EventSmallDto> search(EventSearchDto searchDto) {
         log.info("searchEvents: {}", searchDto);
 
         Organisation organisation;
         try {
             organisation = organisationService.getFullUser();
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | UserException e) {
             organisation = null;
         }
 
-        Specification<Event> specification = searchDto.getSpecification();
-
-        if(organisation != null) {
-            Organisation finalOrganisation = organisation;
-            specification = specification.and((root, query, builder) -> builder.or(
-                    builder.equal(root.get("host").get("id"), finalOrganisation.getId()),
-                    builder.isTrue(root.get("isActive")))
-            );
-        } else {
-            specification = specification.and((root, query, builder) -> builder.isTrue(root.get("isActive")));
-        }
+        Specification<Event> specification = buildSpecification(searchDto, organisation);
 
         List<Event> events = repository.findAll(specification, searchDto.getPageable()).getContent();
 
@@ -144,6 +137,22 @@ public class EventSearchService {
                 .map(event -> toSmallDtoWithDependencies(event, searchDto))
                 .collect(Collectors.toList());
     }
+
+
+    private Specification<Event> buildSpecification(EventSearchDto searchDto, Organisation organisation) {
+        Specification<Event> specification = searchDto.getSpecification();
+
+        if(organisation != null) {
+            specification = specification.and((root, query, builder) -> builder.or(
+                    builder.equal(root.get("host").get("id"), organisation.getId()),
+                    builder.isTrue(root.get("isActive")))
+            );
+        } else {
+            specification = specification.and((root, query, builder) -> builder.isTrue(root.get("isActive")));
+        }
+        return specification;
+    }
+
 
     private EventSmallDto toSmallDtoWithDependencies(Event event, EventSearchDto searchDto) {
         EventSmallDto dto = mapper.toDtoSmall(event);

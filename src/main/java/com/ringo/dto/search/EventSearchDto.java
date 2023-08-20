@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ import java.util.Objects;
 @Data
 public class EventSearchDto extends GenericSearchDto<Event>{
 
-    private String searchString;
+    private String search;
     private Long[] categoryIds;
     private Long hostId;
     private Boolean isTicketNeeded;
@@ -61,10 +62,10 @@ public class EventSearchDto extends GenericSearchDto<Event>{
         if(currencyId == null && (priceMin != null || priceMax != null))
             throw new UserException("Currency is required when filtering by price");
 
-        if (searchString != null) {
+        if (search != null) {
             filters.add(criteriaBuilder.or(
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchString.toLowerCase() + "%"),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchString.toLowerCase() + "%")
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + search.toLowerCase() + "%")
             ));
         }
         if (hostId != null) {
@@ -87,6 +88,7 @@ public class EventSearchDto extends GenericSearchDto<Event>{
         }
 
         if (categoryIds != null) {
+            List<Predicate> predicates = new ArrayList<>();
             for(Long categoryId : categoryIds) {
                 Subquery<Long> ids = query.subquery(Long.class);
                 Root<Event> subqueryEvent = ids.from(Event.class);
@@ -94,8 +96,9 @@ public class EventSearchDto extends GenericSearchDto<Event>{
 
                 ids.select(subqueryEvent.get("id")).where(criteriaBuilder.equal(categories.get("id"), categoryId));
 
-                filters.add(criteriaBuilder.in(root.get("id")).value(ids));
+                predicates.add(criteriaBuilder.in(root.get("id")).value(ids));
             }
+            filters.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
         }
         if(maxDistance != null) {
             if(latitude == null || longitude == null)
@@ -152,11 +155,11 @@ public class EventSearchDto extends GenericSearchDto<Event>{
 
     private void addOrderByName(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         if(Objects.equals(sort, "string")) {
-            if(searchString == null)
+            if(search == null)
                 return;
-            String searchStringLower = searchString.toLowerCase();
+            String searchStringLower = search.toLowerCase();
             query.orderBy(criteriaBuilder.asc(criteriaBuilder.selectCase()
-                    .when(criteriaBuilder.equal(root.get("name"), searchString), 1)
+                    .when(criteriaBuilder.equal(root.get("name"), search), 1)
                     .when(criteriaBuilder.equal(criteriaBuilder.lower(root.get("name")), searchStringLower), 2)
                     .when(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchStringLower + "%"), 3)
                     .when(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "% " + searchStringLower + " %"), 4)
