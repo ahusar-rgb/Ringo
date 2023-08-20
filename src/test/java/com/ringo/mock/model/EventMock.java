@@ -1,18 +1,20 @@
 package com.ringo.mock.model;
 
+import com.ringo.it.util.IdGenerator;
 import com.ringo.model.company.Event;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class EventMock {
     public static Event getEventMock() {
         return Event.builder()
-                .id(System.currentTimeMillis())
+                .id(IdGenerator.getNewId())
                 .isActive(true)
                 .name("Test")
                 .description("Test description")
-                .categories(new ArrayList<>())
+                .isTicketNeeded(true)
+                .categories(new HashSet<>())
                 .peopleCount(0)
                 .price(1.0f)
                 .latitude(50.0)

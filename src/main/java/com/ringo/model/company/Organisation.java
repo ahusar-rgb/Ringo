@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,11 +31,11 @@ public class Organisation extends User {
     @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Label> contacts;
 
-    @OneToMany(mappedBy = "host")
+    @OneToMany(mappedBy = "host", orphanRemoval = true)
     @Builder.Default
     private Set<Event> hostedEvents = new HashSet<>();
 
     @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<Review> reviews = new HashSet<>();
+    private List<Review> reviews = new ArrayList<>();
 }

@@ -95,6 +95,8 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
 
     public T getFullUser() {
         User user = authenticationService.getCurrentUser();
+        if(user == null)
+            throw new UserException("User is not authenticated");
 
         Optional<T> result = repository.findFullById(user.getId());
         if (result.isEmpty())

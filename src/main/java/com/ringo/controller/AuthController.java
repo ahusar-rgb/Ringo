@@ -56,7 +56,7 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "User not found", content = @Content)
             }
     )
-    @PostMapping(value = "forgot-password", produces = {"text/html"})
+    @PostMapping(value = "forgot-password", produces = {"text/html"}, consumes = {"application/json"})
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordForm form) {
         authenticationService.forgotPassword(form);
         return ResponseEntity.ok("<h1>Password reset link was sent to %s<h1>".formatted(form.getEmail()));

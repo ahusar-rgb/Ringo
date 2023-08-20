@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "event")
@@ -68,13 +69,8 @@ public class Event extends AbstractActiveEntity {
     @JoinColumn(name = "host_id", nullable = false)
     private Organisation host;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable (
-            name = "event_category",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "category_id"}))
-    private List<Category> categories;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Category> categories;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

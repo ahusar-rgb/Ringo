@@ -10,8 +10,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "participant")
@@ -33,7 +34,7 @@ public class Participant extends User {
             joinColumns = @JoinColumn(name = "participant_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     @Builder.Default
-    private List<Event> savedEvents = new ArrayList<>();
+    private Set<Event> savedEvents = new HashSet<>();
 
     @OneToMany(mappedBy = "participant", cascade = CascadeType.PERSIST)
     private List<Review> reviews;

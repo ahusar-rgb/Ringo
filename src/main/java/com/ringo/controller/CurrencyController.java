@@ -51,6 +51,38 @@ public class CurrencyController {
                 .body(currencyService.saveCurrency(dto));
     }
 
+    @Operation(summary = "Update an existing currency")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Currency updated",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CurrencyDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+            }
+    )
+    @PutMapping(value = "{id}", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<CurrencyDto> updateCurrency(@Parameter(description = "Currency id") @PathVariable("id") Long id,
+                                                      @Parameter(description = "Currency to update") @RequestBody CurrencyDto dto) {
+        return ResponseEntity
+                .ok()
+                .body(currencyService.updateCurrency(id, dto));
+    }
+
+
+    @Operation(summary = "Delete an existing currency")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Currency deleted"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+            }
+    )
+    @DeleteMapping(value = "{id}", produces = {"application/json"})
+    public ResponseEntity<Void> deleteCurrency(@Parameter(description = "Currency id") @PathVariable("id") Long id) {
+        currencyService.deleteCurrency(id);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
     @Operation(summary = "Get all currencies")
     @ApiResponses(
             value = {

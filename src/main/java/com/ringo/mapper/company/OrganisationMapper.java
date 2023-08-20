@@ -16,6 +16,7 @@ public interface OrganisationMapper extends AbstractUserMapper<OrganisationReque
     @Mapping(target = "pastEventsCount", ignore = true)
     @Mapping(target = "upcomingEventsCount", ignore = true)
     @Mapping(target = "contacts", source = "contacts")
+    @Mapping(target = "email", ignore = true)
     OrganisationResponseDto toDto(Organisation entity);
 
     @Override

@@ -31,7 +31,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createSuccess() {
-        OrganisationRequestDto organisationRequestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto organisationRequestDto = OrganisationDtoMock.getOrganisationDtoMock();
         OrganisationResponseDto responseDto = organisationTemplate.create(organisationRequestDto);
 
         loginTemplate.verifyEmail(organisationRequestDto.getEmail(), organisationRequestDto.getUsername());
@@ -47,7 +47,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createWithContactsSuccess() {
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationDtoMock();
 
         List<LabelDto> contacts = new ArrayList<>();
         contacts.add(LabelDto.builder().ordinal(2).title("title2").content("content2").build());
@@ -66,7 +66,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void updateContactsSuccess() {
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationDtoMock();
 
         List<LabelDto> contacts = new ArrayList<>();
         contacts.add(LabelDto.builder().ordinal(2).title("title2").content("content2").build());
@@ -116,7 +116,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     void setPhotoSuccess() {
         TokenDto token = createOrganisationActivated();
 
-        File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
+        File profilePicture = new File("src/test/java/com/ringo/resources/test_picture_1.jpeg");
 
         OrganisationResponseDto actual = organisationTemplate.setPhoto(token.getAccessToken(), profilePicture, "image/jpeg");
         assertThat(actual.getProfilePictureId()).isNotNull();
@@ -128,12 +128,17 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     void removePhotoSuccess() {
         TokenDto token = createOrganisationActivated();
 
-        File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
+        File profilePicture = new File("src/test/java/com/ringo/resources/test_picture_1.jpeg");
         organisationTemplate.setPhoto(token.getAccessToken(), profilePicture, "image/jpeg");
 
         OrganisationResponseDto actual = organisationTemplate.removePhoto(token.getAccessToken());
         assertThat(actual.getProfilePictureId()).isNull();
 
         organisationTemplate.delete(token.getAccessToken());
+    }
+
+    @Test
+    void deleteWithEventsSuccess() {
+        assert false;
     }
 }

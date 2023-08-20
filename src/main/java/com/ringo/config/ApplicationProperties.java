@@ -10,4 +10,6 @@ public class ApplicationProperties {
     private Integer maxPhotoCount;
     private String googleClientId;
     private String appleAud;
+    private String adminLogin;
+    private String adminPassword;
 }

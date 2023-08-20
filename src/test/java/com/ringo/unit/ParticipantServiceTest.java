@@ -176,7 +176,7 @@ public class ParticipantServiceTest {
 
         //when
         when(userRepository.findByUsername(participant.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.of(Organisation.builder().id(System.currentTimeMillis()).build()));
+        when(userRepository.findVerifiedByEmail(participant.getEmail())).thenReturn(Optional.of(Organisation.builder().id(participant.getId() + 1).build()));
         when(idProvider.getUserFromToken(idToken)).thenReturn(participant);
 
         //then

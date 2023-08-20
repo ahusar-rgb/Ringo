@@ -4,12 +4,14 @@ import com.ringo.auth.JwtService;
 import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.company.UserRequestDto;
 import com.ringo.dto.security.TokenDto;
+import com.ringo.it.config.EnvVars;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
 import com.ringo.model.security.User;
 import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -20,6 +22,13 @@ public class LoginTemplate extends EndpointTemplate {
 
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private Environment environment;
+
+    @Override
+    protected String getEndpoint() {
+        return "auth";
+    }
 
     public TokenDto login(String email, String password, int expectedStatusCode) {
         UserRequestDto userRequestDto = new UserRequestDto();
@@ -74,8 +83,10 @@ public class LoginTemplate extends EndpointTemplate {
         httpGetWithParams(ItTestConsts.NO_TOKEN, "verify-email?token=" + token, ItTestConsts.HTTP_SUCCESS);
     }
 
-    @Override
-    protected String getEndpoint() {
-        return "auth";
+    public String getAdminToken() {
+        String username = environment.getProperty(EnvVars.ADMIN_LOGIN);
+        String password = environment.getProperty(EnvVars.ADMIN_PASSWORD);
+
+        return login(username, password, ItTestConsts.HTTP_SUCCESS).getAccessToken();
     }
 }

@@ -33,7 +33,8 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.getRating()).isEqualTo((float)reviewDto.getRate());
-        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating").isEqualTo(organisation);
+        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating", "email").isEqualTo(organisation);
+        assertThat(responseDto.getEmail()).isNull();
 
         OrganisationResponseDto found = organisationTemplate.findById(participantToken.getAccessToken(), organisation.getId());
         assertThat(found.getRating()).isEqualTo((float)reviewDto.getRate());
@@ -56,7 +57,8 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.getRating()).isEqualTo((float)reviewDto.getRate());
-        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating").isEqualTo(organisation);
+        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating", "email").isEqualTo(organisation);
+        assertThat(responseDto.getEmail()).isNull();
 
         //review 2
         TokenDto participantToken2 = createParticipantActivated();
@@ -67,7 +69,8 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(responseDto2).isNotNull();
         assertThat(responseDto2.getRating()).isEqualTo((float)(reviewDto2.getRate() + reviewDto.getRate()) / 2);
-        assertThat(responseDto2).usingRecursiveComparison().ignoringFields("rating").isEqualTo(organisation);
+        assertThat(responseDto2).usingRecursiveComparison().ignoringFields("rating", "email").isEqualTo(organisation);
+        assertThat(responseDto.getEmail()).isNull();
 
         participantTemplate.delete(participantToken.getAccessToken());
         participantTemplate.delete(participantToken2.getAccessToken());
@@ -87,7 +90,8 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.getRating()).isEqualTo((float)reviewDto.getRate());
-        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating").isEqualTo(organisation);
+        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating", "email").isEqualTo(organisation);
+        assertThat(responseDto.getEmail()).isNull();
 
         //review 2
         ReviewRequestDto reviewDto2 = ReviewDtoMock.getReviewDtoMock();
@@ -135,7 +139,8 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.getRating()).isEqualTo((float)reviewDto.getRate());
-        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating").isEqualTo(organisation);
+        assertThat(responseDto).usingRecursiveComparison().ignoringFields("rating", "email").isEqualTo(organisation);
+        assertThat(responseDto.getEmail()).isNull();
 
         //update review
         ReviewRequestDto reviewDto2 = ReviewDtoMock.getReviewDtoMock();
@@ -144,7 +149,8 @@ public class ReviewIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(responseDto2).isNotNull();
         assertThat(responseDto2.getRating()).isEqualTo((float)reviewDto2.getRate());
-        assertThat(responseDto2).usingRecursiveComparison().ignoringFields("rating").isEqualTo(organisation);
+        assertThat(responseDto2).usingRecursiveComparison().ignoringFields("rating", "email").isEqualTo(organisation);
+        assertThat(responseDto.getEmail()).isNull();
 
         participantTemplate.delete(participantToken.getAccessToken());
         organisationTemplate.delete(organisationToken.getAccessToken());

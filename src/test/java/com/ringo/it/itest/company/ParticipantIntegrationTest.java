@@ -64,7 +64,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
     @Test
     void setPhotoSuccess() {
         TokenDto token = createParticipantActivated();
-        File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
+        File profilePicture = new File("src/test/java/com/ringo/resources/test_picture_1.jpeg");
 
         ParticipantResponseDto actual = participantTemplate.setPhoto(token.getAccessToken(), profilePicture, "image/jpeg");
         assertThat(actual.getProfilePictureId()).isNotNull();
@@ -75,7 +75,7 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
     @Test
     void removePhotoSuccess() {
         TokenDto token = createParticipantActivated();
-        File profilePicture = new File("src/test/java/com/ringo/resources/test_profile_picture.jpeg");
+        File profilePicture = new File("src/test/java/com/ringo/resources/test_picture_1.jpeg");
 
         participantTemplate.setPhoto(token.getAccessToken(), profilePicture, "image/jpeg");
 

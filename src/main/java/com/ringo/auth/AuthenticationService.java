@@ -29,6 +29,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    public static final String ANONYMOUS_USER = "anonymousUser";
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final GoogleIdService googleIdService;
@@ -159,7 +160,10 @@ public class AuthenticationService {
     }
 
     public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal.equals(ANONYMOUS_USER))
+            return null;
+        return (User) principal;
     }
 
     public void verifyEmail(String token) {

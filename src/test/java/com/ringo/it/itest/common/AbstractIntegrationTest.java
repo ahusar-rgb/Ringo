@@ -37,7 +37,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected TokenDto createOrganisationActivated() {
-        OrganisationRequestDto organisationRequestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto organisationRequestDto = OrganisationDtoMock.getOrganisationDtoMock();
         organisationTemplate.create(organisationRequestDto);
 
         loginTemplate.verifyEmail(organisationRequestDto.getEmail(), organisationRequestDto.getUsername());

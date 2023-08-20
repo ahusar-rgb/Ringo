@@ -8,6 +8,7 @@ import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.mapper.company.CurrencyMapper;
 import com.ringo.mapper.company.EventGroupMapper;
 import com.ringo.mapper.company.EventMapper;
@@ -56,7 +57,7 @@ public class EventSearchService {
         Organisation organisation;
         try {
             organisation = organisationService.getFullUser();
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | UserException e) {
             organisation = null;
         }
 
