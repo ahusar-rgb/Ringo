@@ -23,6 +23,7 @@ import com.ringo.repository.EventRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
 import com.ringo.service.company.OrganisationService;
 import com.ringo.service.company.RegistrationValidator;
+import com.ringo.service.company.event.EventCleanUpService;
 import com.ringo.service.company.event.EventPhotoService;
 import com.ringo.service.company.event.EventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +62,8 @@ public class EventServiceTest {
     private CurrencyRepository currencyRepository;
     @Mock
     private CategoryRepository categoryRepository;
+    @Mock
+    private EventCleanUpService eventCleanUpService;
     @Mock
     private RegistrationValidator registrationValidator;
     @InjectMocks
@@ -296,8 +299,6 @@ public class EventServiceTest {
     void deleteEventSuccess() {
         //given
         Event event = EventMock.getEventMock();
-        event.setMainPhoto(new EventMainPhoto());
-        event.setPhotos(List.of(EventPhoto.builder().id(1L).build(), EventPhoto.builder().id(2L).build()));
         Organisation organisation = OrganisationMock.getOrganisationMock();
         organisation.setId(event.getHost().getId());
 
@@ -309,11 +310,7 @@ public class EventServiceTest {
         eventService.delete(event.getId());
         verify(eventRepository, times(1)).deleteById(event.getId());
         verify(eventRepository, times(1)).findById(event.getId());
-
-        verify(eventPhotoService, times(1)).removeMainPhoto(event);
-        for(EventPhoto photo : event.getPhotos()) {
-            verify(eventPhotoService, times(1)).delete(photo.getId());
-        }
+        verify(eventCleanUpService, times(1)).cleanUpEvent(event);
     }
 
     @Test

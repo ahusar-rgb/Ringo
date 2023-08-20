@@ -8,6 +8,7 @@ import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
+import com.ringo.model.company.Event;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
@@ -15,6 +16,9 @@ import com.ringo.repository.OrganisationRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
+import com.ringo.service.company.event.EventCleanUpService;
+import com.ringo.service.company.event.EventPhotoService;
+import com.ringo.service.company.event.EventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +34,8 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     private GoogleIdService googleIdService;
     @Autowired
     private AppleIdService appleIdService;
+    @Autowired
+    private EventCleanUpService eventCleanUpService;
 
     private final OrganisationMapper mapper;
     private final OrganisationRepository organisationRepository;
@@ -51,7 +57,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         Organisation organisation = organisationRepository.findByIdActiveWithEvents(id).orElseThrow(
                 () -> new NotFoundException("Organisation [id: %d] not found".formatted(id)));
 
-        return mapper.toDto(organisation);
+        return mapper.toDtoDetails(organisation);
     }
 
     public OrganisationResponseDto save(OrganisationRequestDto dto) {
@@ -62,6 +68,13 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     protected void prepareForSave(Organisation user) {
         if(user.getContacts() != null)
             user.getContacts().forEach(contact -> contact.setOrganisation(user));
+    }
+
+    @Override
+    public void prepareForDelete(Organisation user) {
+        for(Event event : user.getHostedEvents()) {
+            eventCleanUpService.cleanUpEvent(event);
+        }
     }
 
     public OrganisationResponseDto findCurrentOrganisation() {

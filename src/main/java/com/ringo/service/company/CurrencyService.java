@@ -8,6 +8,7 @@ import com.ringo.mapper.company.CurrencyMapper;
 import com.ringo.model.company.Currency;
 import com.ringo.model.security.Role;
 import com.ringo.repository.CurrencyRepository;
+import com.ringo.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CurrencyService {
 
         private final CurrencyRepository repository;
+        private final EventRepository eventRepository;
         private final CurrencyMapper mapper;
         private final AuthenticationService authenticationService;
 
@@ -68,6 +70,9 @@ public class CurrencyService {
             throwIfNotAdmin();
             if(repository.findById(id).isEmpty())
                 throw new NotFoundException("Currency [id: %d] not found".formatted(id));
+            if(eventRepository.existsByCurrencyId(id))
+                throw new UserException("Currency [id: %d] is used in events".formatted(id));
+
             repository.deleteById(id);
         }
 

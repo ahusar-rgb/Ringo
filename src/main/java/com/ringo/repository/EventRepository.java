@@ -25,4 +25,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     @Query("SELECT e FROM Event e WHERE e.id = :id AND e.isActive")
     Optional<Event> findActiveById(Long id);
+
+    @Query("SELECT COUNT(e) > 0 FROM Event e WHERE e.currency.id = :id")
+    boolean existsByCurrencyId(Long id);
 }

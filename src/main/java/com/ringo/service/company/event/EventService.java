@@ -46,6 +46,7 @@ public class EventService {
     private final CurrencyRepository currencyRepository;
     private final CategoryRepository categoryRepository;
     private final RegistrationValidator registrationValidator;
+    private final EventCleanUpService eventCleanUpService;
 
     public EventResponseDto create(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
@@ -123,21 +124,7 @@ public class EventService {
         );
         throwIfNotHost(event);
 
-        if(event.getMainPhoto() != null)
-            eventPhotoService.removeMainPhoto(event);
-
-        event.getPhotos().stream().map(AbstractEntity::getId).forEach(
-                photo -> {
-                    try {
-                        eventPhotoService.delete(photo);
-                    } catch (NotFoundException ignored) {}
-                }
-        );
-
-        for(Category category : event.getCategories()) {
-            category.getEvents().remove(event);
-        }
-
+        eventCleanUpService.cleanUpEvent(event);
         repository.deleteById(id);
     }
 

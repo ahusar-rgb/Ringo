@@ -136,10 +136,4 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
         organisationTemplate.delete(token.getAccessToken());
     }
-
-    @Test
-    void deleteWithEventsSuccess() {
-        //TODO: implement
-        assert true;
-    }
 }

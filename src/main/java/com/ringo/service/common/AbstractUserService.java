@@ -40,9 +40,11 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     protected abstract void throwIfUniqueConstraintsViolated(T user);
 
     //    This method is called before saving the user to the database.
-//    It can be used to set additional fields.
-    protected void prepareForSave(T user) {
-    }
+    //    It can be used to set additional fields.
+    protected void prepareForSave(T user) {}
+    //    This method is called before deleting the user from the database.
+    //    It can be used to delete referenced objects.
+    protected void prepareForDelete(T user) {}
 
     public R save(S dto, Role role) {
         log.info("save: {}, role: {}", dto.getEmail(), role);
@@ -152,6 +154,8 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     public void delete() {
+        T user = getFullUser();
+        prepareForDelete(user);
         repository.delete(getFullUser());
     }
 

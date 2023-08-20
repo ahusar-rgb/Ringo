@@ -29,6 +29,10 @@ public abstract class EndpointTemplate {
         httpDeleteById(token, id, ItTestConsts.HTTP_SUCCESS);
     }
 
+    public void delete(String token, Long id, int expectedCode) {
+        httpDeleteById(token, id, expectedCode);
+    }
+
     protected String getEndpointUrl() {
         System.out.println(getBaseUrl() + "/" + getEndpoint());
         return getBaseUrl() + "/" + getEndpoint();

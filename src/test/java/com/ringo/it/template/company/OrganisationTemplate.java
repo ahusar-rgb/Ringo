@@ -41,8 +41,11 @@ public class OrganisationTemplate extends EndpointTemplate {
         return response.getBody().as(OrganisationResponseDto.class);
     }
 
-    public OrganisationResponseDto findById(String token, Long id) {
-        Response response = httpGetWithParams(token, String.valueOf(id), ItTestConsts.HTTP_SUCCESS);
+    public OrganisationResponseDto findById(String token, Long id, int expectedStatusCode) {
+        Response response = httpGetWithParams(token, String.valueOf(id), expectedStatusCode);
+        if (expectedStatusCode != ItTestConsts.HTTP_SUCCESS) {
+            return null;
+        }
         return response.getBody().as(OrganisationResponseDto.class);
     }
 
