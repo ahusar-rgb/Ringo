@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(Exception e) {
         String error = e.getMessage();
         log.error(e.toString());
+        e.printStackTrace();
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

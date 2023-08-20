@@ -11,4 +11,5 @@ public class EventPhotoDto {
     private Long id;
     private Long normalId;
     private Long lazyId;
+    private Integer ordinal;
 }

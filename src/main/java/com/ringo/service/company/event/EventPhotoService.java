@@ -35,7 +35,7 @@ public class EventPhotoService {
     public EventPhoto save(Event event, MultipartFile file) {
         EventPhoto eventPhoto = EventPhoto.builder()
                 .event(event)
-                .orderNumber(event.getPhotoCount() + 1)
+                .ordinal(event.getPhotoCount() + 1)
                 .build();
 
         String contentType = file.getContentType().split("/")[1];

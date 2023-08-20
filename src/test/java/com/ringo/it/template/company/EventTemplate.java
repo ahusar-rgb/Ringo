@@ -3,6 +3,7 @@ package com.ringo.it.template.company;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
 import io.restassured.RestAssured;
@@ -58,6 +59,15 @@ public class EventTemplate extends EndpointTemplate {
 
     public EventResponseDto removePhoto(String token, Long id, Long photoId) {
         Response response = httpDeleteWithParams(token, id.toString() + "/photos/" + photoId.toString(), ItTestConsts.HTTP_SUCCESS);
+        EventResponseDto actual = response.getBody().as(EventResponseDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
+    }
+
+    public EventResponseDto setPhotoOrder(String token, Long id, List<EventPhotoDto> photos, int expectedStatusCode) {
+        Response response = httpPutWithParams(token, id.toString() + "/photos/order", photos, expectedStatusCode);
+        if(expectedStatusCode != ItTestConsts.HTTP_SUCCESS)
+            return null;
         EventResponseDto actual = response.getBody().as(EventResponseDto.class);
         assertThat(actual).isNotNull();
         return actual;

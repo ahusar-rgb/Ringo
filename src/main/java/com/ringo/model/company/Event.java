@@ -72,9 +72,9 @@ public class Event extends AbstractActiveEntity {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Category> categories;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "event")
     @Builder.Default
-    @OrderBy("orderNumber ASC")
+    @OrderBy("ordinal ASC")
     private List<EventPhoto> photos = new ArrayList<>();
 
     @Column(name = "photoCount", columnDefinition = "INT DEFAULT 0")

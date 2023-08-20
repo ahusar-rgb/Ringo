@@ -27,6 +27,6 @@ public class EventPhoto extends AbstractEntity {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @Column(name = "order_number", nullable = false)
-    private Integer orderNumber;
+    @Column(name = "ordinal", nullable = false)
+    private Integer ordinal;
 }
