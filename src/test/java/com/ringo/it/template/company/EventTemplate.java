@@ -2,6 +2,7 @@ package com.ringo.it.template.company;
 
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.EventSmallDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
 import io.restassured.RestAssured;
@@ -10,6 +11,7 @@ import io.restassured.specification.RequestSpecification;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -87,6 +89,13 @@ public class EventTemplate extends EndpointTemplate {
         if(expectedStatusCode == ItTestConsts.HTTP_NOT_FOUND)
             return null;
         return response.getBody().as(EventResponseDto.class);
+    }
+
+    public List<EventSmallDto> search(String token, String params) {
+        Response response = httpGetQueryString(token, params, ItTestConsts.HTTP_SUCCESS);
+        List<EventSmallDto> actual = response.getBody().jsonPath().getList(".", EventSmallDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
     }
 
     public EventResponseDto update(String token, Long id, EventRequestDto dto) {

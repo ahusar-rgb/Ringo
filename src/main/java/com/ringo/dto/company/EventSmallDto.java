@@ -3,12 +3,14 @@ package com.ringo.dto.company;
 import com.ringo.dto.common.AbstractEntityDto;
 import com.ringo.dto.common.Coordinates;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class EventSmallDto extends AbstractEntityDto {
     private String name;
     private String description;

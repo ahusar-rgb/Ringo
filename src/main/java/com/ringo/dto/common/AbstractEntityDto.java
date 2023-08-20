@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class AbstractEntityDto {
     private Long id;
 }

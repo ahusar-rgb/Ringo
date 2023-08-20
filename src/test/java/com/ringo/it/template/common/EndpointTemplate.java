@@ -113,7 +113,7 @@ public abstract class EndpointTemplate {
         return response;
     }
 
-    public <T> Response httpGetWithParams(String token, String pathParams, int expectedHttpCode) {
+    public Response httpGetWithParams(String token, String pathParams, int expectedHttpCode) {
         String url = getEndpointUrl() + "/" + pathParams;
         log.info("Sending GET request to {}", url);
 
