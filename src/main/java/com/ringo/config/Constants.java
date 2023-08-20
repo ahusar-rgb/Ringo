@@ -10,6 +10,10 @@ public class Constants {
             "/api/auth/**",
             "/api/organisations/sign-up/**",
             "/api/participants/sign-up/**",
-            "/api/photos/**"
+            "/api/photos/**",
+            "/api/events/**",
+            "/api/categories/**",
+            "/api/currencies/**",
     };
+    public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm[:ss][.SSS]";
 }

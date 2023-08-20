@@ -151,7 +151,7 @@ public class EventController {
                     @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
             }
     )
-    @PutMapping(value = "/{id}/add-photo", produces = {"application/json"}, consumes = {"multipart/form-data"})
+    @PostMapping(value = "/{id}/photos", produces = {"application/json"}, consumes = {"multipart/form-data"})
     public ResponseEntity<EventResponseDto> addPhotoToEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
             @Parameter(description = "Photo") @RequestPart("file") MultipartFile photo) {
@@ -169,7 +169,7 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "Photo not owned by the event", content = @Content)
             }
     )
-    @PutMapping(value = "{id}/remove-photo/{photo_id}", produces = {"application/json"})
+    @DeleteMapping(value = "{id}/photos/{photo_id}", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> removePhotoFromEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
             @Parameter(description = "Id of the photo") @PathVariable("photo_id") Long photoId) {
@@ -187,14 +187,14 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "Photo not owned by the event", content = @Content)
             }
     )
-    @PutMapping(value = "{id}/change-main-photo/{photo_id}", produces = {"application/json"})
+    @PostMapping(value = "{id}/photos/main/{photo_id}", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> changeMainPhoto(@Parameter(description = "Event id") @PathVariable("id") Long id,
                                 @Parameter(description = "Photo id") @PathVariable("photo_id") Long photoId) {
 
         return ResponseEntity.ok(eventService.setMainPhoto(id, photoId));
     }
 
-    @PutMapping(value = "/{id}/remove-main-photo", produces = {"application/json"})
+    @DeleteMapping(value = "/{id}/photos/main", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> removeMainPhoto(@Parameter(description = "Event id") @PathVariable("id") Long id) {
         return ResponseEntity.ok(eventService.removeMainPhoto(id));
     }
@@ -207,7 +207,7 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "Event not found", content = @Content)
             }
     )
-    @PutMapping(value = "/{id}/activate", produces = {"application/json"})
+    @PostMapping(value = "/{id}/activate", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> activateEvent(@Parameter(description = "Event id") @PathVariable("id") Long id) {
         return ResponseEntity.ok(eventService.activate(id));
     }
@@ -220,7 +220,7 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "Event not found", content = @Content)
             }
     )
-    @PutMapping(value = "/{id}/deactivate", produces = {"application/json"})
+    @PostMapping(value = "/{id}/deactivate", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> deactivateEvent(@Parameter(description = "Event id") @PathVariable("id") Long id) {
         return ResponseEntity.ok(eventService.deactivate(id));
     }

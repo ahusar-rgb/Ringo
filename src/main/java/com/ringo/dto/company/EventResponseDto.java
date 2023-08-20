@@ -5,12 +5,16 @@ import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.photo.EventMainPhotoDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.model.form.RegistrationForm;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @SuperBuilder

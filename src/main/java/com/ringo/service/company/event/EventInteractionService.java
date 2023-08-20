@@ -102,7 +102,7 @@ public class EventInteractionService {
 
     public List<EventSmallDto> getSavedEvents() {
         Participant participant = participantService.getFullUser();
-        return mapper.toDtoSmallList(participant.getSavedEvents());
+        return mapper.toDtoSmallList(participant.getSavedEvents().stream().toList());
     }
 
     public TicketDto getTicketForEvent(Long id) {

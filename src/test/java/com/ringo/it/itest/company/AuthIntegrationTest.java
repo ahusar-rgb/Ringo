@@ -44,7 +44,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void refreshTokenOrganisation() {
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationDtoMock();
         createOrganisationActivated(requestDto);
 
         TokenDto tokenDto = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
@@ -92,7 +92,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     @Test
     void changePasswordOrganisation() {
         final String newPassword = "new password";
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationDtoMock();
         createOrganisationActivated(requestDto);
 
         TokenDto tokenDto = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
@@ -108,7 +108,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     @Test
     void changePasswordOrganisationWrongPassword() {
         final String newPassword = "new password";
-        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto requestDto = OrganisationDtoMock.getOrganisationDtoMock();
         createOrganisationActivated(requestDto);
 
         TokenDto tokenDto = loginTemplate.login(requestDto.getEmail(), requestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);

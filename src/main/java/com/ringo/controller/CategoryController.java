@@ -37,6 +37,38 @@ public class CategoryController {
                 .body(categoryService.findCategoryById(id));
     }
 
+    @Operation(summary = "Update an existing category")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Category updated",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+            }
+    )
+    @PutMapping(value = "{id}", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<CategoryDto> updateCategory(@Parameter(description = "Category id") @PathVariable("id") Long id,
+                                                      @Parameter(description = "Category to update") @RequestBody CategoryDto dto) {
+        return ResponseEntity
+                .ok()
+                .body(categoryService.updateCategory(id, dto));
+    }
+
+    @Operation(summary = "Delete an existing category")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Category deleted",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+            }
+    )
+    @DeleteMapping(value = "{id}", produces = {"application/json"})
+    public ResponseEntity<Void> deleteCategory(@Parameter(description = "Category id") @PathVariable("id") Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
     @Operation(summary = "Create a new category")
     @ApiResponses(
             value = {

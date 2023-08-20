@@ -27,8 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,17 +55,24 @@ public class EventService {
         Currency currency = currencyRepository.findById(eventDto.getCurrencyId()).orElseThrow(
                 () -> new NotFoundException("Currency [id: %d] not found".formatted(eventDto.getCurrencyId()))
         );
-        List<Category> categories = eventDto.getCategoryIds().stream()
+        Set<Category> categories = eventDto.getCategoryIds().stream()
                 .map(id -> categoryRepository.findById(id).orElseThrow(
                         () -> new NotFoundException("Category [id: %d] not found".formatted(id))
                 )
-        ).toList();
+        ).collect(Collectors.toSet());
 
 
         Event event = mapper.toEntity(eventDto);
         event.setHost(organisation);
         event.setCurrency(currency);
+
         event.setCategories(categories);
+        for (Category category : categories) {
+            if(category.getEvents() == null)
+                category.setEvents(new HashSet<>());
+            category.getEvents().add(event);
+        }
+
         event.setIsActive(false);
         event.setCreatedAt(LocalDateTime.now());
 
@@ -81,6 +90,28 @@ public class EventService {
         mapper.partialUpdate(event, dto);
         event.setUpdatedAt(LocalDateTime.now());
 
+        if(dto.getCurrencyId() != null) {
+            Currency currency = currencyRepository.findById(dto.getCurrencyId()).orElseThrow(
+                    () -> new NotFoundException("Currency [id: %d] not found".formatted(dto.getCurrencyId()))
+            );
+            event.setCurrency(currency);
+        }
+
+        if(dto.getCategoryIds() != null) {
+            Set<Category> categories = new HashSet<>();
+            for (Long categoryId : dto.getCategoryIds()) {
+                Category category = categoryRepository.findById(categoryId).orElseThrow(
+                        () -> new NotFoundException("Category [id: %d] not found".formatted(categoryId))
+                );
+                categories.add(category);
+                if(category.getEvents() == null)
+                    category.setEvents(new HashSet<>());
+                category.getEvents().add(event);
+            }
+
+            event.setCategories(categories);
+        }
+
         return mapper.toDtoDetails(repository.save(event));
     }
 
@@ -92,7 +123,9 @@ public class EventService {
         );
         throwIfNotHost(event);
 
-        eventPhotoService.removeMainPhoto(event);
+        if(event.getMainPhoto() != null)
+            eventPhotoService.removeMainPhoto(event);
+
         event.getPhotos().stream().map(AbstractEntity::getId).forEach(
                 photo -> {
                     try {
@@ -100,6 +133,10 @@ public class EventService {
                     } catch (NotFoundException ignored) {}
                 }
         );
+
+        for(Category category : event.getCategories()) {
+            category.getEvents().remove(event);
+        }
 
         repository.deleteById(id);
     }
@@ -130,16 +167,21 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
 
+        throwIfNotHost(event);
+
         EventPhoto photo = eventPhotoRepository.findById(photoId).orElseThrow(
                 () -> new NotFoundException("Photo [id: %d] not found".formatted(photoId))
         );
 
-        if(Objects.equals(event.getMainPhoto().getHighQualityPhoto().getId(), photoId))
+        if(event.getMainPhoto() != null && Objects.equals(event.getMainPhoto().getHighQualityPhoto().getId(), photoId))
             throw new UserException("Main photo cannot be removed");
-
-        throwIfNotHost(event);
+        if(event.getPhotos().size() <= 1)
+            throw new UserException("Event must have at least one photo");
+        if(!event.getPhotos().contains(photo))
+            throw new UserException("Photo [id: %d] is not owned by the event".formatted(photoId));
 
         eventPhotoService.delete(photo.getId());
+        event.getPhotos().remove(photo);
         return mapper.toDtoDetails(repository.save(event));
     }
 
@@ -180,6 +222,9 @@ public class EventService {
         if(event.getPhotos() == null || event.getPhotos().isEmpty())
             throw new UserException("Event must have at least one photo");
 
+        if(event.getMainPhoto() == null)
+            throw new UserException("Event must have a main photo");
+
         event.setIsActive(true);
         return mapper.toDtoDetails(repository.save(event));
     }
@@ -187,10 +232,13 @@ public class EventService {
     public EventResponseDto deactivate(Long eventId) {
         log.info("setInactive: {}", eventId);
 
-        Event event = repository.findFullActiveById(eventId).orElseThrow(
+        Event event = repository.findFullById(eventId).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
         throwIfNotHost(event);
+
+        if(!event.getIsActive())
+            throw new UserException("Event is not active");
 
         event.setIsActive(false);
         return mapper.toDtoDetails(repository.save(event));

@@ -116,7 +116,7 @@ public class OrganisationServiceTest {
         // given
         Organisation organisation = OrganisationMock.getOrganisationMock();
         organisation.setIsActive(false);
-        OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationDtoMock();
         dto.setEmail(organisation.getEmail());
         dto.setUsername(organisation.getUsername());
         // when
@@ -177,7 +177,7 @@ public class OrganisationServiceTest {
 
         //when
         when(userRepository.findByUsername(organisation.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.of(Organisation.builder().id(System.currentTimeMillis()).build()));
+        when(userRepository.findVerifiedByEmail(organisation.getEmail())).thenReturn(Optional.of(Organisation.builder().id(organisation.getId() + 1).build()));
         when(idProvider.getUserFromToken(idToken)).thenReturn(organisation);
 
         //then
@@ -188,7 +188,7 @@ public class OrganisationServiceTest {
     void partialUpdateSuccess() {
         //given
         Organisation organisation = OrganisationMock.getOrganisationMock();
-        OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationMockDto();
+        OrganisationRequestDto dto = OrganisationDtoMock.getOrganisationDtoMock();
         dto.setEmail(organisation.getEmail());
         //when
         when(userRepository.findByUsername(dto.getUsername())).thenReturn(Optional.empty());
@@ -313,7 +313,8 @@ public class OrganisationServiceTest {
         OrganisationResponseDto activated = service.activate();
         assertThat(activated).isNotNull();
         assertThat(activated.getIsActive()).isTrue();
-        assertThat(activated).usingRecursiveComparison().ignoringFields("isActive").isEqualTo(mapper.toDto(organisation));
+        assertThat(activated).usingRecursiveComparison().ignoringFields("isActive", "email").isEqualTo(mapper.toDto(organisation));
+        assertThat(activated.getEmail()).isEqualTo(organisation.getEmail());
         verify(organisationRepository, times(1)).save(any(Organisation.class));
     }
 

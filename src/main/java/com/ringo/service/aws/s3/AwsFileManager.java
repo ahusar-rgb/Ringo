@@ -1,6 +1,7 @@
 package com.ringo.service.aws.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ringo.exception.InternalException;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,11 @@ public class AwsFileManager {
     private final AmazonS3 s3;
 
     public void uploadFile(String fileName, byte[] bytes) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentLength(inputStream.available());
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, WORKING_DIRECTORY + fileName, new ByteArrayInputStream(bytes), null);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, WORKING_DIRECTORY + fileName, inputStream, meta);
 
         s3.putObject(putObjectRequest);
     }

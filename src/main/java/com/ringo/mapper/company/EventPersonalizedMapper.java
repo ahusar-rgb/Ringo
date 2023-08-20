@@ -2,6 +2,7 @@ package com.ringo.mapper.company;
 
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.exception.NotFoundException;
+import com.ringo.exception.UserException;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
 import com.ringo.service.company.ParticipantService;
@@ -25,7 +26,7 @@ public class EventPersonalizedMapper {
 
             dto.setIsRegistered(ticketService.ticketExists(event, participant));
             dto.setIsSaved(participant.getSavedEvents().contains(event));
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | UserException e) {
             return dto;
         }
 
