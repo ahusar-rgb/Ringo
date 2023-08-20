@@ -1,6 +1,7 @@
 package com.ringo.controller;
 
 import com.ringo.dto.company.*;
+import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.form.RegistrationSubmission;
@@ -175,6 +176,23 @@ public class EventController {
             @Parameter(description = "Id of the photo") @PathVariable("photo_id") Long photoId) {
 
         return ResponseEntity.ok(eventService.removePhoto(id, photoId));
+    }
+
+    @Operation(summary = "Set photo order of event")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Photo order changed",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "404", description = "Event not found", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Photo not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Photo not owned by the event", content = @Content)
+            }
+    )
+    @PutMapping(value = "{id}/photos/order", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<EventResponseDto> setPhotoOrder(@Parameter(description = "Event id") @PathVariable("id") Long id,
+                                @Parameter(description = "Photo order") @RequestBody List<EventPhotoDto> photos) {
+
+        return ResponseEntity.ok(eventService.setPhotoOrder(id, photos));
     }
 
     @Operation(summary = "Set main photo of event")

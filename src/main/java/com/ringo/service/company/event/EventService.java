@@ -3,6 +3,7 @@ package com.ringo.service.company.event;
 import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
@@ -26,9 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -168,6 +167,45 @@ public class EventService {
 
         eventPhotoService.delete(photo.getId());
         event.getPhotos().remove(photo);
+        return mapper.toDtoDetails(repository.save(event));
+    }
+
+    public EventResponseDto setPhotoOrder(Long eventId, List<EventPhotoDto> photos) {
+        log.info("setPhotoOrder: {}", eventId);
+
+        Event event = repository.findFullById(eventId).orElseThrow(
+                () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
+        );
+        throwIfNotHost(event);
+
+        Long mainPhotoId = event.getMainPhoto() == null ? null : event.getMainPhoto().getHighQualityPhoto().getId();
+
+        List<EventPhoto> newPhotos = new ArrayList<>();
+        for(EventPhotoDto eventPhotoDto : photos) {
+            EventPhoto eventPhoto = eventPhotoRepository.findById(eventPhotoDto.getId()).orElseThrow(
+                    () -> new NotFoundException("Photo [id: %d] not found".formatted(eventPhotoDto.getId()))
+            );
+
+            if(Objects.equals(mainPhotoId, eventPhoto.getPhoto().getId()))
+                throw new UserException("Main photo cannot be moved");
+
+            eventPhoto.setOrdinal(eventPhoto.getOrdinal());
+
+            newPhotos.add(eventPhoto);
+        }
+
+        HashSet<EventPhoto> currentEventPhotos = new HashSet<>();
+        for(EventPhoto photo : event.getPhotos()) {
+            if(Objects.equals(mainPhotoId, photo.getPhoto().getId()))
+                continue;
+            currentEventPhotos.add(photo);
+        }
+
+        if(!new HashSet<>(newPhotos).equals(currentEventPhotos)) {
+            throw new UserException("Photos are not owned by the event");
+        }
+
+        event.setPhotos(newPhotos);
         return mapper.toDtoDetails(repository.save(event));
     }
 

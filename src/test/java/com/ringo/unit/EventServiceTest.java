@@ -5,6 +5,7 @@ import com.ringo.config.Constants;
 import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
@@ -373,6 +374,138 @@ public class EventServiceTest {
 
         Event saved = eventCaptor.getValue();
         assertThat(saved.getPhotoCount()).isEqualTo(1);
+    }
+
+
+    @Test
+    void changePhotoSuccess() {
+        //given
+        Event event = EventMock.getEventMock();
+        List<EventPhoto> photoList = List.of(
+                EventPhotoMock.getEventPhotoMock(),
+                EventPhotoMock.getEventPhotoMock(),
+                EventPhotoMock.getEventPhotoMock()
+        );
+        event.setPhotos(List.copyOf(photoList));
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        List<EventPhotoDto> setPhotoOrderDto = List.of(
+                EventPhotoDto.builder()
+                                .id(event.getPhotos().get(1).getId())
+                                .ordinal(0)
+                                .build(),
+                EventPhotoDto.builder()
+                                .id(event.getPhotos().get(2).getId())
+                                .ordinal(1)
+                                .build(),
+                EventPhotoDto.builder()
+                                .id(event.getPhotos().get(0).getId())
+                                .ordinal(2)
+                                .build()
+        );
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(0).getId())).thenReturn(Optional.of(event.getPhotos().get(1)));
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(1).getId())).thenReturn(Optional.of(event.getPhotos().get(2)));
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(2).getId())).thenReturn(Optional.of(event.getPhotos().get(0)));
+
+        //then
+        eventService.setPhotoOrder(event.getId(), setPhotoOrderDto);
+
+        verify(eventRepository, times(1)).save(eventCaptor.capture());
+        verify(eventPhotoService, never()).save(any(), any());
+
+        Event saved = eventCaptor.getValue();
+        assertThat(saved.getPhotos().size()).isEqualTo(3);
+        assertThat(saved.getPhotos().get(0).getId()).isEqualTo(photoList.get(1).getId());
+        assertThat(saved.getPhotos().get(1).getId()).isEqualTo(photoList.get(2).getId());
+        assertThat(saved.getPhotos().get(2).getId()).isEqualTo(photoList.get(0).getId());
+    }
+
+
+    @Test
+    void changePhotoNotOwnedByEvent() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setPhotos(List.of(
+                EventPhotoMock.getEventPhotoMock(),
+                EventPhotoMock.getEventPhotoMock(),
+                EventPhotoMock.getEventPhotoMock()
+        ));
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        List<EventPhotoDto> setPhotoOrderDto = List.of(
+                EventPhotoDto.builder()
+                        .id(event.getPhotos().get(1).getId())
+                        .ordinal(0)
+                        .build(),
+                EventPhotoDto.builder()
+                        .id(event.getPhotos().get(2).getId())
+                        .ordinal(1)
+                        .build(),
+                EventPhotoDto.builder()
+                        .id(event.getPhotos().get(0).getId())
+                        .ordinal(2)
+                        .build()
+        );
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(0).getId())).thenReturn(Optional.of(EventPhotoMock.getEventPhotoMock()));
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(1).getId())).thenReturn(Optional.of(EventPhotoMock.getEventPhotoMock()));
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(2).getId())).thenReturn(Optional.of(EventPhotoMock.getEventPhotoMock()));
+
+        //then
+        assertThatThrownBy(() -> eventService.setPhotoOrder(event.getId(), setPhotoOrderDto))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Photos are not owned by the event");
+    }
+
+
+    @Test
+    void setPhotoOrderIncludedMain() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setPhotos(List.of(
+                EventPhotoMock.getEventPhotoMock(),
+                EventPhotoMock.getEventPhotoMock(),
+                EventPhotoMock.getEventPhotoMock()
+        ));
+        event.setMainPhoto(EventMainPhoto.builder()
+                .highQualityPhoto(event.getPhotos().get(2).getPhoto()).build());
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        List<EventPhotoDto> setPhotoOrderDto = List.of(
+                EventPhotoDto.builder()
+                        .id(event.getPhotos().get(1).getId())
+                        .ordinal(0)
+                        .build(),
+                EventPhotoDto.builder()
+                        .id(event.getPhotos().get(2).getId())
+                        .ordinal(1)
+                        .build(),
+                EventPhotoDto.builder()
+                        .id(event.getPhotos().get(0).getId())
+                        .ordinal(2)
+                        .build()
+        );
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(0).getId())).thenReturn(Optional.of(event.getPhotos().get(1)));
+        when(eventPhotoRepository.findById(setPhotoOrderDto.get(1).getId())).thenReturn(Optional.of(event.getPhotos().get(2)));
+
+        //then
+        assertThatThrownBy(() -> eventService.setPhotoOrder(event.getId(), setPhotoOrderDto))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Main photo cannot be moved");
     }
 
 
