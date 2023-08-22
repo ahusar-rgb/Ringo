@@ -1,8 +1,12 @@
 package com.ringo.model.form;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Option {
     private Long id;
     private String content;

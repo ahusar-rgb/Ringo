@@ -12,6 +12,8 @@ import com.ringo.it.util.ItTestConsts;
 import com.ringo.mock.dto.CategoryDtoMock;
 import com.ringo.mock.dto.CurrencyDtoMock;
 import com.ringo.mock.dto.EventDtoMock;
+import com.ringo.mock.dto.RegistrationFormMock;
+import com.ringo.model.form.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -556,6 +559,144 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
     @Test
     void deleteEventWithTickets() {
         //TODO: implement
+    }
+
+    @Test
+    void addRegistrationFormSuccess() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+        addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
+
+        RegistrationForm registrationForm = RegistrationFormMock.getRegistrationFormMock();
+        EventResponseDto registrationFormResponseDto = eventTemplate.addRegistrationForm(organisationToken.getAccessToken(), event.getId(), registrationForm, ItTestConsts.HTTP_SUCCESS);
+
+        assertThat(registrationFormResponseDto.getRegistrationForm()).usingRecursiveComparison().ignoringFields("id", "questions").isEqualTo(registrationForm);
+        assertThat(registrationFormResponseDto.getRegistrationForm().getQuestions().size()).isEqualTo(registrationForm.getQuestions().size());
+        assertThat(registrationFormResponseDto.getRegistrationForm().getQuestions().stream().allMatch(question -> question.getId() != null)).isTrue();
+
+        List<Option> options = new ArrayList<>();
+        for(Question question : registrationFormResponseDto.getRegistrationForm().getQuestions()) {
+            if(question instanceof MultipleChoiceQuestion)
+                options.addAll(((MultipleChoiceQuestion) question).getOptions());
+            if(question instanceof CheckboxQuestion)
+                options.addAll(((CheckboxQuestion) question).getOptions());
+        }
+        assertThat(options.stream().allMatch(option -> option.getId() != null)).isTrue();
+
+        EventResponseDto found = eventTemplate.findById(event.getId(), ItTestConsts.HTTP_SUCCESS);
+        assertThat(found).isEqualTo(registrationFormResponseDto);
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken.getAccessToken());
+    }
+
+    @Test
+    void addRegistrationForNotHost() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+        TokenDto organisationToken2 = createOrganisationActivated();
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+
+        RegistrationForm registrationForm = RegistrationFormMock.getRegistrationFormMock();
+        eventTemplate.addRegistrationForm(organisationToken2.getAccessToken(), event.getId(), registrationForm, ItTestConsts.HTTP_BAD_REQUEST);
+
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken2.getAccessToken());
+        organisationTemplate.delete(organisationToken.getAccessToken());
+    }
+
+    @Test
+    void removeRegistrationFormSuccess() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+        addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
+
+        RegistrationForm registrationForm = RegistrationFormMock.getRegistrationFormMock();
+        eventTemplate.addRegistrationForm(organisationToken.getAccessToken(), event.getId(), registrationForm, ItTestConsts.HTTP_SUCCESS);
+
+        eventTemplate.removeRegistrationForm(organisationToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+
+        EventResponseDto found = eventTemplate.findById(event.getId(), ItTestConsts.HTTP_SUCCESS);
+        assertThat(found.getRegistrationForm()).isNull();
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken.getAccessToken());
+    }
+
+    @Test
+    void removeRegistrationFormNotHost() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+        TokenDto organisationToken2 = createOrganisationActivated();
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+
+        RegistrationForm registrationForm = RegistrationFormMock.getRegistrationFormMock();
+        eventTemplate.addRegistrationForm(organisationToken.getAccessToken(), event.getId(), registrationForm, ItTestConsts.HTTP_SUCCESS);
+
+        eventTemplate.removeRegistrationForm(organisationToken2.getAccessToken(), event.getId(), ItTestConsts.HTTP_BAD_REQUEST);
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken2.getAccessToken());
+        organisationTemplate.delete(organisationToken.getAccessToken());
     }
 
     private void addPhotoAndActivate(String token, Long eventId) {
