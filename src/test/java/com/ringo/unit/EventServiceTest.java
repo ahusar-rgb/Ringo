@@ -11,11 +11,13 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
 import com.ringo.mock.common.MultipartFileMock;
 import com.ringo.mock.dto.EventDtoMock;
+import com.ringo.mock.dto.RegistrationFormMock;
 import com.ringo.mock.model.*;
 import com.ringo.model.company.Category;
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Organisation;
+import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
 import com.ringo.repository.CategoryRepository;
@@ -742,5 +744,113 @@ public class EventServiceTest {
                 .hasMessage("Event is not active");
 
         verify(eventRepository, never()).save(any());
+    }
+
+    @Test
+    void setRegistrationFormSuccess() {
+        //given
+        RegistrationForm form = RegistrationFormMock.getRegistrationFormMock();
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        eventService.setRegistrationForm(event.getId(), form);
+
+        verify(registrationValidator, times(1)).throwIfFormInvalid(form);
+        verify(eventRepository, times(1)).save(eventCaptor.capture());
+
+        Event saved = eventCaptor.getValue();
+        assertThat(saved).usingRecursiveComparison().ignoringFields("registrationForm").isEqualTo(event);
+        assertThat(saved.getRegistrationForm()).usingRecursiveComparison().ignoringFields("id").isEqualTo(form);
+    }
+
+    @Test
+    void setRegistrationFormNotHost() {
+        //given
+        RegistrationForm form = RegistrationFormMock.getRegistrationFormMock();
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId() + 1);
+
+        //when
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        assertThatThrownBy(() -> eventService.setRegistrationForm(event.getId(), form))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Event [id: %d] is not owned by the organisation".formatted(event.getId()));
+
+        verify(registrationValidator, never()).throwIfFormInvalid(any());
+        verify(eventRepository, never()).save(any());
+    }
+
+    @Test
+    void setRegistrationFormInvalid() {
+        //given
+        RegistrationForm form = RegistrationFormMock.getRegistrationFormMock();
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+        doThrow(new UserException("Invalid form")).when(registrationValidator).throwIfFormInvalid(form);
+
+        //then
+        assertThatThrownBy(() -> eventService.setRegistrationForm(event.getId(), form))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Invalid form");
+    }
+
+    @Test
+    void removeRegistrationFormSuccess() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        event.setRegistrationForm(RegistrationFormMock.getRegistrationFormMock());
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        eventService.removeRegistrationForm(event.getId());
+
+        verify(eventRepository, times(1)).save(eventCaptor.capture());
+
+        Event saved = eventCaptor.getValue();
+        assertThat(saved).usingRecursiveComparison().ignoringFields("registrationForm").isEqualTo(event);
+        assertThat(saved.getRegistrationForm()).isNull();
+    }
+
+    @Test
+    void removeRegistrationFormNotHost() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        event.setRegistrationForm(RegistrationFormMock.getRegistrationFormMock());
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId() + 1);
+
+        //when
+        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        assertThatThrownBy(() -> eventService.removeRegistrationForm(event.getId()))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Event [id: %d] is not owned by the organisation".formatted(event.getId()));
     }
 }

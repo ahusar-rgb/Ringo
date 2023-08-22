@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ringo.model.form.utils.QuestionDeserializer;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder(toBuilder = true)
 @JsonDeserialize(using = QuestionDeserializer.class)
 public class Question {
 

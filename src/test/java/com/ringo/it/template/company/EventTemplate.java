@@ -6,6 +6,7 @@ import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
+import com.ringo.model.form.RegistrationForm;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -110,6 +111,24 @@ public class EventTemplate extends EndpointTemplate {
 
     public EventResponseDto update(String token, Long id, EventRequestDto dto) {
         Response response = httpPutWithParams(token, id.toString(), dto, ItTestConsts.HTTP_SUCCESS);
+        EventResponseDto actual = response.getBody().as(EventResponseDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
+    }
+
+    public EventResponseDto addRegistrationForm(String accessToken, Long id, RegistrationForm registrationForm, int httpSuccess) {
+        Response response = httpPostWithParams(accessToken, registrationForm, id.toString() + "/registration-form", httpSuccess);
+        if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
+            return null;
+        EventResponseDto actual = response.getBody().as(EventResponseDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
+    }
+
+    public EventResponseDto removeRegistrationForm(String accessToken, Long id, int httpSuccess) {
+        Response response = httpDeleteWithParams(accessToken, id.toString() + "/registration-form", httpSuccess);
+        if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
+            return null;
         EventResponseDto actual = response.getBody().as(EventResponseDto.class);
         assertThat(actual).isNotNull();
         return actual;

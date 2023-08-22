@@ -119,7 +119,7 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "User is not the owner of the event", content = @Content),
             }
     )
-    @PutMapping(value = "/{id}/add-registration-form", produces = {"application/json"}, consumes = {"application/json"})
+    @PostMapping(value = "/{id}/registration-form", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<EventResponseDto> addRegistrationFormToEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
             @Parameter(description = "Registration form") @RequestBody RegistrationForm registrationForm) {
@@ -137,7 +137,7 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "User is not the owner of the event", content = @Content),
             }
     )
-    @PutMapping(value = "/{id}/remove-registration-form", produces = {"application/json"})
+    @DeleteMapping(value = "/{id}/registration-form", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> removeRegistrationFormFromEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id) {
 
