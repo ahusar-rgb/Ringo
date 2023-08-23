@@ -79,7 +79,7 @@ public class ReviewServiceTest {
 
         // when
         when(organisationRepository.findByIdActiveWithEvents(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
         when(reviewRepository.existsByOrganisationAndParticipant(organisation, participant)).thenReturn(false);
         when(reviewRepository.getAverageRatingByOrganisationId(organisation.getId())).thenReturn(organisationRating);
         when(organisationRepository.save(organisation)).thenReturn(organisation);
@@ -107,7 +107,7 @@ public class ReviewServiceTest {
         Participant participant = ParticipantMock.getParticipantMock();
         ReviewRequestDto dto = ReviewDtoMock.getReviewDtoMock();
         //when
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
         when(organisationRepository.findByIdActiveWithEvents(organisation.getId())).thenReturn(Optional.of(organisation));
         when(reviewRepository.existsByOrganisationAndParticipant(organisation, participant)).thenReturn(true);
         //then
@@ -134,7 +134,7 @@ public class ReviewServiceTest {
         ReviewRequestDto dto = ReviewDtoMock.getReviewDtoMock();
         //when
         when(organisationRepository.findActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
         when(reviewRepository.findByOrganisationAndParticipant(organisation, participant)).thenReturn(Optional.of(review));
         when(organisationRepository.save(organisation)).thenReturn(organisation);
         when(reviewRepository.getAverageRatingByOrganisationId(organisation.getId())).thenReturn(organisationRating);
@@ -171,7 +171,7 @@ public class ReviewServiceTest {
         dto.setComment(null);
         //when
         when(organisationRepository.findActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
         when(reviewRepository.findByOrganisationAndParticipant(organisation, participant)).thenReturn(Optional.of(review));
         when(organisationRepository.save(organisation)).thenReturn(organisation);
         when(reviewRepository.getAverageRatingByOrganisationId(organisation.getId())).thenReturn(organisationRating);
@@ -203,7 +203,7 @@ public class ReviewServiceTest {
         ReviewRequestDto dto = ReviewDtoMock.getReviewDtoMock();
         //when
         when(organisationRepository.findActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
         when(reviewRepository.findByOrganisationAndParticipant(organisation, participant)).thenReturn(Optional.empty());
         //then
         assertThrows(NotFoundException.class, () -> reviewService.updateReview(organisation.getId(), dto));
@@ -224,7 +224,7 @@ public class ReviewServiceTest {
 
         //when
         when(organisationRepository.findActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
         when(reviewRepository.findByOrganisationAndParticipant(organisation, participant)).thenReturn(Optional.of(review));
         when(organisationRepository.save(organisation)).thenReturn(organisation);
         when(reviewRepository.getAverageRatingByOrganisationId(organisation.getId())).thenReturn(organisationRating);
@@ -254,7 +254,7 @@ public class ReviewServiceTest {
 
         //when
         when(organisationRepository.findActiveById(id)).thenReturn(Optional.of(organisation));
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
         when(reviewRepository.findByOrganisationAndParticipant(organisation, participant)).thenReturn(Optional.empty());
 
         //then

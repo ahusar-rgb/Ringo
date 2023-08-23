@@ -49,7 +49,7 @@ public class EventService {
     public EventResponseDto create(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
-        Organisation organisation = organisationService.getFullUser();
+        Organisation organisation = organisationService.getFullActiveUser();
 
         Currency currency = currencyRepository.findById(eventDto.getCurrencyId()).orElseThrow(
                 () -> new NotFoundException("Currency [id: %d] not found".formatted(eventDto.getCurrencyId()))
@@ -294,7 +294,7 @@ public class EventService {
     }
 
     private void throwIfNotHost(Event event) {
-        if(!event.getHost().getId().equals(organisationService.getFullUser().getId()))
+        if(!event.getHost().getId().equals(organisationService.getFullActiveUser().getId()))
             throw new UserException("Event [id: %d] is not owned by the organisation".formatted(event.getId()));
     }
 }

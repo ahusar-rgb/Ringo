@@ -16,6 +16,7 @@ public class EventMock {
                 .isTicketNeeded(true)
                 .categories(new HashSet<>())
                 .peopleCount(0)
+                .peopleSaved(0)
                 .price(1.0f)
                 .latitude(50.0)
                 .longitude(50.0)

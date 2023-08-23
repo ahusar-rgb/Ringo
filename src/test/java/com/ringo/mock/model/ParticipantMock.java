@@ -6,6 +6,7 @@ import com.ringo.model.enums.Gender;
 import com.ringo.model.security.Role;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 public class ParticipantMock {
     public static Participant getParticipantMock() {
@@ -21,6 +22,7 @@ public class ParticipantMock {
                 .password("test")
                 .emailVerified(false)
                 .withIdProvider(false)
+                .savedEvents(new HashSet<>())
                 .build();
     }
 }

@@ -92,17 +92,36 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         return savedDto;
     }
 
-    protected T getUserDetails() {
-        User user = authenticationService.getCurrentUser();
-        return abstractUserMapper.fromUser(user);
-    }
-
     public T getFullUser() {
         User user = authenticationService.getCurrentUser();
         if(user == null)
             throw new UserException("User is not authenticated");
 
         Optional<T> result = repository.findFullById(user.getId());
+        if (result.isEmpty())
+            throw new NotFoundException("User is not found");
+
+        return result.get();
+    }
+
+    public T getUser() {
+        User user = authenticationService.getCurrentUser();
+        if(user == null)
+            throw new UserException("User is not authenticated");
+
+        Optional<T> result = repository.findById(user.getId());
+        if (result.isEmpty())
+            throw new NotFoundException("User is not found");
+
+        return result.get();
+    }
+
+    public T getFullActiveUser() {
+        User user = authenticationService.getCurrentUser();
+        if(user == null)
+            throw new UserException("User is not authenticated");
+
+        Optional<T> result = repository.findFullActiveById(user.getId());
         if (result.isEmpty())
             throw new NotFoundException("User is not found");
 
@@ -158,11 +177,11 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     public void delete() {
         T user = getFullUser();
         prepareForDelete(user);
-        repository.delete(getFullUser());
+        repository.delete(user);
     }
 
     public R setPhoto(MultipartFile photo) {
-        T user = getFullUser();
+        T user = getFullActiveUser();
 
         log.info("email: {}, setPhoto: {}", user.getEmail(), photo.getOriginalFilename());
 
@@ -187,7 +206,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     }
 
     public R removePhoto() {
-        T user = getFullUser();
+        T user = getFullActiveUser();
 
         if (user.getProfilePicture() == null)
             throw new UserException("User does not have a photo");

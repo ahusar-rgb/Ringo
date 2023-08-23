@@ -39,7 +39,7 @@ public class ReviewService {
                 () -> new NotFoundException("Organisation#" + id + " was not found")
         );
 
-        Participant participant = participantService.getFullUser();
+        Participant participant = participantService.getFullActiveUser();
 
         if(repository.existsByOrganisationAndParticipant(organisation, participant))
             throw new UserException("Current user has already rated this organisation");
@@ -62,7 +62,7 @@ public class ReviewService {
                 () -> new NotFoundException("Organisation#" + organisationId + " not found")
         );
 
-        Participant participant = participantService.getFullUser();
+        Participant participant = participantService.getFullActiveUser();
 
         Review review = repository.findByOrganisationAndParticipant(organisation, participant).orElseThrow(
                 () -> new NotFoundException("There is no review for this organisation made by current user")
@@ -87,7 +87,7 @@ public class ReviewService {
                 () -> new NotFoundException("Organisation#" + organisationId + " not found")
         );
 
-        Participant participant = participantService.getFullUser();
+        Participant participant = participantService.getFullActiveUser();
 
 
         Review review = repository.findByOrganisationAndParticipant(organisation, participant).orElseThrow(
@@ -103,7 +103,7 @@ public class ReviewService {
     public List<ReviewResponseDto> findAllByOrganisation(Long organisationId, ReviewPageRequestDto request) {
         Participant participant = null;
         try {
-            participant = participantService.getFullUser();
+            participant = participantService.getFullActiveUser();
         } catch (NotFoundException ignored) {}
 
         Page<Review> page = repository.findAll(

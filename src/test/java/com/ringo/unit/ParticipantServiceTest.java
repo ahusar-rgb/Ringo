@@ -226,10 +226,10 @@ public class ParticipantServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
-        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        when(participantRepository.findFullActiveById(participant.getId())).thenReturn(Optional.of(participant));
 
         //then
-        Participant returned = service.getFullUser();
+        Participant returned = service.getFullActiveUser();
         assertThat(returned).isEqualTo(participant);
     }
 
@@ -240,10 +240,10 @@ public class ParticipantServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
-        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.empty());
+        when(participantRepository.findFullActiveById(participant.getId())).thenReturn(Optional.empty());
 
         //then
-        assertThrows(NotFoundException.class, () -> service.getFullUser());
+        assertThrows(NotFoundException.class, () -> service.getFullActiveUser());
     }
 
     @Test
@@ -390,7 +390,7 @@ public class ParticipantServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
-        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        when(participantRepository.findFullActiveById(participant.getId())).thenReturn(Optional.of(participant));
         when(participantRepository.save(participant)).thenReturn(participant);
 
         //then
@@ -416,7 +416,7 @@ public class ParticipantServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
-        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        when(participantRepository.findFullActiveById(participant.getId())).thenReturn(Optional.of(participant));
         when(participantRepository.save(participant)).thenReturn(participant);
 
         //then
@@ -434,7 +434,7 @@ public class ParticipantServiceTest {
         participant.setProfilePicture(null);
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
-        when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        when(participantRepository.findFullActiveById(participant.getId())).thenReturn(Optional.of(participant));
 
         //then
         assertThrows(UserException.class, () -> service.removePhoto());

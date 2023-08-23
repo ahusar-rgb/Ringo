@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface AbstractUserRepository<T extends User> extends JpaRepository<T, Long> {
     Optional<T> findFullById(Long id);
+
+    Optional<T> findFullActiveById(Long id);
 }

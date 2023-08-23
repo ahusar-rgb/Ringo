@@ -224,10 +224,10 @@ public class OrganisationServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
-        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationRepository.findFullActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
 
         //then
-        Organisation returned = service.getFullUser();
+        Organisation returned = service.getFullActiveUser();
         assertThat(returned).isEqualTo(organisation);
     }
 
@@ -238,10 +238,10 @@ public class OrganisationServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
-        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.empty());
+        when(organisationRepository.findFullActiveById(organisation.getId())).thenReturn(Optional.empty());
 
         //then
-        assertThrows(NotFoundException.class, () -> service.getFullUser());
+        assertThrows(NotFoundException.class, () -> service.getFullActiveUser());
     }
 
     @Test
@@ -368,7 +368,7 @@ public class OrganisationServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
-        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationRepository.findFullActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(organisationRepository.save(organisation)).thenReturn(organisation);
 
         //then
@@ -394,7 +394,7 @@ public class OrganisationServiceTest {
 
         //when
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
-        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationRepository.findFullActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(organisationRepository.save(organisation)).thenReturn(organisation);
 
         //then
@@ -412,7 +412,7 @@ public class OrganisationServiceTest {
         organisation.setProfilePicture(null);
         //when
         when(authenticationService.getCurrentUser()).thenReturn(organisation);
-        when(organisationRepository.findFullById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationRepository.findFullActiveById(organisation.getId())).thenReturn(Optional.of(organisation));
 
         //then
         assertThrows(UserException.class, () -> service.removePhoto());

@@ -133,4 +133,22 @@ public class EventTemplate extends EndpointTemplate {
         assertThat(actual).isNotNull();
         return actual;
     }
+
+    public EventResponseDto saveEvent(String accessToken, Long id, int httpSuccess) {
+        Response response = httpPostWithParams(accessToken, null, id.toString() + "/save", httpSuccess);
+        if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
+            return null;
+        EventResponseDto actual = response.getBody().as(EventResponseDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
+    }
+
+    public EventResponseDto unsave(String accessToken, Long id, int httpSuccess) {
+        Response response = httpPostWithParams(accessToken, null, id.toString() + "/unsave", httpSuccess);
+        if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
+            return null;
+        EventResponseDto actual = response.getBody().as(EventResponseDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
+    }
 }

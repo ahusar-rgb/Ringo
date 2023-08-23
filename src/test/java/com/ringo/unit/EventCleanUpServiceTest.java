@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static org.mockito.Mockito.times;
@@ -31,6 +32,7 @@ public class EventCleanUpServiceTest {
         Event event = EventMock.getEventMock();
         event.setMainPhoto(new EventMainPhoto());
         event.setPhotos(List.of(EventPhoto.builder().id(1L).build(), EventPhoto.builder().id(2L).build()));
+        event.setSavedBy(new HashSet<>());
 
         //then
         eventCleanUpService.cleanUpEvent(event);
