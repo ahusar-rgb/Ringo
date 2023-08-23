@@ -10,7 +10,7 @@ public class OrganisationDtoMock {
         return OrganisationRequestDto.builder()
                 .name("Test")
                 .username("test" + IdGenerator.getNewId())
-                .email("test" + IdGenerator.getNewId() + "@test.com")
+                .email("test" + IdGenerator.getNewId() + "@ringo-events.com")
                 .password("test")
                 .description("Test description")
                 .contacts(new ArrayList<>())
