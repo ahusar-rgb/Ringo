@@ -8,7 +8,7 @@ public class ParticipantDtoMock {
         return ParticipantRequestDto.builder()
                 .name("Test")
                 .username("test" + IdGenerator.getNewId())
-                .email("test" + IdGenerator.getNewId() + "@test.com")
+                .email("test" + IdGenerator.getNewId() + "@ringo-events.com")
                 .password("test")
                 .dateOfBirth("2000-01-01")
                 .gender("MALE")
