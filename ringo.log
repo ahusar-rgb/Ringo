@@ -5770,3 +5770,1218 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 2023-08-22 22:56:52.797 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-08-22 22:56:52.803 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2023-08-22 22:56:52.810 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-08-23 13:16:36.400 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 37435 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-08-23 13:16:36.404 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-08-23 13:16:38.563 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-23 13:16:38.818 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 237 ms. Found 13 JPA repository interfaces.
+2023-08-23 13:16:40.060 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-08-23 13:16:40.084 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-08-23 13:16:40.084 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-08-23 13:16:40.357 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-08-23 13:16:40.358 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3399 ms
+2023-08-23 13:16:40.550 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-08-23 13:16:41.717 [main] ERROR com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: Connection to localhost:5432 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:342)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:253)
+	at org.postgresql.Driver.makeConnection(Driver.java:434)
+	at org.postgresql.Driver.connect(Driver.java:291)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:280)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1798)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1748)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:691)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:515)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1664)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1413)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1405)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:245)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1345)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1189)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1405)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:245)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1345)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1189)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:415)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:210)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:173)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:168)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:153)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:86)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:261)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:235)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5144)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1383)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:916)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:886)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1383)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:916)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:252)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:430)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:926)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:485)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:123)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:104)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:488)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:210)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:183)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:161)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:578)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:434)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at com.ringo.RingoApplication.main(RingoApplication.java:27)
+Caused by: java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:243)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:132)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:258)
+	... 124 common frames omitted
+2023-08-23 13:16:41.732 [main] ERROR o.s.b.w.e.tomcat.TomcatStarter - Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'securityConfig' defined in file [/Users/aleksandr/Ringo/build/classes/java/main/com/ringo/config/SecurityConfig.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'userService' defined in file [/Users/aleksandr/Ringo/build/classes/java/main/com/ringo/service/security/UserService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.ringo.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+2023-08-23 13:16:41.802 [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2023-08-23 13:16:41.810 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
+2023-08-23 13:16:41.825 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2023-08-23 13:16:41.859 [main] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:164)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:578)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:434)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at com.ringo.RingoApplication.main(RingoApplication.java:27)
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:142)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:104)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:488)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:210)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:183)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:161)
+	... 6 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'securityConfig' defined in file [/Users/aleksandr/Ringo/build/classes/java/main/com/ringo/config/SecurityConfig.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'userService' defined in file [/Users/aleksandr/Ringo/build/classes/java/main/com/ringo/service/security/UserService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.ringo.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:798)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:245)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1345)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1189)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:415)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:210)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:173)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:168)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:153)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:86)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:261)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:235)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5144)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1383)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:916)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:886)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1383)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:916)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:252)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:430)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:926)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:485)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:123)
+	... 11 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userService' defined in file [/Users/aleksandr/Ringo/build/classes/java/main/com/ringo/service/security/UserService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userRepository' defined in com.ringo.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:798)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:245)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1345)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1189)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1405)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	... 61 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.ringo.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1664)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1413)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1405)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:885)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:789)
+	... 75 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaSharedEM_entityManagerFactory': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:691)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:515)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1325)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 89 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: org.postgresql.util.PSQLException: Connection to localhost:5432 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 101 common frames omitted
+Caused by: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: Connection to localhost:5432 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1798)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1748)
+	... 110 common frames omitted
+Caused by: org.postgresql.util.PSQLException: Connection to localhost:5432 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:342)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:253)
+	at org.postgresql.Driver.makeConnection(Driver.java:434)
+	at org.postgresql.Driver.connect(Driver.java:291)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:280)
+	... 112 common frames omitted
+Caused by: java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:243)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:132)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:258)
+	... 124 common frames omitted
+2023-08-23 13:17:02.027 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 37447 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-08-23 13:17:02.031 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-08-23 13:17:03.880 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-23 13:17:04.079 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 186 ms. Found 13 JPA repository interfaces.
+2023-08-23 13:17:05.117 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-08-23 13:17:05.140 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-08-23 13:17:05.140 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-08-23 13:17:05.463 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-08-23 13:17:05.464 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2975 ms
+2023-08-23 13:17:05.625 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-08-23 13:17:05.921 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3eac2e8a
+2023-08-23 13:17:05.924 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-08-23 13:17:06.245 [main] INFO  liquibase.database - Set default schema name to public
+2023-08-23 13:17:06.376 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+2023-08-23 13:17:06.491 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
+2023-08-23 13:17:06.921 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-category.sql
+2023-08-23 13:17:06.924 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/002-currency.sql
+2023-08-23 13:17:06.927 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/009-get_distance.sql
+2023-08-23 13:17:07.016 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2023-08-23 13:17:07.164 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2023-08-23 13:17:07.307 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-23 13:17:07.397 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-08-23 13:17:07.894 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-08-23 13:17:09.427 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-23 13:17:09.441 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-23 13:17:14.248 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
+2023-08-23 13:17:15.496 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
+2023-08-23 13:17:16.383 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
+2023-08-23 13:17:19.362 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@98e2a07, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@cfcab77, org.springframework.security.web.context.SecurityContextHolderFilter@3c01d268, org.springframework.security.web.header.HeaderWriterFilter@1d30a3d4, org.springframework.web.filter.CorsFilter@28d48616, org.springframework.security.web.authentication.logout.LogoutFilter@19315d74, com.ringo.auth.JwtFilter@46244e65, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@77652fc6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4924c27e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3bc59637, org.springframework.security.web.session.SessionManagementFilter@601f58a3, org.springframework.security.web.access.ExceptionTranslationFilter@769580de, org.springframework.security.web.access.intercept.AuthorizationFilter@774e5726]
+2023-08-23 13:17:19.849 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-23 13:17:19.866 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 18.558 seconds (process running for 20.126)
+2023-08-23 13:17:19.934 [main] INFO  com.ringo.RingoApplication - 
+----------------------------------------------------------
+	Application 'Ringo' is running! Access URLs:
+	Local: 		http://localhost:8080/
+	External: 	http://127.0.0.1:8080/
+	Profile(s): 	[]
+----------------------------------------------------------
+2023-08-23 13:17:35.396 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-23 13:17:35.397 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-08-23 13:17:35.400 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2023-08-23 13:17:35.513 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1692785853414@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:17:38.259 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785853414@ringo-events.com] is authenticated
+2023-08-23 13:17:38.335 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785853414@ringo-events.com
+2023-08-23 13:17:38.485 [http-nio-8080-exec-5] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-23 13:17:38.641 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785853414@ringo-events.com] is authenticated
+2023-08-23 13:17:38.820 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: test1692785858768@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:17:40.642 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785858768@ringo-events.com] is authenticated
+2023-08-23 13:17:40.700 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785858768@ringo-events.com
+2023-08-23 13:17:40.843 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785858768@ringo-events.com] is authenticated
+2023-08-23 13:17:41.219 [http-nio-8080-exec-4] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-23 13:17:41.344 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785858768@ringo-events.com] is authenticated
+2023-08-23 13:17:41.460 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - save: test1692785861438@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:17:43.415 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785861438@ringo-events.com] is authenticated
+2023-08-23 13:17:43.448 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785861438@ringo-events.com
+2023-08-23 13:17:43.570 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785861438@ringo-events.com] is authenticated
+2023-08-23 13:17:43.902 [http-nio-8080-exec-3] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-23 13:17:44.009 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785861438@ringo-events.com] is authenticated
+2023-08-23 13:17:44.099 [http-nio-8080-exec-6] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception
+com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 parts, but got 0.
+	at com.auth0.jwt.TokenUtils.wrongNumberOfParts(TokenUtils.java:45)
+	at com.auth0.jwt.TokenUtils.splitToken(TokenUtils.java:23)
+	at com.auth0.jwt.JWTDecoder.<init>(JWTDecoder.java:37)
+	at com.auth0.jwt.JWTDecoder.<init>(JWTDecoder.java:33)
+	at com.auth0.jwt.JWT.decode(JWT.java:52)
+	at com.ringo.auth.JwtService.getEmailFromToken(JwtService.java:114)
+	at com.ringo.auth.JwtFilter.doFilterInternal(JwtFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:859)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1734)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-08-23 13:17:44.178 [http-nio-8080-exec-11] INFO  c.r.s.common.AbstractUserService - save: test1692785864149@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:17:46.207 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785864149@ringo-events.com] is authenticated
+2023-08-23 13:17:46.238 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785864149@ringo-events.com
+2023-08-23 13:17:46.363 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785864149@ringo-events.com] is authenticated
+2023-08-23 13:17:46.482 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Wrong password
+2023-08-23 13:17:46.598 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785864149@ringo-events.com] is authenticated
+2023-08-23 13:17:46.675 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - save: test1692785866659@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:17:48.531 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785866659@ringo-events.com] is authenticated
+2023-08-23 13:17:48.555 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785866659@ringo-events.com
+2023-08-23 13:17:48.670 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785866659@ringo-events.com] is authenticated
+2023-08-23 13:17:48.767 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692785868753@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:17:50.788 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785868753@ringo-events.com] is authenticated
+2023-08-23 13:17:50.810 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785868753@ringo-events.com
+2023-08-23 13:17:50.920 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785868753@ringo-events.com] is authenticated
+2023-08-23 13:17:51.033 [http-nio-8080-exec-1] WARN  c.r.exception.GlobalExceptionHandler - Wrong password
+2023-08-23 13:17:51.140 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785868753@ringo-events.com] is authenticated
+2023-08-23 13:17:51.223 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - save: test1692785871204@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:17:53.436 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785871204@ringo-events.com] is authenticated
+2023-08-23 13:17:53.465 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785871204@ringo-events.com
+2023-08-23 13:17:53.577 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785871204@ringo-events.com] is authenticated
+2023-08-23 13:17:53.690 [http-nio-8080-exec-10] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
+2023-08-23 13:17:53.818 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:17:53.851 [http-nio-8080-exec-11] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785873829)
+2023-08-23 13:17:53.908 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785873888)
+2023-08-23 13:17:53.945 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785873929)
+2023-08-23 13:17:53.976 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785873962)
+2023-08-23 13:17:54.016 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1692785874001@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:17:55.766 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785874001@ringo-events.com] is authenticated
+2023-08-23 13:17:55.793 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785874001@ringo-events.com
+2023-08-23 13:17:55.838 [http-nio-8080-exec-8] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:17:55.904 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785873998)
+2023-08-23 13:17:56.236 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 25, test_picture_1.jpeg
+2023-08-23 13:17:56.236 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:17:56.818 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:17:58.130 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:17:58.394 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785873998)
+2023-08-23 13:17:58.530 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 26, test_picture_2.jpeg
+2023-08-23 13:17:58.530 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:17:58.605 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:17:59.046 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:17:59.259 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setPhotoOrder: 25
+2023-08-23 13:17:59.310 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Photos are not owned by the event
+2023-08-23 13:17:59.333 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - deleteEvent: 25
+2023-08-23 13:17:59.362 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - deletePhoto: 83
+2023-08-23 13:17:59.424 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - deletePhoto: 84
+2023-08-23 13:17:59.551 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - deleteEvent: 26
+2023-08-23 13:17:59.567 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 85
+2023-08-23 13:17:59.631 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 86
+2023-08-23 13:17:59.740 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - deleteCategory: 68
+2023-08-23 13:17:59.778 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - deleteCategory: 69
+2023-08-23 13:17:59.815 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - deleteCategory: 70
+2023-08-23 13:17:59.852 [http-nio-8080-exec-12] INFO  c.r.service.company.CurrencyService - deleteCurrency: 23
+2023-08-23 13:18:00.037 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:00.064 [http-nio-8080-exec-1] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785880045)
+2023-08-23 13:18:00.102 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785880088)
+2023-08-23 13:18:00.144 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785880119)
+2023-08-23 13:18:00.182 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785880164)
+2023-08-23 13:18:00.218 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1692785880204@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:02.180 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785880204@ringo-events.com] is authenticated
+2023-08-23 13:18:02.207 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785880204@ringo-events.com
+2023-08-23 13:18:02.232 [http-nio-8080-exec-8] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:18:02.269 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785880201)
+2023-08-23 13:18:02.392 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 27, test_picture_1.jpeg
+2023-08-23 13:18:02.393 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:02.480 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:03.024 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:03.200 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setMainPhoto: 26
+2023-08-23 13:18:03.223 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - findPhoto: 87
+2023-08-23 13:18:03.391 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:03.561 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:04.018 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - setActive: 27
+2023-08-23 13:18:04.086 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 27, test_picture_2.jpeg
+2023-08-23 13:18:04.086 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:04.141 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:04.534 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:04.717 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - findPhoto: 91
+2023-08-23 13:18:04.722 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - findPhoto: 91
+2023-08-23 13:18:04.855 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - removePhotoFromEvent: 27, 27
+2023-08-23 13:18:04.881 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - deletePhoto: 91
+2023-08-23 13:18:04.947 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - deletePhoto: 92
+2023-08-23 13:18:05.037 [http-nio-8080-exec-6] INFO  c.r.s.c.event.EventSearchService - findEventById: 27
+2023-08-23 13:18:05.075 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - findPhoto: 91
+2023-08-23 13:18:05.080 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:18:05.099 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - deleteEvent: 27
+2023-08-23 13:18:05.113 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - deletePhoto: 89
+2023-08-23 13:18:05.168 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - deletePhoto: 90
+2023-08-23 13:18:05.234 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - deletePhoto: 87
+2023-08-23 13:18:05.296 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - deletePhoto: 88
+2023-08-23 13:18:05.414 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - deleteCategory: 71
+2023-08-23 13:18:05.437 [http-nio-8080-exec-12] INFO  c.r.service.company.CategoryService - deleteCategory: 72
+2023-08-23 13:18:05.460 [http-nio-8080-exec-11] INFO  c.r.service.company.CategoryService - deleteCategory: 73
+2023-08-23 13:18:05.488 [http-nio-8080-exec-1] INFO  c.r.service.company.CurrencyService - deleteCurrency: 24
+2023-08-23 13:18:05.647 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:05.673 [http-nio-8080-exec-4] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785885653)
+2023-08-23 13:18:05.707 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785885691)
+2023-08-23 13:18:05.736 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785885722)
+2023-08-23 13:18:05.765 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785885751)
+2023-08-23 13:18:05.795 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692785885786@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:07.568 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785885786@ringo-events.com] is authenticated
+2023-08-23 13:18:07.591 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785885786@ringo-events.com
+2023-08-23 13:18:07.621 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - save: test1692785887602@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:09.413 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785887602@ringo-events.com] is authenticated
+2023-08-23 13:18:09.434 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785887602@ringo-events.com
+2023-08-23 13:18:09.456 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785885783)
+2023-08-23 13:18:09.576 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - setRegistrationForm: 28, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@125a1007, com.ringo.model.form.MultipleChoiceQuestion@8d7fc40b, com.ringo.model.form.CheckboxQuestion@5ad6bdd9])
+2023-08-23 13:18:09.656 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - removeRegistrationForm: 28
+2023-08-23 13:18:09.679 [http-nio-8080-exec-3] WARN  c.r.exception.GlobalExceptionHandler - Event [id: 28] is not owned by the organisation
+2023-08-23 13:18:09.697 [http-nio-8080-exec-13] INFO  c.r.s.company.event.EventService - deleteEvent: 28
+2023-08-23 13:18:09.773 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 74
+2023-08-23 13:18:09.801 [http-nio-8080-exec-6] INFO  c.r.service.company.CategoryService - deleteCategory: 75
+2023-08-23 13:18:09.831 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - deleteCategory: 76
+2023-08-23 13:18:09.857 [http-nio-8080-exec-9] INFO  c.r.service.company.CurrencyService - deleteCurrency: 25
+2023-08-23 13:18:10.062 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:10.087 [http-nio-8080-exec-1] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785890071)
+2023-08-23 13:18:10.119 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785890106)
+2023-08-23 13:18:10.146 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785890134)
+2023-08-23 13:18:10.173 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785890160)
+2023-08-23 13:18:10.201 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - save: test1692785890190@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:12.059 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785890190@ringo-events.com] is authenticated
+2023-08-23 13:18:12.087 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785890190@ringo-events.com
+2023-08-23 13:18:12.105 [http-nio-8080-exec-3] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:18:12.132 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785890187)
+2023-08-23 13:18:12.218 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 29, test_picture_1.jpeg
+2023-08-23 13:18:12.219 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:12.283 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:13.272 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:13.518 [http-nio-8080-exec-13] INFO  c.r.s.company.event.EventService - setMainPhoto: 28
+2023-08-23 13:18:13.541 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - findPhoto: 93
+2023-08-23 13:18:13.730 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:14.042 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:14.252 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - setActive: 29
+2023-08-23 13:18:14.321 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 29, test_picture_1.jpeg
+2023-08-23 13:18:14.321 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:14.380 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:14.962 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:15.231 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 29, test_picture_2.jpeg
+2023-08-23 13:18:15.232 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:15.286 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:15.695 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:16.170 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 29, test_picture_3.png
+2023-08-23 13:18:16.170 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - photo type: image/png
+2023-08-23 13:18:16.713 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: png
+2023-08-23 13:18:20.357 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: png
+2023-08-23 13:18:20.844 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - setPhotoOrder: 29
+2023-08-23 13:18:20.898 [http-nio-8080-exec-6] INFO  c.r.s.c.event.EventSearchService - findEventById: 29
+2023-08-23 13:18:20.951 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - deleteEvent: 29
+2023-08-23 13:18:20.962 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 95
+2023-08-23 13:18:21.023 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 96
+2023-08-23 13:18:21.092 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 93
+2023-08-23 13:18:21.154 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 94
+2023-08-23 13:18:21.214 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 97
+2023-08-23 13:18:21.271 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 98
+2023-08-23 13:18:21.331 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 99
+2023-08-23 13:18:21.393 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 100
+2023-08-23 13:18:21.458 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 101
+2023-08-23 13:18:21.517 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 102
+2023-08-23 13:18:21.633 [http-nio-8080-exec-1] INFO  c.r.service.company.CategoryService - deleteCategory: 77
+2023-08-23 13:18:21.655 [http-nio-8080-exec-11] INFO  c.r.service.company.CategoryService - deleteCategory: 78
+2023-08-23 13:18:21.680 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - deleteCategory: 79
+2023-08-23 13:18:21.700 [http-nio-8080-exec-10] INFO  c.r.service.company.CurrencyService - deleteCurrency: 26
+2023-08-23 13:18:21.877 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:21.899 [http-nio-8080-exec-12] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785901884)
+2023-08-23 13:18:21.938 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785901922)
+2023-08-23 13:18:21.972 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785901956)
+2023-08-23 13:18:22.006 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785901990)
+2023-08-23 13:18:22.034 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1692785902026@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:24.062 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785902026@ringo-events.com] is authenticated
+2023-08-23 13:18:24.089 [http-nio-8080-exec-11] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785902026@ringo-events.com
+2023-08-23 13:18:24.115 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785902023)
+2023-08-23 13:18:24.204 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 30, test_picture_1.jpeg
+2023-08-23 13:18:24.204 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:24.257 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:24.716 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:24.935 [http-nio-8080-exec-13] INFO  c.r.s.company.event.EventService - setMainPhoto: 32
+2023-08-23 13:18:24.956 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - findPhoto: 103
+2023-08-23 13:18:25.082 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:25.258 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:25.455 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setActive: 30
+2023-08-23 13:18:25.498 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - setRegistrationForm: 30, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@6b507194, com.ringo.model.form.MultipleChoiceQuestion@a43e0e58, com.ringo.model.form.CheckboxQuestion@6891dd02])
+2023-08-23 13:18:25.546 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - removeRegistrationForm: 30
+2023-08-23 13:18:25.573 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - setRegistrationForm: 30, null
+2023-08-23 13:18:25.606 [http-nio-8080-exec-6] INFO  c.r.s.c.event.EventSearchService - findEventById: 30
+2023-08-23 13:18:25.641 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - deleteEvent: 30
+2023-08-23 13:18:25.650 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 105
+2023-08-23 13:18:25.717 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 106
+2023-08-23 13:18:25.779 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 103
+2023-08-23 13:18:25.839 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 104
+2023-08-23 13:18:25.943 [http-nio-8080-exec-1] INFO  c.r.service.company.CategoryService - deleteCategory: 80
+2023-08-23 13:18:25.975 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - deleteCategory: 81
+2023-08-23 13:18:26.003 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - deleteCategory: 82
+2023-08-23 13:18:26.021 [http-nio-8080-exec-4] INFO  c.r.service.company.CurrencyService - deleteCurrency: 27
+2023-08-23 13:18:26.177 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:26.198 [http-nio-8080-exec-12] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785906184)
+2023-08-23 13:18:26.230 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785906217)
+2023-08-23 13:18:26.253 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785906242)
+2023-08-23 13:18:26.281 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785906266)
+2023-08-23 13:18:26.305 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1692785906297@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:28.032 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785906297@ringo-events.com] is authenticated
+2023-08-23 13:18:28.056 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785906297@ringo-events.com
+2023-08-23 13:18:28.075 [http-nio-8080-exec-8] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:18:28.100 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785906294)
+2023-08-23 13:18:28.177 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - updateEvent: 31, AbstractEntityDto(id=null)
+2023-08-23 13:18:28.259 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 31, test_picture_1.jpeg
+2023-08-23 13:18:28.259 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:28.328 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:28.799 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:28.984 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - setMainPhoto: 33
+2023-08-23 13:18:29.006 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - findPhoto: 107
+2023-08-23 13:18:29.102 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:29.273 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:29.431 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - setActive: 31
+2023-08-23 13:18:29.467 [http-nio-8080-exec-13] INFO  c.r.s.c.event.EventSearchService - findEventById: 31
+2023-08-23 13:18:29.502 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - deleteEvent: 31
+2023-08-23 13:18:29.510 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - deletePhoto: 109
+2023-08-23 13:18:29.575 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - deletePhoto: 110
+2023-08-23 13:18:29.637 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - deletePhoto: 107
+2023-08-23 13:18:29.697 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - deletePhoto: 108
+2023-08-23 13:18:29.805 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - deleteCategory: 83
+2023-08-23 13:18:29.831 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 84
+2023-08-23 13:18:29.854 [http-nio-8080-exec-6] INFO  c.r.service.company.CategoryService - deleteCategory: 85
+2023-08-23 13:18:29.877 [http-nio-8080-exec-7] INFO  c.r.service.company.CurrencyService - deleteCurrency: 28
+2023-08-23 13:18:30.029 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:30.048 [http-nio-8080-exec-10] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785910035)
+2023-08-23 13:18:30.081 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785910065)
+2023-08-23 13:18:30.140 [http-nio-8080-exec-11] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785910128)
+2023-08-23 13:18:30.173 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785910157)
+2023-08-23 13:18:30.200 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - save: test1692785910191@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:31.997 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785910191@ringo-events.com] is authenticated
+2023-08-23 13:18:32.025 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785910191@ringo-events.com
+2023-08-23 13:18:32.051 [http-nio-8080-exec-5] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:18:32.089 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785910188)
+2023-08-23 13:18:32.182 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - setPhotoOrder: 32
+2023-08-23 13:18:32.214 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Photo [id: 1692785912157] not found
+2023-08-23 13:18:32.229 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - deleteEvent: 32
+2023-08-23 13:18:32.281 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - deleteCategory: 86
+2023-08-23 13:18:32.307 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - deleteCategory: 87
+2023-08-23 13:18:32.333 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 88
+2023-08-23 13:18:32.364 [http-nio-8080-exec-6] INFO  c.r.service.company.CurrencyService - deleteCurrency: 29
+2023-08-23 13:18:32.537 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:32.558 [http-nio-8080-exec-8] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785912543)
+2023-08-23 13:18:32.593 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785912580)
+2023-08-23 13:18:32.629 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785912614)
+2023-08-23 13:18:32.657 [http-nio-8080-exec-11] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785912644)
+2023-08-23 13:18:32.688 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: test1692785912678@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:34.504 [http-nio-8080-exec-13] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785912678@ringo-events.com] is authenticated
+2023-08-23 13:18:34.526 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785912678@ringo-events.com
+2023-08-23 13:18:34.543 [http-nio-8080-exec-9] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:18:34.569 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785912675)
+2023-08-23 13:18:34.665 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 33, test_picture_1.jpeg
+2023-08-23 13:18:34.665 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:34.731 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:35.289 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:35.470 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - setMainPhoto: 34
+2023-08-23 13:18:35.498 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - findPhoto: 111
+2023-08-23 13:18:35.602 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:35.799 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:36.015 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - setActive: 33
+2023-08-23 13:18:36.057 [http-nio-8080-exec-8] INFO  c.r.s.c.event.EventSearchService - findEventById: 33
+2023-08-23 13:18:36.099 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - removeMainPhoto: 33
+2023-08-23 13:18:36.120 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - deletePhoto: 113
+2023-08-23 13:18:36.179 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - deletePhoto: 114
+2023-08-23 13:18:36.267 [http-nio-8080-exec-4] INFO  c.r.s.c.event.EventSearchService - findEventById: 33
+2023-08-23 13:18:36.308 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - findPhoto: 111
+2023-08-23 13:18:36.314 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - findPhoto: 111
+2023-08-23 13:18:36.397 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - findPhoto: 112
+2023-08-23 13:18:36.403 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - findPhoto: 112
+2023-08-23 13:18:36.480 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - findPhoto: 113
+2023-08-23 13:18:36.486 [http-nio-8080-exec-12] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:18:36.493 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - findPhoto: 114
+2023-08-23 13:18:36.497 [http-nio-8080-exec-13] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:18:36.516 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - deleteEvent: 33
+2023-08-23 13:18:36.527 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 111
+2023-08-23 13:18:36.585 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 112
+2023-08-23 13:18:36.679 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - deleteCategory: 89
+2023-08-23 13:18:36.701 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 90
+2023-08-23 13:18:36.721 [http-nio-8080-exec-6] INFO  c.r.service.company.CategoryService - deleteCategory: 91
+2023-08-23 13:18:36.741 [http-nio-8080-exec-7] INFO  c.r.service.company.CurrencyService - deleteCurrency: 30
+2023-08-23 13:18:36.904 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:36.947 [http-nio-8080-exec-3] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785916920)
+2023-08-23 13:18:36.980 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785916967)
+2023-08-23 13:18:37.004 [http-nio-8080-exec-11] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785916993)
+2023-08-23 13:18:37.029 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785917017)
+2023-08-23 13:18:37.052 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - save: test1692785917045@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:38.791 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785917045@ringo-events.com] is authenticated
+2023-08-23 13:18:38.809 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785917045@ringo-events.com
+2023-08-23 13:18:38.827 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785917042)
+2023-08-23 13:18:38.875 [http-nio-8080-exec-7] INFO  c.r.service.company.CurrencyService - deleteCurrency: 31
+2023-08-23 13:18:38.883 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Currency [id: 31] is used in events
+2023-08-23 13:18:38.897 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - deleteEvent: 34
+2023-08-23 13:18:38.952 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - deleteCategory: 92
+2023-08-23 13:18:38.982 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - deleteCategory: 93
+2023-08-23 13:18:39.005 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - deleteCategory: 94
+2023-08-23 13:18:39.026 [http-nio-8080-exec-11] INFO  c.r.service.company.CurrencyService - deleteCurrency: 31
+2023-08-23 13:18:39.164 [http-nio-8080-exec-13] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:39.182 [http-nio-8080-exec-12] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785919171)
+2023-08-23 13:18:39.210 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785919199)
+2023-08-23 13:18:39.234 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785919224)
+2023-08-23 13:18:39.255 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785919246)
+2023-08-23 13:18:39.277 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692785919270@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:41.023 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785919270@ringo-events.com] is authenticated
+2023-08-23 13:18:41.040 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785919270@ringo-events.com
+2023-08-23 13:18:41.058 [http-nio-8080-exec-3] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:18:41.080 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785919268)
+2023-08-23 13:18:41.152 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 35, test_picture_1.jpeg
+2023-08-23 13:18:41.152 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:41.206 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:41.687 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:41.853 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - setMainPhoto: 35
+2023-08-23 13:18:41.869 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - findPhoto: 115
+2023-08-23 13:18:41.953 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:42.145 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:42.359 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setActive: 35
+2023-08-23 13:18:42.391 [http-nio-8080-exec-10] INFO  c.r.s.c.event.EventSearchService - findEventById: 35
+2023-08-23 13:18:42.440 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 117
+2023-08-23 13:18:42.500 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 118
+2023-08-23 13:18:42.564 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 115
+2023-08-23 13:18:42.624 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 116
+2023-08-23 13:18:42.734 [http-nio-8080-exec-12] INFO  c.r.s.c.event.EventSearchService - findEventById: 35
+2023-08-23 13:18:42.737 [http-nio-8080-exec-12] WARN  c.r.exception.GlobalExceptionHandler - Event [id: 35] not found
+2023-08-23 13:18:42.746 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - findPhoto: 115
+2023-08-23 13:18:42.751 [http-nio-8080-exec-9] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:18:42.760 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - findPhoto: 117
+2023-08-23 13:18:42.764 [http-nio-8080-exec-5] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:18:42.773 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - findPhoto: 118
+2023-08-23 13:18:42.778 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:18:42.786 [http-nio-8080-exec-6] INFO  c.r.s.company.OrganisationService - findOrganisationById: 75
+2023-08-23 13:18:42.796 [http-nio-8080-exec-6] WARN  c.r.exception.GlobalExceptionHandler - Organisation [id: 75] not found
+2023-08-23 13:18:42.809 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - deleteCategory: 95
+2023-08-23 13:18:42.835 [http-nio-8080-exec-1] INFO  c.r.service.company.CategoryService - deleteCategory: 96
+2023-08-23 13:18:42.860 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - deleteCategory: 97
+2023-08-23 13:18:42.887 [http-nio-8080-exec-11] INFO  c.r.service.company.CurrencyService - deleteCurrency: 32
+2023-08-23 13:18:43.006 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:43.023 [http-nio-8080-exec-2] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785923012)
+2023-08-23 13:18:43.055 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785923042)
+2023-08-23 13:18:43.081 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785923068)
+2023-08-23 13:18:43.107 [http-nio-8080-exec-12] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785923095)
+2023-08-23 13:18:43.131 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - save: test1692785923122@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:45.246 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785923122@ringo-events.com] is authenticated
+2023-08-23 13:18:45.266 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785923122@ringo-events.com
+2023-08-23 13:18:45.287 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785923119)
+2023-08-23 13:18:45.337 [http-nio-8080-exec-1] INFO  c.r.service.company.CategoryService - deleteCategory: 98
+2023-08-23 13:18:45.364 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - deleteCategory: 99
+2023-08-23 13:18:45.388 [http-nio-8080-exec-11] INFO  c.r.service.company.CategoryService - deleteCategory: 100
+2023-08-23 13:18:45.414 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - deleteEvent: 36
+2023-08-23 13:18:45.442 [http-nio-8080-exec-2] INFO  c.r.service.company.CurrencyService - deleteCurrency: 33
+2023-08-23 13:18:45.581 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:45.599 [http-nio-8080-exec-12] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785925587)
+2023-08-23 13:18:45.629 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785925617)
+2023-08-23 13:18:45.654 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785925642)
+2023-08-23 13:18:45.676 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785925666)
+2023-08-23 13:18:45.700 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692785925692@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:47.486 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785925692@ringo-events.com] is authenticated
+2023-08-23 13:18:47.501 [http-nio-8080-exec-13] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785925692@ringo-events.com
+2023-08-23 13:18:47.518 [http-nio-8080-exec-11] INFO  c.r.s.common.AbstractUserService - save: test1692785927510@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:49.342 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785927510@ringo-events.com] is authenticated
+2023-08-23 13:18:49.363 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785927510@ringo-events.com
+2023-08-23 13:18:49.382 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785925689)
+2023-08-23 13:18:49.435 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - setRegistrationForm: 37, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@db8174, com.ringo.model.form.MultipleChoiceQuestion@7573e66, com.ringo.model.form.CheckboxQuestion@e3079661])
+2023-08-23 13:18:49.459 [http-nio-8080-exec-12] WARN  c.r.exception.GlobalExceptionHandler - Event [id: 37] is not owned by the organisation
+2023-08-23 13:18:49.473 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - deleteEvent: 37
+2023-08-23 13:18:49.512 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 101
+2023-08-23 13:18:49.548 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - deleteCategory: 102
+2023-08-23 13:18:49.574 [http-nio-8080-exec-6] INFO  c.r.service.company.CategoryService - deleteCategory: 103
+2023-08-23 13:18:49.594 [http-nio-8080-exec-3] INFO  c.r.service.company.CurrencyService - deleteCurrency: 34
+2023-08-23 13:18:49.764 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:49.782 [http-nio-8080-exec-4] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785929770)
+2023-08-23 13:18:49.816 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785929805)
+2023-08-23 13:18:49.839 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785929829)
+2023-08-23 13:18:49.866 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785929853)
+2023-08-23 13:18:49.890 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - save: test1692785929884@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:18:51.796 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785929884@ringo-events.com] is authenticated
+2023-08-23 13:18:51.826 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785929884@ringo-events.com
+2023-08-23 13:18:51.846 [http-nio-8080-exec-6] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:18:51.866 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785929881)
+2023-08-23 13:18:51.950 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 38, test_picture_1.jpeg
+2023-08-23 13:18:51.950 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:18:52.002 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:53.059 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:53.303 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - setMainPhoto: 36
+2023-08-23 13:18:53.321 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - findPhoto: 119
+2023-08-23 13:18:53.482 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:53.814 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:18:54.026 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setActive: 38
+2023-08-23 13:18:54.070 [http-nio-8080-exec-3] ERROR c.r.exception.GlobalExceptionHandler - org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded
+2023-08-23 13:18:55.314 [http-nio-8080-exec-7] ERROR c.r.exception.GlobalExceptionHandler - org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded
+2023-08-23 13:18:56.565 [http-nio-8080-exec-4] ERROR c.r.exception.GlobalExceptionHandler - org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded
+2023-08-23 13:18:57.784 [http-nio-8080-exec-9] ERROR c.r.exception.GlobalExceptionHandler - org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded
+2023-08-23 13:18:58.989 [http-nio-8080-exec-11] INFO  c.r.s.c.event.EventSearchService - findEventById: 38
+2023-08-23 13:18:59.021 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - deleteEvent: 38
+2023-08-23 13:18:59.027 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 121
+2023-08-23 13:18:59.089 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 122
+2023-08-23 13:18:59.157 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 119
+2023-08-23 13:18:59.217 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 120
+2023-08-23 13:18:59.319 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - deleteCategory: 104
+2023-08-23 13:18:59.339 [http-nio-8080-exec-1] INFO  c.r.service.company.CategoryService - deleteCategory: 105
+2023-08-23 13:18:59.359 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 106
+2023-08-23 13:18:59.377 [http-nio-8080-exec-2] INFO  c.r.service.company.CurrencyService - deleteCurrency: 35
+2023-08-23 13:18:59.521 [http-nio-8080-exec-13] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:18:59.538 [http-nio-8080-exec-6] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785939527)
+2023-08-23 13:18:59.568 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785939556)
+2023-08-23 13:18:59.589 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785939579)
+2023-08-23 13:18:59.610 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785939601)
+2023-08-23 13:18:59.633 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - save: test1692785939625@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:01.426 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785939625@ringo-events.com] is authenticated
+2023-08-23 13:19:01.442 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785939625@ringo-events.com
+2023-08-23 13:19:01.458 [http-nio-8080-exec-1] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:01.480 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785939623)
+2023-08-23 13:19:01.550 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 39, test_picture_1.jpeg
+2023-08-23 13:19:01.550 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:01.601 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:02.139 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:02.292 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - setMainPhoto: 37
+2023-08-23 13:19:02.310 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - findPhoto: 123
+2023-08-23 13:19:02.440 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:02.611 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:02.808 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - setActive: 39
+2023-08-23 13:19:02.852 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 39, test_picture_2.jpeg
+2023-08-23 13:19:02.852 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:02.897 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:03.205 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:03.359 [http-nio-8080-exec-10] INFO  c.r.s.c.event.EventSearchService - findEventById: 39
+2023-08-23 13:19:03.385 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - findPhoto: 127
+2023-08-23 13:19:03.389 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - findPhoto: 127
+2023-08-23 13:19:03.478 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - findPhoto: 128
+2023-08-23 13:19:03.483 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - findPhoto: 128
+2023-08-23 13:19:03.673 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - deleteEvent: 39
+2023-08-23 13:19:03.679 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - deletePhoto: 125
+2023-08-23 13:19:03.739 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - deletePhoto: 126
+2023-08-23 13:19:03.802 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - deletePhoto: 123
+2023-08-23 13:19:03.863 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - deletePhoto: 124
+2023-08-23 13:19:03.923 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - deletePhoto: 127
+2023-08-23 13:19:04.047 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - deletePhoto: 128
+2023-08-23 13:19:04.209 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - deleteCategory: 107
+2023-08-23 13:19:04.227 [http-nio-8080-exec-6] INFO  c.r.service.company.CategoryService - deleteCategory: 108
+2023-08-23 13:19:04.244 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - deleteCategory: 109
+2023-08-23 13:19:04.262 [http-nio-8080-exec-7] INFO  c.r.service.company.CurrencyService - deleteCurrency: 36
+2023-08-23 13:19:04.302 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - findPhoto: 127
+2023-08-23 13:19:04.306 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:19:04.315 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - findPhoto: 128
+2023-08-23 13:19:04.320 [http-nio-8080-exec-9] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:19:04.327 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - findPhoto: 123
+2023-08-23 13:19:04.332 [http-nio-8080-exec-11] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:19:04.338 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - findPhoto: 125
+2023-08-23 13:19:04.342 [http-nio-8080-exec-8] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:19:04.348 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - findPhoto: 126
+2023-08-23 13:19:04.352 [http-nio-8080-exec-10] WARN  c.r.exception.GlobalExceptionHandler - Photo not found
+2023-08-23 13:19:04.458 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:19:04.474 [http-nio-8080-exec-5] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785944464)
+2023-08-23 13:19:04.503 [http-nio-8080-exec-12] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785944492)
+2023-08-23 13:19:04.524 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785944515)
+2023-08-23 13:19:04.548 [http-nio-8080-exec-6] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785944537)
+2023-08-23 13:19:04.569 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - save: test1692785944563@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:07.464 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785944563@ringo-events.com] is authenticated
+2023-08-23 13:19:07.483 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785944563@ringo-events.com
+2023-08-23 13:19:07.501 [http-nio-8080-exec-9] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:07.527 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785944559)
+2023-08-23 13:19:07.607 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 40, test_picture_1.jpeg
+2023-08-23 13:19:07.607 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:07.663 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:08.136 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:08.296 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - setMainPhoto: 39
+2023-08-23 13:19:08.311 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - findPhoto: 129
+2023-08-23 13:19:08.394 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:08.570 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:08.732 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - setActive: 40
+2023-08-23 13:19:08.765 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - setInactive: 40
+2023-08-23 13:19:08.793 [http-nio-8080-exec-12] INFO  c.r.s.c.event.EventSearchService - findEventById: 40
+2023-08-23 13:19:08.806 [http-nio-8080-exec-12] WARN  c.r.exception.GlobalExceptionHandler - Event [id: 40] not found
+2023-08-23 13:19:08.830 [http-nio-8080-exec-13] INFO  c.r.s.c.event.EventSearchService - findEventById: 40
+2023-08-23 13:19:08.883 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - deleteEvent: 40
+2023-08-23 13:19:08.889 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 131
+2023-08-23 13:19:08.952 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 132
+2023-08-23 13:19:09.022 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 129
+2023-08-23 13:19:09.078 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 130
+2023-08-23 13:19:09.173 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - deleteCategory: 110
+2023-08-23 13:19:09.188 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - deleteCategory: 111
+2023-08-23 13:19:09.204 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - deleteCategory: 112
+2023-08-23 13:19:09.223 [http-nio-8080-exec-2] INFO  c.r.service.company.CurrencyService - deleteCurrency: 37
+2023-08-23 13:19:09.361 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:19:09.380 [http-nio-8080-exec-8] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785949367)
+2023-08-23 13:19:09.407 [http-nio-8080-exec-6] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785949396)
+2023-08-23 13:19:09.431 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785949420)
+2023-08-23 13:19:09.456 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785949443)
+2023-08-23 13:19:09.481 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - save: test1692785949473@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:11.257 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785949473@ringo-events.com] is authenticated
+2023-08-23 13:19:11.273 [http-nio-8080-exec-11] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785949473@ringo-events.com
+2023-08-23 13:19:11.291 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785949470)
+2023-08-23 13:19:11.352 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 41, test_picture_1.jpeg
+2023-08-23 13:19:11.352 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:11.403 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:11.874 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:12.022 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - setMainPhoto: 40
+2023-08-23 13:19:12.037 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - findPhoto: 133
+2023-08-23 13:19:12.123 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:12.359 [http-nio-8080-exec-1] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:12.516 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - setActive: 41
+2023-08-23 13:19:12.559 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - setRegistrationForm: 41, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@264e01e8, com.ringo.model.form.MultipleChoiceQuestion@770cfd27, com.ringo.model.form.CheckboxQuestion@73456390])
+2023-08-23 13:19:12.597 [http-nio-8080-exec-8] INFO  c.r.s.c.event.EventSearchService - findEventById: 41
+2023-08-23 13:19:12.646 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - deleteEvent: 41
+2023-08-23 13:19:12.661 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 135
+2023-08-23 13:19:12.720 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 136
+2023-08-23 13:19:12.784 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 133
+2023-08-23 13:19:12.846 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - deletePhoto: 134
+2023-08-23 13:19:12.947 [http-nio-8080-exec-3] INFO  c.r.service.company.CategoryService - deleteCategory: 113
+2023-08-23 13:19:12.962 [http-nio-8080-exec-13] INFO  c.r.service.company.CategoryService - deleteCategory: 114
+2023-08-23 13:19:12.995 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - deleteCategory: 115
+2023-08-23 13:19:13.013 [http-nio-8080-exec-7] INFO  c.r.service.company.CurrencyService - deleteCurrency: 38
+2023-08-23 13:19:13.148 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:19:13.167 [http-nio-8080-exec-9] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785953154)
+2023-08-23 13:19:13.193 [http-nio-8080-exec-10] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785953183)
+2023-08-23 13:19:13.214 [http-nio-8080-exec-1] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785953205)
+2023-08-23 13:19:13.236 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785953226)
+2023-08-23 13:19:13.255 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - save: test1692785953250@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:15.172 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785953250@ringo-events.com] is authenticated
+2023-08-23 13:19:15.187 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785953250@ringo-events.com
+2023-08-23 13:19:15.203 [http-nio-8080-exec-13] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:15.224 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785953247)
+2023-08-23 13:19:15.295 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 42, test_picture_1.jpeg
+2023-08-23 13:19:15.295 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:15.345 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:15.803 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:16.021 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setMainPhoto: 41
+2023-08-23 13:19:16.042 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - findPhoto: 137
+2023-08-23 13:19:16.133 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:16.297 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:16.487 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - setActive: 42
+2023-08-23 13:19:16.520 [http-nio-8080-exec-9] INFO  c.r.s.c.event.EventSearchService - findEventById: 42
+2023-08-23 13:19:16.550 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - deleteEvent: 42
+2023-08-23 13:19:16.557 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 139
+2023-08-23 13:19:16.620 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 140
+2023-08-23 13:19:16.687 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 137
+2023-08-23 13:19:16.749 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 138
+2023-08-23 13:19:16.848 [http-nio-8080-exec-1] INFO  c.r.service.company.CategoryService - deleteCategory: 116
+2023-08-23 13:19:16.866 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 117
+2023-08-23 13:19:16.880 [http-nio-8080-exec-12] INFO  c.r.service.company.CategoryService - deleteCategory: 118
+2023-08-23 13:19:16.895 [http-nio-8080-exec-8] INFO  c.r.service.company.CurrencyService - deleteCurrency: 39
+2023-08-23 13:19:17.041 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:19:17.059 [http-nio-8080-exec-13] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785957047)
+2023-08-23 13:19:17.085 [http-nio-8080-exec-4] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785957075)
+2023-08-23 13:19:17.106 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785957096)
+2023-08-23 13:19:17.128 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785957120)
+2023-08-23 13:19:17.158 [http-nio-8080-exec-11] INFO  c.r.s.common.AbstractUserService - save: test1692785957150@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:18.931 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785957150@ringo-events.com] is authenticated
+2023-08-23 13:19:18.948 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785957150@ringo-events.com
+2023-08-23 13:19:18.972 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785958956)
+2023-08-23 13:19:19.009 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785958958)
+2023-08-23 13:19:19.069 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785958959)
+2023-08-23 13:19:19.152 [http-nio-8080-exec-13] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 43, test_picture_1.jpeg
+2023-08-23 13:19:19.152 [http-nio-8080-exec-13] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:19.235 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:19.699 [http-nio-8080-exec-13] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:19.896 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - setMainPhoto: 42
+2023-08-23 13:19:19.920 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - findPhoto: 141
+2023-08-23 13:19:20.009 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:20.185 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:20.338 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - setActive: 43
+2023-08-23 13:19:20.397 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 44, test_picture_1.jpeg
+2023-08-23 13:19:20.397 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:20.459 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:20.913 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:21.079 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setMainPhoto: 43
+2023-08-23 13:19:21.103 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - findPhoto: 145
+2023-08-23 13:19:21.192 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:21.355 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:21.535 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - setActive: 44
+2023-08-23 13:19:21.581 [http-nio-8080-exec-14] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=null, categoryIds=null, hostId=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
+2023-08-23 13:19:21.794 [http-nio-8080-exec-6] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=null, categoryIds=null, hostId=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
+2023-08-23 13:19:21.894 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - deleteEvent: 43
+2023-08-23 13:19:21.912 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - deletePhoto: 143
+2023-08-23 13:19:21.978 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - deletePhoto: 144
+2023-08-23 13:19:22.045 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - deletePhoto: 141
+2023-08-23 13:19:22.103 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - deletePhoto: 142
+2023-08-23 13:19:22.200 [http-nio-8080-exec-10] INFO  c.r.s.company.event.EventService - deleteEvent: 44
+2023-08-23 13:19:22.210 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 147
+2023-08-23 13:19:22.272 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 148
+2023-08-23 13:19:22.338 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 145
+2023-08-23 13:19:22.400 [http-nio-8080-exec-10] INFO  c.ringo.service.common.PhotoService - deletePhoto: 146
+2023-08-23 13:19:22.504 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - deleteEvent: 45
+2023-08-23 13:19:22.539 [http-nio-8080-exec-12] INFO  c.r.service.company.CategoryService - deleteCategory: 119
+2023-08-23 13:19:22.556 [http-nio-8080-exec-5] INFO  c.r.service.company.CategoryService - deleteCategory: 120
+2023-08-23 13:19:22.573 [http-nio-8080-exec-8] INFO  c.r.service.company.CategoryService - deleteCategory: 121
+2023-08-23 13:19:22.589 [http-nio-8080-exec-13] INFO  c.r.service.company.CurrencyService - deleteCurrency: 40
+2023-08-23 13:19:22.706 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: admin] is authenticated
+2023-08-23 13:19:22.728 [http-nio-8080-exec-4] INFO  c.r.service.company.CurrencyService - saveCurrency: AbstractEntityDto(id=1692785962714)
+2023-08-23 13:19:22.763 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785962749)
+2023-08-23 13:19:22.791 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785962779)
+2023-08-23 13:19:22.818 [http-nio-8080-exec-9] INFO  c.r.service.company.CategoryService - saveCategory: AbstractEntityDto(id=1692785962807)
+2023-08-23 13:19:22.839 [http-nio-8080-exec-14] INFO  c.r.s.common.AbstractUserService - save: test1692785962832@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:24.873 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785962832@ringo-events.com] is authenticated
+2023-08-23 13:19:24.889 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785962832@ringo-events.com
+2023-08-23 13:19:24.911 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785964897)
+2023-08-23 13:19:24.945 [http-nio-8080-exec-12] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785964898)
+2023-08-23 13:19:25.002 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1692785964899)
+2023-08-23 13:19:25.090 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 46, test_picture_1.jpeg
+2023-08-23 13:19:25.090 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:25.155 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:25.620 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:25.865 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - setMainPhoto: 44
+2023-08-23 13:19:25.887 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - findPhoto: 149
+2023-08-23 13:19:25.971 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:26.138 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:26.315 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - setActive: 46
+2023-08-23 13:19:26.370 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 47, test_picture_1.jpeg
+2023-08-23 13:19:26.371 [http-nio-8080-exec-7] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:26.426 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:26.883 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:27.044 [http-nio-8080-exec-2] INFO  c.r.s.company.event.EventService - setMainPhoto: 45
+2023-08-23 13:19:27.075 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - findPhoto: 153
+2023-08-23 13:19:27.159 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:27.338 [http-nio-8080-exec-2] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:27.500 [http-nio-8080-exec-14] INFO  c.r.s.company.event.EventService - setActive: 47
+2023-08-23 13:19:27.555 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 48, test_picture_1.jpeg
+2023-08-23 13:19:27.555 [http-nio-8080-exec-6] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
+2023-08-23 13:19:27.618 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:28.087 [http-nio-8080-exec-6] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:28.267 [http-nio-8080-exec-9] INFO  c.r.s.company.event.EventService - setMainPhoto: 46
+2023-08-23 13:19:28.291 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - findPhoto: 157
+2023-08-23 13:19:28.373 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:28.563 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:28.761 [http-nio-8080-exec-11] INFO  c.r.s.company.event.EventService - setActive: 48
+2023-08-23 13:19:28.796 [http-nio-8080-exec-10] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=null, categoryIds=[122], hostId=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
+2023-08-23 13:19:28.862 [http-nio-8080-exec-1] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=null, categoryIds=[123], hostId=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
+2023-08-23 13:19:28.904 [http-nio-8080-exec-12] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=null, categoryIds=[123, 124], hostId=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
+2023-08-23 13:19:28.945 [http-nio-8080-exec-5] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=Test, categoryIds=null, hostId=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
+2023-08-23 13:19:29.020 [http-nio-8080-exec-13] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=Test description, categoryIds=null, hostId=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
+2023-08-23 13:19:29.083 [http-nio-8080-exec-8] INFO  c.r.s.company.event.EventService - deleteEvent: 46
+2023-08-23 13:19:29.098 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 151
+2023-08-23 13:19:29.158 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 152
+2023-08-23 13:19:29.224 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 149
+2023-08-23 13:19:29.285 [http-nio-8080-exec-8] INFO  c.ringo.service.common.PhotoService - deletePhoto: 150
+2023-08-23 13:19:29.394 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - deleteEvent: 47
+2023-08-23 13:19:29.405 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - deletePhoto: 155
+2023-08-23 13:19:29.470 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - deletePhoto: 156
+2023-08-23 13:19:29.535 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - deletePhoto: 153
+2023-08-23 13:19:29.597 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - deletePhoto: 154
+2023-08-23 13:19:29.711 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - deleteEvent: 48
+2023-08-23 13:19:29.718 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - deletePhoto: 159
+2023-08-23 13:19:29.779 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - deletePhoto: 160
+2023-08-23 13:19:29.841 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - deletePhoto: 157
+2023-08-23 13:19:29.899 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - deletePhoto: 158
+2023-08-23 13:19:30.009 [http-nio-8080-exec-7] INFO  c.r.service.company.CategoryService - deleteCategory: 122
+2023-08-23 13:19:30.026 [http-nio-8080-exec-2] INFO  c.r.service.company.CategoryService - deleteCategory: 123
+2023-08-23 13:19:30.043 [http-nio-8080-exec-14] INFO  c.r.service.company.CategoryService - deleteCategory: 124
+2023-08-23 13:19:30.063 [http-nio-8080-exec-6] INFO  c.r.service.company.CurrencyService - deleteCurrency: 41
+2023-08-23 13:19:30.103 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - save: test1692785970095@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:31.807 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785970095@ringo-events.com] is authenticated
+2023-08-23 13:19:31.826 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785970095@ringo-events.com
+2023-08-23 13:19:31.864 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - email: test1692785970095@ringo-events.com, setPhoto: test_picture_1.jpeg
+2023-08-23 13:19:31.865 [http-nio-8080-exec-12] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:32.110 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: test1692785972100@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:34.022 [http-nio-8080-exec-13] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785972100@ringo-events.com] is authenticated
+2023-08-23 13:19:34.042 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785972100@ringo-events.com
+2023-08-23 13:19:34.080 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - email: test1692785972100@ringo-events.com, setPhoto: test_picture_1.jpeg
+2023-08-23 13:19:34.081 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:34.241 [http-nio-8080-exec-7] INFO  c.ringo.service.common.PhotoService - deletePhoto: 162
+2023-08-23 13:19:34.367 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: test1692785974355@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:36.114 [http-nio-8080-exec-9] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785974355@ringo-events.com] is authenticated
+2023-08-23 13:19:36.132 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785974355@ringo-events.com
+2023-08-23 13:19:36.193 [http-nio-8080-exec-12] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:36.257 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: test1692785976249@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:38.073 [http-nio-8080-exec-13] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785976249@ringo-events.com] is authenticated
+2023-08-23 13:19:38.089 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785976249@ringo-events.com
+2023-08-23 13:19:38.104 [http-nio-8080-exec-4] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:38.154 [http-nio-8080-exec-14] INFO  c.r.s.common.AbstractUserService - save: test1692785978146@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:39.919 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785978146@ringo-events.com] is authenticated
+2023-08-23 13:19:39.933 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785978146@ringo-events.com
+2023-08-23 13:19:40.008 [http-nio-8080-exec-11] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:40.064 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: test1692785980057@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:41.871 [http-nio-8080-exec-5] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785980057@ringo-events.com] is authenticated
+2023-08-23 13:19:41.886 [http-nio-8080-exec-13] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785980057@ringo-events.com
+2023-08-23 13:19:41.903 [http-nio-8080-exec-3] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:41.976 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - save: test1692785981968@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:19:43.912 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785981968@ringo-events.com] is authenticated
+2023-08-23 13:19:43.926 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785981968@ringo-events.com
+2023-08-23 13:19:43.958 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - email: test1692785981968@ringo-events.com, setPhoto: test_picture_1.jpeg
+2023-08-23 13:19:43.958 [http-nio-8080-exec-9] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:44.948 [http-nio-8080-exec-11] INFO  c.r.s.common.AbstractUserService - save: test1692785984940@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:19:46.758 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785984940@ringo-events.com] is authenticated
+2023-08-23 13:19:46.771 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785984940@ringo-events.com
+2023-08-23 13:19:46.810 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - email: test1692785984940@ringo-events.com, setPhoto: test_picture_1.jpeg
+2023-08-23 13:19:46.811 [http-nio-8080-exec-5] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
+2023-08-23 13:19:47.307 [http-nio-8080-exec-11] INFO  c.ringo.service.common.PhotoService - deletePhoto: 164
+2023-08-23 13:19:47.415 [http-nio-8080-exec-13] INFO  c.r.s.common.AbstractUserService - save: test1692785987406@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:19:49.240 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785987406@ringo-events.com] is authenticated
+2023-08-23 13:19:49.254 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785987406@ringo-events.com
+2023-08-23 13:19:49.269 [http-nio-8080-exec-14] INFO  c.r.s.company.ParticipantService - findCurrentParticipant
+2023-08-23 13:19:49.319 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692785989310@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:19:51.032 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785989310@ringo-events.com] is authenticated
+2023-08-23 13:19:51.044 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785989310@ringo-events.com
+2023-08-23 13:19:51.086 [http-nio-8080-exec-5] INFO  c.r.s.company.ParticipantService - findCurrentParticipant
+2023-08-23 13:19:51.134 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: test1692785991126@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:52.928 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785991126@ringo-events.com] is authenticated
+2023-08-23 13:19:52.943 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785991126@ringo-events.com
+2023-08-23 13:19:52.958 [http-nio-8080-exec-7] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:52.974 [http-nio-8080-exec-14] INFO  c.r.s.common.AbstractUserService - save: test1692785992969@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:54.774 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785992969@ringo-events.com] is authenticated
+2023-08-23 13:19:54.789 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785992969@ringo-events.com
+2023-08-23 13:19:54.809 [http-nio-8080-exec-10] INFO  c.r.service.company.ReviewService - rateOrganisation: 96
+2023-08-23 13:19:54.817 [http-nio-8080-exec-10] WARN  c.r.exception.GlobalExceptionHandler - User is not found
+2023-08-23 13:19:54.878 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1692785994870@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:19:56.612 [http-nio-8080-exec-8] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785994870@ringo-events.com] is authenticated
+2023-08-23 13:19:56.627 [http-nio-8080-exec-13] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785994870@ringo-events.com
+2023-08-23 13:19:56.641 [http-nio-8080-exec-3] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:19:56.655 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - save: test1692785996651@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:19:58.387 [http-nio-8080-exec-14] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785996651@ringo-events.com] is authenticated
+2023-08-23 13:19:58.399 [http-nio-8080-exec-9] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785996651@ringo-events.com
+2023-08-23 13:19:58.414 [http-nio-8080-exec-6] INFO  c.r.service.company.ReviewService - rateOrganisation: 98
+2023-08-23 13:19:58.459 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: test1692785998452@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:00.504 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692785998452@ringo-events.com] is authenticated
+2023-08-23 13:20:00.516 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692785998452@ringo-events.com
+2023-08-23 13:20:00.530 [http-nio-8080-exec-5] INFO  c.r.service.company.ReviewService - rateOrganisation: 98
+2023-08-23 13:20:00.662 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - save: test1692786000654@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:20:02.451 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786000654@ringo-events.com] is authenticated
+2023-08-23 13:20:02.465 [http-nio-8080-exec-14] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786000654@ringo-events.com
+2023-08-23 13:20:02.479 [http-nio-8080-exec-9] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:20:02.495 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692786002489@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:04.497 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786002489@ringo-events.com] is authenticated
+2023-08-23 13:20:04.508 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786002489@ringo-events.com
+2023-08-23 13:20:04.523 [http-nio-8080-exec-12] INFO  c.r.service.company.ReviewService - rateOrganisation: 101
+2023-08-23 13:20:04.561 [http-nio-8080-exec-5] INFO  c.r.service.company.ReviewService - deleteReview: 101
+2023-08-23 13:20:04.608 [http-nio-8080-exec-11] INFO  c.r.s.company.OrganisationService - findOrganisationById: 101
+2023-08-23 13:20:04.694 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - save: test1692786004685@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:06.784 [http-nio-8080-exec-7] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786004685@ringo-events.com] is authenticated
+2023-08-23 13:20:06.795 [http-nio-8080-exec-14] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786004685@ringo-events.com
+2023-08-23 13:20:06.809 [http-nio-8080-exec-9] INFO  c.r.service.company.ReviewService - rateOrganisation: 1692786006801
+2023-08-23 13:20:06.812 [http-nio-8080-exec-9] WARN  c.r.exception.GlobalExceptionHandler - Organisation#1692786006801 was not found
+2023-08-23 13:20:06.857 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: test1692786006848@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:20:08.695 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786006848@ringo-events.com] is authenticated
+2023-08-23 13:20:08.709 [http-nio-8080-exec-12] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786006848@ringo-events.com
+2023-08-23 13:20:08.724 [http-nio-8080-exec-5] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:20:08.740 [http-nio-8080-exec-11] INFO  c.r.s.common.AbstractUserService - save: test1692786008735@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:10.744 [http-nio-8080-exec-13] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786008735@ringo-events.com] is authenticated
+2023-08-23 13:20:10.757 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786008735@ringo-events.com
+2023-08-23 13:20:10.771 [http-nio-8080-exec-4] INFO  c.r.service.company.ReviewService - rateOrganisation: 104
+2023-08-23 13:20:10.819 [http-nio-8080-exec-7] INFO  c.r.service.company.ReviewService - updateReview(organisaitonId): 104
+2023-08-23 13:20:10.943 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692786010936@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:20:12.796 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786010936@ringo-events.com] is authenticated
+2023-08-23 13:20:12.811 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786010936@ringo-events.com
+2023-08-23 13:20:12.827 [http-nio-8080-exec-12] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:20:12.844 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - save: test1692786012838@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:14.637 [http-nio-8080-exec-13] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786012838@ringo-events.com] is authenticated
+2023-08-23 13:20:14.648 [http-nio-8080-exec-17] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786012838@ringo-events.com
+2023-08-23 13:20:14.662 [http-nio-8080-exec-12] INFO  c.r.service.company.ReviewService - updateReview(organisaitonId): 106
+2023-08-23 13:20:14.672 [http-nio-8080-exec-12] WARN  c.r.exception.GlobalExceptionHandler - There is no review for this organisation made by current user
+2023-08-23 13:20:14.735 [http-nio-8080-exec-8] INFO  c.r.s.common.AbstractUserService - save: test1692786014727@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:20:16.621 [http-nio-8080-exec-15] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786014727@ringo-events.com] is authenticated
+2023-08-23 13:20:16.640 [http-nio-8080-exec-3] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786014727@ringo-events.com
+2023-08-23 13:20:16.657 [http-nio-8080-exec-7] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:20:16.675 [http-nio-8080-exec-16] INFO  c.r.s.common.AbstractUserService - save: test1692786016670@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:18.425 [http-nio-8080-exec-14] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786016670@ringo-events.com] is authenticated
+2023-08-23 13:20:18.436 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786016670@ringo-events.com
+2023-08-23 13:20:18.450 [http-nio-8080-exec-2] INFO  c.r.service.company.ReviewService - rateOrganisation: 108
+2023-08-23 13:20:18.488 [http-nio-8080-exec-1] INFO  c.r.service.company.ReviewService - rateOrganisation: 108
+2023-08-23 13:20:18.498 [http-nio-8080-exec-1] WARN  c.r.exception.GlobalExceptionHandler - Current user has already rated this organisation
+2023-08-23 13:20:18.577 [http-nio-8080-exec-17] INFO  c.r.s.common.AbstractUserService - save: test1692786018571@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:20:20.373 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786018571@ringo-events.com] is authenticated
+2023-08-23 13:20:20.388 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786018571@ringo-events.com
+2023-08-23 13:20:20.403 [http-nio-8080-exec-8] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:20:20.419 [http-nio-8080-exec-4] INFO  c.r.s.common.AbstractUserService - save: test1692786020413@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:22.292 [http-nio-8080-exec-3] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786020413@ringo-events.com] is authenticated
+2023-08-23 13:20:22.304 [http-nio-8080-exec-7] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786020413@ringo-events.com
+2023-08-23 13:20:22.319 [http-nio-8080-exec-16] INFO  c.r.service.company.ReviewService - deleteReview: 110
+2023-08-23 13:20:22.329 [http-nio-8080-exec-16] WARN  c.r.exception.GlobalExceptionHandler - There is no review for this organisation made by current user
+2023-08-23 13:20:22.386 [http-nio-8080-exec-6] INFO  c.r.s.common.AbstractUserService - save: test1692786022380@ringo-events.com, role: ROLE_ORGANISATION
+2023-08-23 13:20:24.142 [http-nio-8080-exec-1] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786022380@ringo-events.com] is authenticated
+2023-08-23 13:20:24.157 [http-nio-8080-exec-10] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786022380@ringo-events.com
+2023-08-23 13:20:24.171 [http-nio-8080-exec-13] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-08-23 13:20:24.187 [http-nio-8080-exec-17] INFO  c.r.s.common.AbstractUserService - save: test1692786024181@ringo-events.com, role: ROLE_PARTICIPANT
+2023-08-23 13:20:25.997 [http-nio-8080-exec-11] INFO  c.ringo.auth.AuthenticationService - User [email: test1692786024181@ringo-events.com] is authenticated
+2023-08-23 13:20:26.011 [http-nio-8080-exec-5] INFO  c.r.s.common.AbstractUserService - activateParticipant: test1692786024181@ringo-events.com
+2023-08-23 13:20:26.025 [http-nio-8080-exec-8] INFO  c.r.service.company.ReviewService - rateOrganisation: 112
+2023-08-23 13:20:26.067 [http-nio-8080-exec-4] INFO  c.r.s.company.OrganisationService - findOrganisationById: 112
+2023-08-23 13:20:53.827 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-23 13:20:53.833 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-08-23 13:20:53.836 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
