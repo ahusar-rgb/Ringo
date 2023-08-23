@@ -89,6 +89,9 @@ public class Event extends AbstractActiveEntity {
     @Builder.Default
     private Integer peopleSaved = 0;
 
+    @ManyToMany(mappedBy = "savedEvents")
+    private Set<Participant> savedBy;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "registration_form", columnDefinition = "JSONB")
     private RegistrationForm registrationForm;

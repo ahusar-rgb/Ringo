@@ -77,8 +77,8 @@ public class EventSearchServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
-        when(participantService.getFullUser()).thenThrow(new NotFoundException("User is not found"));
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
+        when(participantService.getFullActiveUser()).thenThrow(new NotFoundException("User is not found"));
 
         //then
         EventResponseDto responseDto = eventSearchService.findById(event.getId());
@@ -97,9 +97,9 @@ public class EventSearchServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenThrow(new NotFoundException("User is not found"));
+        when(organisationService.getFullActiveUser()).thenThrow(new NotFoundException("User is not found"));
         when(ticketService.ticketExists(event, participant)).thenReturn(true);
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
 
         //then
         EventResponseDto responseDto = eventSearchService.findById(event.getId());
@@ -121,9 +121,9 @@ public class EventSearchServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenThrow(new NotFoundException("User is not found"));
+        when(organisationService.getFullActiveUser()).thenThrow(new NotFoundException("User is not found"));
         when(ticketService.ticketExists(event, participant)).thenReturn(false);
-        when(participantService.getFullUser()).thenReturn(participant);
+        when(participantService.getFullActiveUser()).thenReturn(participant);
 
         //then
         EventResponseDto responseDto = eventSearchService.findById(event.getId());

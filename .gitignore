@@ -1,4 +1,5 @@
 HELP.md
+ringo.log
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -35,4 +36,3 @@ out/
 
 ### VS Code ###
 .vscode/
-ringo.log

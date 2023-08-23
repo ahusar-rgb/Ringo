@@ -22,7 +22,7 @@ public class EventPersonalizedMapper {
         EventResponseDto dto = eventMapper.toDtoDetails(event);
 
         try {
-            Participant participant = participantService.getFullUser();
+            Participant participant = participantService.getFullActiveUser();
 
             dto.setIsRegistered(ticketService.ticketExists(event, participant));
             dto.setIsSaved(participant.getSavedEvents().contains(event));

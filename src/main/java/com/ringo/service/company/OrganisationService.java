@@ -77,8 +77,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     public OrganisationResponseDto findCurrentOrganisation() {
         log.info("findCurrentOrganisation");
-        Organisation organisation = organisationRepository.findFullById(getUserDetails().getId()).orElseThrow(
-                () -> new UserException("Authorized user is not an organisation"));
+        Organisation organisation = getFullUser();
 
         OrganisationResponseDto dto = mapper.toDto(organisation);
         dto.setEmail(organisation.getEmail());

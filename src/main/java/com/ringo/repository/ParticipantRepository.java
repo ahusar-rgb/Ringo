@@ -19,4 +19,8 @@ public interface ParticipantRepository extends AbstractUserRepository<Participan
     @Override
     @Query("SELECT p FROM Participant p LEFT JOIN FETCH p.savedEvents WHERE p.id = :id")
     Optional<Participant> findFullById(Long id);
+
+    @Override
+    @Query("SELECT p FROM Participant p LEFT JOIN FETCH p.savedEvents WHERE p.id = :id AND p.isActive = true")
+    Optional<Participant> findFullActiveById(Long id);
 }

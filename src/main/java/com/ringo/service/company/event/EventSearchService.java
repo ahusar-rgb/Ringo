@@ -57,7 +57,7 @@ public class EventSearchService {
 
         Organisation organisation;
         try {
-            organisation = organisationService.getFullUser();
+            organisation = organisationService.getFullActiveUser();
         } catch (NotFoundException | UserException e) {
             organisation = null;
         }
@@ -124,7 +124,7 @@ public class EventSearchService {
 
         Organisation organisation;
         try {
-            organisation = organisationService.getFullUser();
+            organisation = organisationService.getFullActiveUser();
         } catch (NotFoundException | UserException e) {
             organisation = null;
         }

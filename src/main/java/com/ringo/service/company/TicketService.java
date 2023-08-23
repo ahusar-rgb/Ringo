@@ -76,7 +76,7 @@ public class TicketService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id %d not found".formatted(eventId)));
 
-        Participant participant = participantService.getFullUser();
+        Participant participant = participantService.getFullActiveUser();
 
         throwIfTicketExists(event, participant);
 
@@ -153,12 +153,12 @@ public class TicketService {
     }
 
     private boolean isUserHostOfEvent(Event event) {
-        Organisation organisation = organisationService.getFullUser();
+        Organisation organisation = organisationService.getFullActiveUser();
         return event.getHost().getId().equals(organisation.getId());
     }
 
     public List<TicketDto> getMyTickets() {
-        Participant participant = participantService.getFullUser();
+        Participant participant = participantService.getFullActiveUser();
 
         List<Ticket> tickets = repository.findAllByParticipantId(participant.getId());
 

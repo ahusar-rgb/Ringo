@@ -108,7 +108,7 @@ public class EventServiceTest {
         eventRequestDto.setCurrencyId(currency.getId());
 
         //when
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(currencyRepository.findById(eventRequestDto.getCurrencyId())).thenReturn(Optional.of(currency));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(0))).thenReturn(Optional.of(categories.get(0)));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(1))).thenReturn(Optional.of(categories.get(1)));
@@ -153,7 +153,7 @@ public class EventServiceTest {
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
 
         //when
-        when(organisationService.getFullUser()).thenReturn(OrganisationMock.getOrganisationMock());
+        when(organisationService.getFullActiveUser()).thenReturn(OrganisationMock.getOrganisationMock());
         when(currencyRepository.findById(eventRequestDto.getCurrencyId())).thenReturn(Optional.empty());
 
         //then
@@ -169,7 +169,7 @@ public class EventServiceTest {
         eventRequestDto.setCategoryIds(List.of(1L));
 
         //when
-        when(organisationService.getFullUser()).thenReturn(OrganisationMock.getOrganisationMock());
+        when(organisationService.getFullActiveUser()).thenReturn(OrganisationMock.getOrganisationMock());
         when(currencyRepository.findById(eventRequestDto.getCurrencyId())).thenReturn(Optional.of(CurrencyMock.getCurrencyMock()));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(0))).thenReturn(Optional.empty());
 
@@ -211,7 +211,7 @@ public class EventServiceTest {
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(0))).thenReturn(Optional.of(category1));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(1))).thenReturn(Optional.of(category2));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(2))).thenReturn(Optional.of(category3));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventRepository.save(eventCaptor.capture())).thenReturn(event);
 
         //then
@@ -252,7 +252,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventRepository.save(eventCaptor.capture())).thenReturn(event);
 
         //then
@@ -276,7 +276,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         assertThatThrownBy(() -> eventService.update(event.getId(), EventDtoMock.getEventDtoMock()))
@@ -307,7 +307,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         eventService.delete(event.getId());
@@ -343,7 +343,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         assertThatThrownBy(() -> eventService.delete(event.getId()))
@@ -365,7 +365,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(config.getMaxPhotoCount()).thenReturn(10);
 
         //then
@@ -409,7 +409,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(0).getId())).thenReturn(Optional.of(event.getPhotos().get(1)));
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(1).getId())).thenReturn(Optional.of(event.getPhotos().get(2)));
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(2).getId())).thenReturn(Optional.of(event.getPhotos().get(0)));
@@ -457,7 +457,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(0).getId())).thenReturn(Optional.of(EventPhotoMock.getEventPhotoMock()));
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(1).getId())).thenReturn(Optional.of(EventPhotoMock.getEventPhotoMock()));
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(2).getId())).thenReturn(Optional.of(EventPhotoMock.getEventPhotoMock()));
@@ -500,7 +500,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(0).getId())).thenReturn(Optional.of(event.getPhotos().get(1)));
         when(eventPhotoRepository.findById(setPhotoOrderDto.get(1).getId())).thenReturn(Optional.of(event.getPhotos().get(2)));
 
@@ -527,7 +527,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(config.getMaxPhotoCount()).thenReturn(10);
 
         //then
@@ -548,7 +548,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventPhotoService.prepareMainPhoto(event, 1L)).thenReturn(new EventMainPhoto());
         //then
         EventResponseDto dto = eventService.setMainPhoto(event.getId(), 1L);
@@ -566,7 +566,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         EventResponseDto dto = eventService.removeMainPhoto(event.getId());
@@ -591,7 +591,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventPhotoRepository.findById(event.getPhotos().get(0).getId())).thenReturn(Optional.of(event.getPhotos().get(0)));
 
         //then
@@ -621,7 +621,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventPhotoRepository.findById(photoId)).thenReturn(Optional.of(photo));
 
         //then
@@ -645,7 +645,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventPhotoRepository.findById(event.getPhotos().get(0).getId())).thenReturn(Optional.of(event.getPhotos().get(0)));
 
         //then
@@ -670,7 +670,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         eventService.activate(event.getId());
@@ -693,7 +693,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         assertThatThrownBy(() -> eventService.activate(event.getId()))
@@ -715,7 +715,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         eventService.deactivate(event.getId());
@@ -736,7 +736,7 @@ public class EventServiceTest {
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
 
         //then
         assertThatThrownBy(() -> eventService.deactivate(event.getId()))
@@ -756,7 +756,7 @@ public class EventServiceTest {
         organisation.setId(event.getHost().getId());
 
         //when
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
 
         //then
@@ -780,7 +780,7 @@ public class EventServiceTest {
         organisation.setId(event.getHost().getId() + 1);
 
         //when
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
 
         //then
@@ -802,7 +802,7 @@ public class EventServiceTest {
         organisation.setId(event.getHost().getId());
 
         //when
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
         doThrow(new UserException("Invalid form")).when(registrationValidator).throwIfFormInvalid(form);
 
@@ -822,7 +822,7 @@ public class EventServiceTest {
         organisation.setId(event.getHost().getId());
 
         //when
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
 
         //then
@@ -845,7 +845,7 @@ public class EventServiceTest {
         organisation.setId(event.getHost().getId() + 1);
 
         //when
-        when(organisationService.getFullUser()).thenReturn(organisation);
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
 
         //then
