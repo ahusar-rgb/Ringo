@@ -1,9 +1,10 @@
 package com.ringo.controller;
 
 import com.ringo.dto.company.CurrencyDto;
-import com.ringo.service.CurrencyService;
+import com.ringo.service.company.CurrencyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/currencies")
@@ -46,5 +49,52 @@ public class CurrencyController {
         return ResponseEntity
                 .ok()
                 .body(currencyService.saveCurrency(dto));
+    }
+
+    @Operation(summary = "Update an existing currency")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Currency updated",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CurrencyDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+            }
+    )
+    @PutMapping(value = "{id}", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<CurrencyDto> updateCurrency(@Parameter(description = "Currency id") @PathVariable("id") Long id,
+                                                      @Parameter(description = "Currency to update") @RequestBody CurrencyDto dto) {
+        return ResponseEntity
+                .ok()
+                .body(currencyService.updateCurrency(id, dto));
+    }
+
+
+    @Operation(summary = "Delete an existing currency")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Currency deleted"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+            }
+    )
+    @DeleteMapping(value = "{id}", produces = {"application/json"})
+    public ResponseEntity<Void> deleteCurrency(@Parameter(description = "Currency id") @PathVariable("id") Long id) {
+        currencyService.deleteCurrency(id);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @Operation(summary = "Get all currencies")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Success",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = CurrencyDto.class))))
+            }
+    )
+    @GetMapping(produces = {"application/json"})
+    public ResponseEntity<List<CurrencyDto>> listAll() {
+        return ResponseEntity
+                .ok()
+                .body(currencyService.findAll());
     }
 }

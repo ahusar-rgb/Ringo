@@ -1,101 +1,102 @@
 package com.ringo.mapper.company;
 
+import com.ringo.config.Constants;
 import com.ringo.dto.common.Coordinates;
-import com.ringo.dto.company.EventGroup;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
-import com.ringo.exception.NotFoundException;
+import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.mapper.common.EntityMapper;
 import com.ringo.model.company.Event;
-import com.ringo.repository.OrganisationRepository;
-import com.ringo.service.CategoryService;
-import com.ringo.service.CurrencyService;
-import com.ringo.service.EventPhotoService;
-import com.ringo.service.EventPhotoStorage;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import com.ringo.model.photo.EventPhoto;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@RequiredArgsConstructor
-public class EventMapper {
-    private final OrganisationRepository organisationRepository;
-    private final OrganisationMapper organisationMapper;
-    private final CategoryMapper categoryMapper;
-    private final CurrencyMapper currencyMapper;
-    private final CategoryService categoryService;
-    private final CurrencyService currencyService;
-    private final EventPhotoStorage eventPhotoStorage;
-    private final EventPhotoService eventPhotoService;
+@Mapper(componentModel = "spring",
+        uses = {EventMainPhotoMapper.class, EventPhotoMapper.class, CategoryMapper.class, CurrencyMapper.class, OrganisationMapper.class},
+        imports = {Coordinates.class})
+public abstract class EventMapper implements EntityMapper<EventRequestDto, EventResponseDto, Event> {
 
-    public EventResponseDto toDto(Event event) {
-        return EventResponseDto.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .description(event.getDescription())
-                .mainPhoto(event.getMainPhoto() == null ? null : eventPhotoStorage.findPhoto(eventPhotoService.findPhotoByPath(event.getMainPhoto())))
-                .photos(
-                        eventPhotoService.findPhotosByEventId(event.getId())
-                                .stream()
-                                .map(eventPhotoStorage::findPhoto)
-                                .toList()
-                )
-                .address(event.getAddress())
-                .coordinates(new Coordinates(event.getLatitude(), event.getLongitude()))
-                .isTicketNeeded(event.getIsTicketNeeded())
-                .price(event.getPrice())
-                .currency(currencyMapper.toDto(event.getCurrency()))
-                .startTime(event.getStartTime().toString())
-                .endTime(event.getEndTime().toString())
-                .categories(categoryMapper.toDtos(event.getCategories()))
-                .organisation(organisationMapper.toDto(event.getHost()))
-                .build();
+    @Autowired
+    private EventPhotoMapper eventPhotoMapper;
+
+    @Override
+    public EventResponseDto toDto(Event entity) {
+        throw new UnsupportedOperationException("Use toDtoSmall or toDtoDetails instead");
     }
 
-    public List<EventResponseDto> toDtos(List<Event> events) {
-        return events.stream()
-                .map(this::toDto)
-                .toList();
+    @Named("toDtoSmall")
+    @Mapping(target = "mainPhotoId", expression = "java(entity.getMainPhoto() == null ? null : entity.getMainPhoto().getHighQualityPhoto().getId())")
+    @Mapping(target = "coordinates", expression = "java(new Coordinates(entity.getLatitude(), entity.getLongitude()))")
+    @Mapping(target = "hostId", source = "host.id")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    public abstract EventSmallDto toDtoSmall(Event entity);
+
+    @Named("toDtoSmallList")
+    public List<EventSmallDto> toDtoSmallList(List<Event> events) {
+        if (events == null) {
+            return null;
+        }
+
+        List<EventSmallDto> list = new ArrayList<>(events.size());
+        for (Event event : events) {
+            list.add(toDtoSmall(event));
+        }
+        return list;
     }
 
-    public EventGroup eventGroup(Event event) {
-        return new EventGroup(new Coordinates(event.getLatitude(), event.getLongitude()), 1, event.getMainPhoto());
+    @Override
+    @Named("toDtoDetails")
+    @Mapping(target = "coordinates", expression = "java(new Coordinates(entity.getLatitude(), entity.getLongitude()))")
+    @Mapping(target = "photos", expression = "java(getPhotosWithoutMain(entity))")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    public abstract EventResponseDto toDtoDetails(Event entity);
+
+    @Named("getPhotosWithoutMain")
+    public List<EventPhotoDto> getPhotosWithoutMain(Event entity) {
+        List<EventPhotoDto> photos = new ArrayList<>();
+        if (entity.getPhotos() != null) {
+            for (EventPhoto photo : entity.getPhotos()) {
+                if (entity.getMainPhoto() == null || !photo.getPhoto().getId().equals(entity.getMainPhoto().getHighQualityPhoto().getId())) {
+                    photos.add(eventPhotoMapper.toDto(photo));
+                }
+            }
+        }
+        return photos;
     }
 
-    public Event toEntity(EventRequestDto eventDto) {
-        return Event.builder()
-                .id(eventDto.getId())
-                .name(eventDto.getName())
-                .description(eventDto.getDescription())
-                .mainPhoto(null)
-                .address(eventDto.getAddress())
-                .latitude(eventDto.getCoordinates().latitude())
-                .longitude(eventDto.getCoordinates().longitude())
-                .isTicketNeeded(eventDto.getIsTicketNeeded())
-                .price(eventDto.getPrice())
-                .currency(currencyMapper.toEntity(currencyService.findCurrencyById(eventDto.getCurrencyId())))
-                .startTime(LocalDateTime.parse(eventDto.getStartTime()))
-                .endTime(LocalDateTime.parse(eventDto.getEndTime()))
-                .categories(categoryMapper.toEntities(eventDto.getCategoryIds().stream()
-                                .map(categoryService::findCategoryById).toList()))
-                .host(organisationRepository.findById(eventDto.getOrganisationId()).orElseThrow(
-                        () -> new NotFoundException("Organisation [id: %d] not found".formatted(eventDto.getOrganisationId()))
-                ))
-                .photoCount(eventDto.getPhotoCount())
-                .build();
-    }
+    @Override
+    @Mapping(target = "latitude", expression = "java(eventRequestDto.getCoordinates() == null ? null : eventRequestDto.getCoordinates().latitude())")
+    @Mapping(target = "longitude", expression = "java(eventRequestDto.getCoordinates() == null ? null : eventRequestDto.getCoordinates().longitude())")
+    @Mapping(target = "host", ignore = true)
+    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "mainPhoto", ignore = true)
+    @Mapping(target = "photos", ignore = true)
+    @Mapping(target = "peopleCount", expression = "java(0)")
+    @Mapping(target = "peopleSaved", expression = "java(0)")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    public abstract Event toEntity(EventRequestDto eventRequestDto);
 
-
-    public List<Event> toEntities(List<EventRequestDto> eventDtos) {
-        return eventDtos.stream()
-                .map(this::toEntity)
-                .toList();
-    }
-
-    public List<EventGroup> toGroups(List<Event> events) {
-        return events.stream()
-                .map(this::eventGroup)
-                .toList();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "host", ignore = true)
+    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "mainPhoto", ignore = true)
+    @Mapping(target = "photos", ignore = true)
+    @Mapping(target = "peopleCount", ignore = true)
+    @Mapping(target = "peopleSaved", ignore = true)
+    @Mapping(target = "registrationForm", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "currency", ignore = true)
+    @Mapping(target = "latitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLatitude() : eventSmallDto.getCoordinates().latitude())")
+    @Mapping(target = "longitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLongitude() : eventSmallDto.getCoordinates().longitude())")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public abstract void partialUpdate(@MappingTarget Event event, EventRequestDto eventSmallDto);
 }

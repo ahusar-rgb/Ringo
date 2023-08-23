@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class EventRequestDto extends AbstractEntityDto {
     private String name;
     private String description;
@@ -26,6 +26,5 @@ public class EventRequestDto extends AbstractEntityDto {
     private String startTime;
     private String endTime;
     private List<Long> categoryIds;
-    private Long organisationId;
-    private Integer photoCount;
+    private Integer capacity;
 }

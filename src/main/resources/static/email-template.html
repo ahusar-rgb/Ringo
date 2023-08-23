@@ -1,0 +1,46 @@
+<table style="background-color: #111111; margin: 0; padding: 0; width: 100%">
+    <tr>
+        <td
+                style="
+        padding: 1rem;
+        text-align: center;
+        background-color: #000000;
+        color: #ffffff;
+      "
+        >
+            <img
+                    src="https://yourdomain.com/Ringo-White.png"
+                    width="64"
+                    height="64"
+                    style="display: inline-block"
+                    alt="Logo"
+            />
+            <h1
+                    style="
+          font-size: 20px;
+          font-weight: 400;
+          color: #ffffff;
+          margin-left: 1rem;
+          display: inline-block;
+        "
+            >
+                Ringo
+            </h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 1.2rem; color: #ffffff; text-align: center">
+            <h1 style="font-size: 24px; font-weight: 400; color: #ffffff">
+                {{ title of the event }}
+            </h1>
+            <p style="font-size: 16px; font-weight: 100; color: #ffffff">
+                Dear {{ name }},<br />
+                Thank you for buying a ticket using Ringo.
+            </p>
+            <p style="font-size: 16px; font-weight: 100; color: #ffffff">
+                Please find the QR-code attached and have fun!
+            </p>
+            <img src="data:image/jpeg;base64,{{ qr-code }}" width="300" height="300" alt="QR Code" />
+        </td>
+    </tr>
+</table>

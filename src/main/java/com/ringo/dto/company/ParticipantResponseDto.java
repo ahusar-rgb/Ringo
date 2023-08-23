@@ -1,7 +1,15 @@
 package com.ringo.dto.company;
 
-import com.ringo.dto.common.UserResponseDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@SuperBuilder
 public class ParticipantResponseDto extends UserResponseDto {
-
+    private String dateOfBirth;
+    private String gender;
 }

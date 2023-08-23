@@ -1,6 +1,5 @@
 package com.ringo.dto.company;
 
-import com.ringo.dto.common.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +16,7 @@ import java.util.List;
 public class OrganisationResponseDto extends UserResponseDto {
     private String description;
     private Float rating;
-    private String contacts;
-    private List<Long> hostedEventIds;
+    private List<LabelDto> contacts;
+    private Integer pastEventsCount;
+    private Integer upcomingEventsCount;
 }

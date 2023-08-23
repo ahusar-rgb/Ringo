@@ -1,17 +1,21 @@
 package com.ringo.model.company;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.OneToOne;
+import lombok.*;
 
 import java.io.Serializable;
 
+@Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 @Getter
 @Setter
-@AllArgsConstructor
 public class TicketId implements Serializable {
-    private User user;
+    @OneToOne
+    private Participant participant;
+
+    @OneToOne
     private Event event;
 }
