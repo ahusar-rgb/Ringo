@@ -286,7 +286,7 @@ public class EventController {
             }
     )
     @PostMapping(value = "/{id}/leave", produces = {"application/json"})
-    public ResponseEntity<TicketDto> leaveEvent(
+    public ResponseEntity<EventResponseDto> leaveEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id) {
         return ResponseEntity.ok(eventInteractionService.leaveEvent(id));
     }

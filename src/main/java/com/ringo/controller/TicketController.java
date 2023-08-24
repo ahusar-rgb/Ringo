@@ -91,13 +91,6 @@ public class TicketController {
                 .body(ticketService.getMyTickets());
     }
 
-
-    @GetMapping(value = "/{id}/ticket-qr", produces = {"application/json"})
-    public ResponseEntity<String> getTicketQr(@Parameter(description = "Event id") @PathVariable("id") Long id) {
-        return ResponseEntity.ok()
-                .body(ticketService.getTicketQrCode(id).toString());
-    }
-
     @PostMapping(value = "/issue/{event_id}/{email}", produces = {"application/json"})
     public ResponseEntity<String> issueTicketByEmail(
             @PathVariable("event_id") Long eventId,

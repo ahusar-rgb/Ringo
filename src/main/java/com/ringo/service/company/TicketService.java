@@ -72,35 +72,6 @@ public class TicketService {
         return ticketDto;
     }
 
-    public byte[] getTicketQrCode(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event with id %d not found".formatted(eventId)));
-
-        Participant participant = participantService.getFullActiveUser();
-
-        throwIfTicketExists(event, participant);
-
-        Ticket ticket = Ticket.builder()
-                .id(new TicketId(participant, event))
-                .timeOfSubmission(LocalDateTime.now())
-                .expiryDate(event.getEndTime())
-                .isValidated(false)
-                .build();
-
-        TicketDto ticketDto = mapper.toDto(repository.save(ticket));
-        ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
-
-        BufferedImage image = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", stream);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalException("Failed to generate QR code");
-        }
-        return stream.toByteArray();
-    }
-
     public void throwIfTicketExists(Event event, Participant participant) {
         if(repository.existsById(new TicketId(participant, event)))
             throw new UserException("The user is already registered for this event");

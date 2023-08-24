@@ -19,7 +19,7 @@ public class RegistrationValidatorTest {
     private RegistrationValidator registrationValidator;
 
     @Test
-    public void validFormSuccess() {
+    void validFormSuccess() {
         RegistrationForm registrationForm = RegistrationFormMock.getRegistrationFormMock();
 
         try {
@@ -32,7 +32,7 @@ public class RegistrationValidatorTest {
     }
 
     @Test
-    public void invalidFormThrowsException() {
+    void invalidFormThrowsException() {
         RegistrationForm registrationForm = RegistrationFormMock.getRegistrationFormMock();
         MultipleChoiceQuestion multipleChoiceQuestion = (MultipleChoiceQuestion) registrationForm.getQuestions().get(1);
         multipleChoiceQuestion.setOptions(null);
@@ -42,5 +42,15 @@ public class RegistrationValidatorTest {
         } catch (Exception e) {
             assertThat(e.getMessage()).isEqualTo("Choices are not specified for question [id: 1]");
         }
+    }
+
+    @Test
+    void validSubmissionSuccess() {
+        assert false;
+    }
+
+    @Test
+    void invalidSubmissionThrowsException() {
+        assert false;
     }
 }

@@ -1,13 +1,16 @@
 package com.ringo.unit;
 
 import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.TicketDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
+import com.ringo.mock.dto.RegistrationSubmissionMock;
 import com.ringo.mock.model.EventMock;
 import com.ringo.mock.model.ParticipantMock;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
+import com.ringo.model.form.RegistrationSubmission;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.service.company.ParticipantService;
@@ -37,8 +40,6 @@ public class EventInteractionServiceTest {
     @Spy
     private EventMapper eventMapper;
     @Mock
-    private EventPersonalizedMapper eventPersonalizedMapper;
-    @Mock
     private RegistrationValidator validator;
     @Mock
     private ParticipantRepository participantRepository;
@@ -49,6 +50,8 @@ public class EventInteractionServiceTest {
     private ArgumentCaptor<Event> eventCaptor;
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;
+
+    private EventPersonalizedMapper personalizedMapper;
 
 
     @BeforeEach
@@ -65,12 +68,12 @@ public class EventInteractionServiceTest {
 
         ReflectionTestUtils.setField(eventInteractionService, "mapper", eventMapper);
 
-        eventPersonalizedMapper = new EventPersonalizedMapper(
+        personalizedMapper = new EventPersonalizedMapper(
                 eventMapper,
                 ticketService,
                 participantService
         );
-        ReflectionTestUtils.setField(eventInteractionService, "personalizedMapper", eventPersonalizedMapper);
+        ReflectionTestUtils.setField(eventInteractionService, "personalizedMapper", personalizedMapper);
     }
 
 
@@ -185,5 +188,126 @@ public class EventInteractionServiceTest {
 
         verify(participantRepository, never()).save(any());
         verify(repository, never()).save(any());
+    }
+
+    @Test
+    void joinEventSuccess() {
+        //given
+        Event event = EventMock.getEventMock();
+        Participant participant = ParticipantMock.getParticipantMock();
+
+        //when
+        when(ticketService.issueTicket(event, participant, null)).thenReturn(new TicketDto());
+        when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
+        when(participantService.getFullActiveUser()).thenReturn(participant);
+
+        //then
+        TicketDto ticketDto = eventInteractionService.joinEvent(event.getId(), null);
+        assertThat(ticketDto.getEvent()).isEqualTo(eventMapper.toDtoSmall(event));
+
+        verify(repository, times(1)).save(eventCaptor.capture());
+
+        Event savedEvent = eventCaptor.getValue();
+        assertThat(savedEvent.getPeopleCount()).isEqualTo(1);
+        assertThat(savedEvent).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(event);
+    }
+
+    @Test
+    void joinEventWithFormSuccess() {
+        //given
+        Event event = EventMock.getEventMock();
+        Participant participant = ParticipantMock.getParticipantMock();
+        RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
+
+        //when
+        when(ticketService.issueTicket(event, participant, submission)).thenReturn(new TicketDto());
+        when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
+        when(participantService.getFullActiveUser()).thenReturn(participant);
+
+        //then
+        TicketDto ticketDto = eventInteractionService.joinEvent(event.getId(), submission);
+        assertThat(ticketDto.getEvent()).isEqualTo(eventMapper.toDtoSmall(event));
+
+        verify(repository, times(1)).save(eventCaptor.capture());
+
+        Event savedEvent = eventCaptor.getValue();
+        assertThat(savedEvent.getPeopleCount()).isEqualTo(1);
+        assertThat(savedEvent).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(event);
+    }
+
+    @Test
+    void joinEventInvalidForm() {
+        //given
+        Event event = EventMock.getEventMock();
+        Participant participant = ParticipantMock.getParticipantMock();
+        RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
+
+        //when
+        when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
+        doThrow(new UserException("Invalid submission")).when(validator).throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
+
+        //then
+        assertThatThrownBy(() -> eventInteractionService.joinEvent(event.getId(), submission))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Invalid submission");
+
+        verify(repository, never()).save(any());
+        verify(ticketService, never()).issueTicket(any(), any(), any());
+    }
+
+    @Test
+    void joinEventFull() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setPeopleCount(event.getCapacity());
+        RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
+
+        //when
+        when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
+
+        //then
+        assertThatThrownBy(() -> eventInteractionService.joinEvent(event.getId(), submission))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Event is already full");
+
+        verify(repository, never()).save(any());
+        verify(ticketService, never()).issueTicket(any(), any(), any());
+    }
+
+    @Test
+    void leaveEventSuccess() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setPeopleCount(5);
+        Participant participant = ParticipantMock.getParticipantMock();
+
+        Event changedEvent = EventMock.getEventMock();
+        changedEvent.setId(event.getId());
+        changedEvent.setPeopleCount(4);
+
+        //when
+        when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
+        when(participantService.getFullActiveUser()).thenReturn(participant);
+        when(ticketService.cancelTicket(event, participant)).thenReturn(new TicketDto());
+        when(repository.save(eventCaptor.capture())).thenReturn(changedEvent);
+
+        //then
+        EventResponseDto responseDto = eventInteractionService.leaveEvent(event.getId());
+        assertThat(responseDto.getIsRegistered()).isFalse();
+        assertThat(responseDto.getPeopleCount()).isEqualTo(4);
+        assertThat(responseDto).usingRecursiveComparison().ignoringFields("isRegistered", "peopleCount").isEqualTo(personalizedMapper.toPersonalizedDto(event));
+
+        Event savedEvent = eventCaptor.getValue();
+        verify(repository, times(1)).save(savedEvent);
+        verify(ticketService, times(1)).cancelTicket(event, participant);
+
+
+        assertThat(savedEvent.getPeopleCount()).isEqualTo(4);
+        assertThat(savedEvent).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(event);
+    }
+
+    @Test
+    void leaveEventNotJoined() {
+
     }
 }
