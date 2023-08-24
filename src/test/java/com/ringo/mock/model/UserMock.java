@@ -14,6 +14,7 @@ public class UserMock {
                 .username("test")
                 .password("test")
                 .role(Role.ROLE_ORGANISATION)
+                .withIdProvider(false)
                 .build();
     }
 }

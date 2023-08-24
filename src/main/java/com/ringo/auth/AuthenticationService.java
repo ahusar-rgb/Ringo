@@ -178,6 +178,8 @@ public class AuthenticationService {
             throw new AuthException("Invalid token");
 
         user.setEmailVerified(true);
+        if(!user.getWithIdProvider())
+            user.setIsActive(true);
         userRepository.save(user);
     }
 

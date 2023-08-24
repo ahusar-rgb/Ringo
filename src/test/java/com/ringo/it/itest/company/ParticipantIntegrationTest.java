@@ -33,7 +33,6 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
 
         loginTemplate.verifyEmail(participantRequestDto.getEmail(), participantRequestDto.getUsername());
         TokenDto token = loginTemplate.login(participantRequestDto.getEmail(), participantRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        participantTemplate.activate(token.getAccessToken());
 
         ParticipantResponseDto actual = participantTemplate.getCurrentParticipant(token.getAccessToken());
 

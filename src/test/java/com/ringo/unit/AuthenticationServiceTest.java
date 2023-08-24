@@ -21,8 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -112,6 +111,7 @@ public class AuthenticationServiceTest {
     void verifyEmailSuccess() {
         //given
         User user = UserMock.getUserMock();
+        user.setIsActive(false);
         final String token = "token";
         //when
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
@@ -126,6 +126,31 @@ public class AuthenticationServiceTest {
 
         User userCaptorValue = userCaptor.getValue();
         assertTrue(userCaptorValue.getEmailVerified());
+        assertTrue(userCaptorValue.getIsActive());
+        assertThat(userCaptorValue).usingRecursiveComparison().ignoringFields("emailVerified").isEqualTo(user);
+    }
+
+    @Test
+    void verifyEmailWithIdProviderSuccess() {
+        //given
+        User user = UserMock.getUserMock();
+        user.setIsActive(false);
+        user.setWithIdProvider(true);
+        final String token = "token";
+        //when
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(jwtService.getEmailFromToken(token)).thenReturn(user.getEmail());
+        when(jwtService.getUsernameFromToken(token)).thenReturn(user.getUsername());
+        when(userRepository.findVerifiedByEmail(user.getEmail())).thenReturn(Optional.empty());
+        when(jwtService.isTokenValid(user, token, TokenType.EMAIL_VERIFICATION)).thenReturn(true);
+        //then
+        authenticationService.verifyEmail(token);
+
+        verify(userRepository, times(1)).save(userCaptor.capture());
+
+        User userCaptorValue = userCaptor.getValue();
+        assertTrue(userCaptorValue.getEmailVerified());
+        assertFalse(userCaptorValue.getIsActive());
         assertThat(userCaptorValue).usingRecursiveComparison().ignoringFields("emailVerified").isEqualTo(user);
     }
 
