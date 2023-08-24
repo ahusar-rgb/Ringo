@@ -30,10 +30,7 @@ public abstract class AbstractIntegrationTest {
         organisationTemplate.create(organisationRequestDto);
 
         loginTemplate.verifyEmail(organisationRequestDto.getEmail(), organisationRequestDto.getUsername());
-        TokenDto tokenDto = loginTemplate.login(organisationRequestDto.getEmail(), organisationRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        organisationTemplate.activate(tokenDto.getAccessToken());
-
-        return tokenDto;
+        return loginTemplate.login(organisationRequestDto.getEmail(), organisationRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
     }
 
     protected TokenDto createOrganisationActivated() {
@@ -41,20 +38,14 @@ public abstract class AbstractIntegrationTest {
         organisationTemplate.create(organisationRequestDto);
 
         loginTemplate.verifyEmail(organisationRequestDto.getEmail(), organisationRequestDto.getUsername());
-        TokenDto tokenDto = loginTemplate.login(organisationRequestDto.getEmail(), organisationRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        organisationTemplate.activate(tokenDto.getAccessToken());
-
-        return tokenDto;
+        return loginTemplate.login(organisationRequestDto.getEmail(), organisationRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
     }
 
     protected TokenDto createParticipantActivated(ParticipantRequestDto participantRequestDto) {
         participantTemplate.create(participantRequestDto);
 
         loginTemplate.verifyEmail(participantRequestDto.getEmail(), participantRequestDto.getUsername());
-        TokenDto participantToken = loginTemplate.login(participantRequestDto.getEmail(), participantRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        participantTemplate.activate(participantToken.getAccessToken());
-
-        return participantToken;
+        return loginTemplate.login(participantRequestDto.getEmail(), participantRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
     }
 
     protected TokenDto createParticipantActivated() {
@@ -62,9 +53,6 @@ public abstract class AbstractIntegrationTest {
         participantTemplate.create(participantRequestDto);
 
         loginTemplate.verifyEmail(participantRequestDto.getEmail(), participantRequestDto.getUsername());
-        TokenDto participantToken = loginTemplate.login(participantRequestDto.getEmail(), participantRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        participantTemplate.activate(participantToken.getAccessToken());
-
-        return participantToken;
+        return loginTemplate.login(participantRequestDto.getEmail(), participantRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
     }
 }

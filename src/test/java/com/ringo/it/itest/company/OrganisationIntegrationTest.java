@@ -36,7 +36,6 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
         loginTemplate.verifyEmail(organisationRequestDto.getEmail(), organisationRequestDto.getUsername());
         TokenDto tokenDto = loginTemplate.login(organisationRequestDto.getEmail(), organisationRequestDto.getPassword(), ItTestConsts.HTTP_SUCCESS);
-        organisationTemplate.activate(tokenDto.getAccessToken());
         OrganisationResponseDto actual = organisationTemplate.getCurrentOrganisation(tokenDto.getAccessToken());
 
         assertThat(actual).isEqualTo(responseDto);
