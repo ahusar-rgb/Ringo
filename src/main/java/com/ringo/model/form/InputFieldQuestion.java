@@ -3,10 +3,12 @@ package com.ringo.model.form;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
+@SuperBuilder(toBuilder = true)
 public class InputFieldQuestion extends Question {
 
     public InputFieldQuestion() {

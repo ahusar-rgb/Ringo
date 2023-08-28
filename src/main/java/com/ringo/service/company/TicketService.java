@@ -22,11 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.lang.Float.compare;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +54,7 @@ public class TicketService {
                 .timeOfSubmission(LocalDateTime.now())
                 .expiryDate(event.getEndTime())
                 .isValidated(false)
+                .isPaid(event.getPrice() != null && compare(event.getPrice(), 0f) != 0)
                 .registrationSubmission(submission)
                 .build();
 
@@ -82,7 +83,11 @@ public class TicketService {
     }
 
     public TicketDto scanTicket(TicketCode ticketCode) {
-        return mapper.toDto(getTicketFromCode(ticketCode));
+        Ticket ticket = getTicketFromCode(ticketCode);
+
+        TicketDto dto = mapper.toDto(ticket);
+        dto.setEvent(eventMapper.toDtoSmall(ticket.getId().getEvent()));
+        return dto;
     }
 
     public Ticket getTicketFromCode(TicketCode ticketCode) {
@@ -106,11 +111,11 @@ public class TicketService {
         return ticket;
     }
 
-    public TicketDto validateTicket(TicketCode ticketCode) {
+    public void validateTicket(TicketCode ticketCode) {
         Ticket ticket = getTicketFromCode(ticketCode);
         ticket.setIsValidated(true);
 
-        return mapper.toDto(repository.save(ticket));
+        repository.save(ticket);
     }
 
     public List<TicketDto> findByEventId(Long eventId) {
@@ -147,6 +152,11 @@ public class TicketService {
     public TicketDto cancelTicket(Event event, Participant participant) {
         Ticket ticket = repository.findById(new TicketId(participant, event))
                 .orElseThrow(() -> new UserException("The user is not registered for this event"));
+
+        if(ticket.getIsPaid()) {
+            if (ticket.getExpiryDate().isAfter(LocalDateTime.now())) //not expired
+                throw new UserException("Can't cancel a ticket for a paid event");
+        }
 
         repository.delete(ticket);
         return mapper.toDto(ticket);

@@ -16,6 +16,7 @@ import com.ringo.model.company.Participant;
 import com.ringo.model.photo.Photo;
 import com.ringo.model.security.Role;
 import com.ringo.repository.ParticipantRepository;
+import com.ringo.repository.TicketRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.ParticipantService;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +45,8 @@ public class ParticipantServiceTest {
     private ParticipantRepository participantRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private TicketRepository ticketRepository;
     @Mock
     private AuthenticationService authenticationService;
     @Mock
@@ -64,6 +68,7 @@ public class ParticipantServiceTest {
         ReflectionTestUtils.setField(service, "mapper", mapper);
         ReflectionTestUtils.setField(service, "abstractUserMapper", new ParticipantMapperImpl());
         ReflectionTestUtils.setField(service, "repository", participantRepository);
+        ReflectionTestUtils.setField(service, "ticketRepository", ticketRepository);
     }
 
     @Test
@@ -320,6 +325,7 @@ public class ParticipantServiceTest {
         //when
         when(authenticationService.getCurrentUser()).thenReturn(participant);
         when(participantRepository.findFullById(participant.getId())).thenReturn(Optional.of(participant));
+        when(ticketRepository.findAllByParticipantId(participant.getId())).thenReturn(new ArrayList<>());
         //then
         service.delete();
         verify(participantRepository, times(1)).delete(any(Participant.class));

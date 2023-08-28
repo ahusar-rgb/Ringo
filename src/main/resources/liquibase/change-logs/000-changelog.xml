@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1692549785376-1" author="aleksandr (generated)">
+    <changeSet id="1693228463167-1" author="aleksandr (generated)">
         <createTable tableName="category">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_category"/>
@@ -15,7 +15,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-2" author="aleksandr (generated)">
+    <changeSet id="1693228463167-2" author="aleksandr (generated)">
         <createTable tableName="category_event">
             <column name="category_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_category_event"/>
@@ -25,7 +25,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-3" author="aleksandr (generated)">
+    <changeSet id="1693228463167-3" author="aleksandr (generated)">
         <createTable tableName="currency">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_currency"/>
@@ -38,7 +38,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-4" author="aleksandr (generated)">
+    <changeSet id="1693228463167-4" author="aleksandr (generated)">
         <createTable tableName="event">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_event"/>
@@ -78,7 +78,7 @@
             <column name="registration_form" type="JSONB"/>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-5" author="aleksandr (generated)">
+    <changeSet id="1693228463167-5" author="aleksandr (generated)">
         <createTable tableName="event_main_photo">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_event_main_photo"/>
@@ -90,7 +90,7 @@
             <column name="event_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-6" author="aleksandr (generated)">
+    <changeSet id="1693228463167-6" author="aleksandr (generated)">
         <createTable tableName="event_photo">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_event_photo"/>
@@ -103,7 +103,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-7" author="aleksandr (generated)">
+    <changeSet id="1693228463167-7" author="aleksandr (generated)">
         <createTable tableName="event_save">
             <column name="event_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_event_save"/>
@@ -113,7 +113,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-8" author="aleksandr (generated)">
+    <changeSet id="1693228463167-8" author="aleksandr (generated)">
         <createTable tableName="exchange_rates">
             <column name="rate" type="FLOAT">
                 <constraints nullable="false"/>
@@ -126,7 +126,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-9" author="aleksandr (generated)">
+    <changeSet id="1693228463167-9" author="aleksandr (generated)">
         <createTable tableName="label">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_label"/>
@@ -137,7 +137,7 @@
             <column name="organisation_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-10" author="aleksandr (generated)">
+    <changeSet id="1693228463167-10" author="aleksandr (generated)">
         <createTable tableName="organisation">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_organisation"/>
@@ -146,7 +146,7 @@
             <column name="rating" type="FLOAT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-11" author="aleksandr (generated)">
+    <changeSet id="1693228463167-11" author="aleksandr (generated)">
         <createTable tableName="participant">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_participant"/>
@@ -155,7 +155,7 @@
             <column name="gender" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-12" author="aleksandr (generated)">
+    <changeSet id="1693228463167-12" author="aleksandr (generated)">
         <createTable tableName="photo">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_photo"/>
@@ -168,7 +168,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-13" author="aleksandr (generated)">
+    <changeSet id="1693228463167-13" author="aleksandr (generated)">
         <createTable tableName="review">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_review"/>
@@ -187,7 +187,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-14" author="aleksandr (generated)">
+    <changeSet id="1693228463167-14" author="aleksandr (generated)">
         <createTable tableName="ticket">
             <column name="time_of_submission" type="DATETIME">
                 <constraints nullable="false"/>
@@ -196,6 +196,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="is_validated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="is_paid" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="registration_submission" type="JSONB"/>
@@ -207,7 +210,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-15" author="aleksandr (generated)">
+    <changeSet id="1693228463167-15" author="aleksandr (generated)">
         <createTable tableName="users">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
@@ -239,135 +242,135 @@
             <column name="profile_picture" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1692549785376-16" author="aleksandr (generated)">
+    <changeSet id="1693228463167-16" author="aleksandr (generated)">
         <addUniqueConstraint columnNames="name" constraintName="uc_category_name" tableName="category"/>
     </changeSet>
-    <changeSet id="1692549785376-17" author="aleksandr (generated)">
+    <changeSet id="1693228463167-17" author="aleksandr (generated)">
         <addUniqueConstraint columnNames="name" constraintName="uc_currency_name" tableName="currency"/>
     </changeSet>
-    <changeSet id="1692549785376-18" author="aleksandr (generated)">
+    <changeSet id="1693228463167-18" author="aleksandr (generated)">
         <addUniqueConstraint columnNames="symbol" constraintName="uc_currency_symbol" tableName="currency"/>
     </changeSet>
-    <changeSet id="1692549785376-19" author="aleksandr (generated)">
+    <changeSet id="1693228463167-19" author="aleksandr (generated)">
         <addUniqueConstraint columnNames="participant_id, organisation_id" constraintName="uc_d69b6a0bbc88578ca74254d55"
                              tableName="review"/>
     </changeSet>
-    <changeSet id="1692549785376-20" author="aleksandr (generated)">
+    <changeSet id="1693228463167-20" author="aleksandr (generated)">
         <addUniqueConstraint columnNames="username" constraintName="uc_users_username" tableName="users"/>
     </changeSet>
-    <changeSet id="1692549785376-21" author="aleksandr (generated)">
+    <changeSet id="1693228463167-21" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="event_main_photo"
                                  constraintName="FK_EVENT_MAIN_PHOTO_ON_EVENT" referencedColumnNames="id"
                                  referencedTableName="event"/>
     </changeSet>
-    <changeSet id="1692549785376-22" author="aleksandr (generated)">
+    <changeSet id="1693228463167-22" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="high_quality_photo_id" baseTableName="event_main_photo"
                                  constraintName="FK_EVENT_MAIN_PHOTO_ON_HIGH_QUALITY_PHOTO" referencedColumnNames="id"
                                  referencedTableName="photo"/>
     </changeSet>
-    <changeSet id="1692549785376-23" author="aleksandr (generated)">
+    <changeSet id="1693228463167-23" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="lazy_photo_id" baseTableName="event_main_photo"
                                  constraintName="FK_EVENT_MAIN_PHOTO_ON_LAZY_PHOTO" referencedColumnNames="id"
                                  referencedTableName="photo"/>
     </changeSet>
-    <changeSet id="1692549785376-24" author="aleksandr (generated)">
+    <changeSet id="1693228463167-24" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="low_quality_photo_id" baseTableName="event_main_photo"
                                  constraintName="FK_EVENT_MAIN_PHOTO_ON_LOW_QUALITY_PHOTO" referencedColumnNames="id"
                                  referencedTableName="photo"/>
     </changeSet>
-    <changeSet id="1692549785376-25" author="aleksandr (generated)">
+    <changeSet id="1693228463167-25" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="medium_quality_photo_id" baseTableName="event_main_photo"
                                  constraintName="FK_EVENT_MAIN_PHOTO_ON_MEDIUM_QUALITY_PHOTO" referencedColumnNames="id"
                                  referencedTableName="photo"/>
     </changeSet>
-    <changeSet id="1692549785376-26" author="aleksandr (generated)">
+    <changeSet id="1693228463167-26" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="currency_id" baseTableName="event"
                                  constraintName="FK_EVENT_ON_CURRENCY" referencedColumnNames="id"
                                  referencedTableName="currency"/>
     </changeSet>
-    <changeSet id="1692549785376-27" author="aleksandr (generated)">
+    <changeSet id="1693228463167-27" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="host_id" baseTableName="event" constraintName="FK_EVENT_ON_HOST"
                                  referencedColumnNames="id" referencedTableName="organisation"/>
     </changeSet>
-    <changeSet id="1692549785376-28" author="aleksandr (generated)">
+    <changeSet id="1693228463167-28" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="event_photo"
                                  constraintName="FK_EVENT_PHOTO_ON_EVENT" referencedColumnNames="id"
                                  referencedTableName="event"/>
     </changeSet>
-    <changeSet id="1692549785376-29" author="aleksandr (generated)">
+    <changeSet id="1693228463167-29" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="lazy_photo_id" baseTableName="event_photo"
                                  constraintName="FK_EVENT_PHOTO_ON_LAZY_PHOTO" referencedColumnNames="id"
                                  referencedTableName="photo"/>
     </changeSet>
-    <changeSet id="1692549785376-30" author="aleksandr (generated)">
+    <changeSet id="1693228463167-30" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="photo_id" baseTableName="event_photo"
                                  constraintName="FK_EVENT_PHOTO_ON_PHOTO" referencedColumnNames="id"
                                  referencedTableName="photo"/>
     </changeSet>
-    <changeSet id="1692549785376-31" author="aleksandr (generated)">
+    <changeSet id="1693228463167-31" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="from_id" baseTableName="exchange_rates"
                                  constraintName="FK_EXCHANGE_RATES_ON_FROM" referencedColumnNames="id"
                                  referencedTableName="currency"/>
     </changeSet>
-    <changeSet id="1692549785376-32" author="aleksandr (generated)">
+    <changeSet id="1693228463167-32" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="to_id" baseTableName="exchange_rates"
                                  constraintName="FK_EXCHANGE_RATES_ON_TO" referencedColumnNames="id"
                                  referencedTableName="currency"/>
     </changeSet>
-    <changeSet id="1692549785376-33" author="aleksandr (generated)">
+    <changeSet id="1693228463167-33" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="organisation_id" baseTableName="label"
                                  constraintName="FK_LABEL_ON_ORGANISATION" referencedColumnNames="id"
                                  referencedTableName="organisation"/>
     </changeSet>
-    <changeSet id="1692549785376-34" author="aleksandr (generated)">
+    <changeSet id="1693228463167-34" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="id" baseTableName="organisation"
                                  constraintName="FK_ORGANISATION_ON_ID" referencedColumnNames="id"
                                  referencedTableName="users"/>
     </changeSet>
-    <changeSet id="1692549785376-35" author="aleksandr (generated)">
+    <changeSet id="1693228463167-35" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="id" baseTableName="participant" constraintName="FK_PARTICIPANT_ON_ID"
                                  referencedColumnNames="id" referencedTableName="users"/>
     </changeSet>
-    <changeSet id="1692549785376-36" author="aleksandr (generated)">
+    <changeSet id="1693228463167-36" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="organisation_id" baseTableName="review"
                                  constraintName="FK_REVIEW_ON_ORGANISATION" referencedColumnNames="id"
                                  referencedTableName="organisation"/>
     </changeSet>
-    <changeSet id="1692549785376-37" author="aleksandr (generated)">
+    <changeSet id="1693228463167-37" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="participant_id" baseTableName="review"
                                  constraintName="FK_REVIEW_ON_PARTICIPANT" referencedColumnNames="id"
                                  referencedTableName="participant"/>
     </changeSet>
-    <changeSet id="1692549785376-38" author="aleksandr (generated)">
+    <changeSet id="1693228463167-38" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="ticket" constraintName="FK_TICKET_ON_EVENT"
                                  referencedColumnNames="id" referencedTableName="event"/>
     </changeSet>
-    <changeSet id="1692549785376-39" author="aleksandr (generated)">
+    <changeSet id="1693228463167-39" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="participant_id" baseTableName="ticket"
                                  constraintName="FK_TICKET_ON_PARTICIPANT" referencedColumnNames="id"
                                  referencedTableName="participant"/>
     </changeSet>
-    <changeSet id="1692549785376-40" author="aleksandr (generated)">
+    <changeSet id="1693228463167-40" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="profile_picture" baseTableName="users"
                                  constraintName="FK_USERS_ON_PROFILE_PICTURE" referencedColumnNames="id"
                                  referencedTableName="photo"/>
     </changeSet>
-    <changeSet id="1692549785376-41" author="aleksandr (generated)">
+    <changeSet id="1693228463167-41" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="category_event"
                                  constraintName="fk_cateve_on_category" referencedColumnNames="id"
                                  referencedTableName="category"/>
     </changeSet>
-    <changeSet id="1692549785376-42" author="aleksandr (generated)">
+    <changeSet id="1693228463167-42" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="category_event"
                                  constraintName="fk_cateve_on_event" referencedColumnNames="id"
                                  referencedTableName="event"/>
     </changeSet>
-    <changeSet id="1692549785376-43" author="aleksandr (generated)">
+    <changeSet id="1693228463167-43" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="event_save"
                                  constraintName="fk_evesav_on_event" referencedColumnNames="id"
                                  referencedTableName="event"/>
     </changeSet>
-    <changeSet id="1692549785376-44" author="aleksandr (generated)">
+    <changeSet id="1693228463167-44" author="aleksandr (generated)">
         <addForeignKeyConstraint baseColumnNames="participant_id" baseTableName="event_save"
                                  constraintName="fk_evesav_on_participant" referencedColumnNames="id"
                                  referencedTableName="participant"/>

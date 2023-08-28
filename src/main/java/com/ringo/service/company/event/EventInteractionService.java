@@ -52,17 +52,17 @@ public class EventInteractionService {
         return ticketDto;
     }
 
-    public EventResponseDto leaveEvent(Long id) {
+    public EventSmallDto leaveEvent(Long id) {
         Participant participant = participantService.getFullActiveUser();
         Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        TicketDto ticketDto = ticketService.cancelTicket(event, participant);
+        ticketService.cancelTicket(event, participant);
         event.setPeopleCount(event.getPeopleCount() - 1);
         event = repository.save(event);
 
-        return personalizedMapper.toPersonalizedDto(event);
+        return mapper.toDtoSmall(event);
     }
 
     public EventResponseDto saveEvent(Long id) {

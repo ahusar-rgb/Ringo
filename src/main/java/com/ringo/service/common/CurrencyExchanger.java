@@ -1,5 +1,6 @@
 package com.ringo.service.common;
 
+import com.ringo.exception.InternalException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.ExchangeRate;
@@ -53,29 +54,38 @@ public class CurrencyExchanger {
                                     1.0F
                             )
                     );
-                else
-                    exchangeRateRepository.save(
-                            new ExchangeRate(
-                                    new ExchangeRateId(from, to),
-                                    fetchExchangeRate(from.getName(), to.getName())
-                            )
-                    );
+                else {
+                    try {
+                        exchangeRateRepository.save(
+                                new ExchangeRate(
+                                        new ExchangeRateId(from, to),
+                                        fetchExchangeRate(from.getName(), to.getName())
+                                )
+                        );
+                    } catch (InternalException e) {
+                        log.error("Failed to fetch exchange rate");
+                    }
+                }
             }
             log.info("Updated exchange rates for currency: {}", from.getName());
         }
     }
 
-    private Float fetchExchangeRate(String from, String to) {
-        RequestSpecification request = RestAssured.given();
-        request.param("have", from);
-        request.param("want", to);
-        request.param("amount", "1");
+    private Float fetchExchangeRate(String from, String to) throws InternalException {
+        try {
+            RequestSpecification request = RestAssured.given();
+            request.param("have", from);
+            request.param("want", to);
+            request.param("amount", "1");
 
-        return request.get(BASE_PATH)
-                .then()
-                .extract()
-                .body()
-                .jsonPath()
-                .getFloat("new_amount");
+            return request.get(BASE_PATH)
+                    .then()
+                    .extract()
+                    .body()
+                    .jsonPath()
+                    .getFloat("new_amount");
+        } catch (Exception e) {
+            throw new InternalException("Failed to fetch exchange rate");
+        }
     }
 }

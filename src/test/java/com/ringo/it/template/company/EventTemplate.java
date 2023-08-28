@@ -3,10 +3,12 @@ package com.ringo.it.template.company;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.company.TicketDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
 import com.ringo.model.form.RegistrationForm;
+import com.ringo.model.form.RegistrationSubmission;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -148,6 +150,28 @@ public class EventTemplate extends EndpointTemplate {
         if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
             return null;
         EventResponseDto actual = response.getBody().as(EventResponseDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
+    }
+
+    public TicketDto joinEvent(String accessToken, Long id, RegistrationSubmission submission, int httpSuccess) {
+        Response response = httpPostWithParams(accessToken, submission, id.toString() + "/join", httpSuccess);
+        if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
+            return null;
+        TicketDto actual = response.getBody().as(TicketDto.class);
+        assertThat(actual).isNotNull();
+        return actual;
+    }
+
+    public TicketDto joinEvent(String accessToken, Long id, int httpSuccess) {
+        return joinEvent(accessToken, id, null, httpSuccess);
+    }
+
+    public EventSmallDto leaveEvent(String accessToken, Long id, int httpSuccess) {
+        Response response = httpPostWithParams(accessToken, null, id.toString() + "/leave", httpSuccess);
+        if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
+            return null;
+        EventSmallDto actual = response.getBody().as(EventSmallDto.class);
         assertThat(actual).isNotNull();
         return actual;
     }

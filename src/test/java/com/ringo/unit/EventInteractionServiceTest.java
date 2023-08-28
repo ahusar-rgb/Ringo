@@ -1,13 +1,14 @@
 package com.ringo.unit;
 
 import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.EventSmallDto;
 import com.ringo.dto.company.TicketDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
-import com.ringo.mock.dto.RegistrationSubmissionMock;
 import com.ringo.mock.model.EventMock;
 import com.ringo.mock.model.ParticipantMock;
+import com.ringo.mock.model.RegistrationSubmissionMock;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
 import com.ringo.model.form.RegistrationSubmission;
@@ -284,6 +285,7 @@ public class EventInteractionServiceTest {
         Event changedEvent = EventMock.getEventMock();
         changedEvent.setId(event.getId());
         changedEvent.setPeopleCount(4);
+        changedEvent.setHost(event.getHost());
 
         //when
         when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
@@ -292,10 +294,9 @@ public class EventInteractionServiceTest {
         when(repository.save(eventCaptor.capture())).thenReturn(changedEvent);
 
         //then
-        EventResponseDto responseDto = eventInteractionService.leaveEvent(event.getId());
-        assertThat(responseDto.getIsRegistered()).isFalse();
+        EventSmallDto responseDto = eventInteractionService.leaveEvent(event.getId());
         assertThat(responseDto.getPeopleCount()).isEqualTo(4);
-        assertThat(responseDto).usingRecursiveComparison().ignoringFields("isRegistered", "peopleCount").isEqualTo(personalizedMapper.toPersonalizedDto(event));
+        assertThat(responseDto).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(eventMapper.toDtoSmall(event));
 
         Event savedEvent = eventCaptor.getValue();
         verify(repository, times(1)).save(savedEvent);
@@ -304,10 +305,5 @@ public class EventInteractionServiceTest {
 
         assertThat(savedEvent.getPeopleCount()).isEqualTo(4);
         assertThat(savedEvent).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(event);
-    }
-
-    @Test
-    void leaveEventNotJoined() {
-
     }
 }

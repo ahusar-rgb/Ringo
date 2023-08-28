@@ -53,6 +53,10 @@ public class OrganisationTemplate extends EndpointTemplate {
         httpDelete(token, ItTestConsts.HTTP_SUCCESS);
     }
 
+    public void delete(String token, int expectedStatusCode) {
+        httpDelete(token, expectedStatusCode);
+    }
+
     public OrganisationResponseDto setPhoto(String token, File file, String contentType) {
         RequestSpecification request = RestAssured.given();
         request.header("Authorization", "Bearer " + token);

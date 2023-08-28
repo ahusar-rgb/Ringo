@@ -8,10 +8,13 @@ import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
+import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
+import com.ringo.model.company.Ticket;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
 import com.ringo.repository.ParticipantRepository;
+import com.ringo.repository.TicketRepository;
 import com.ringo.repository.UserRepository;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
@@ -19,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -28,6 +33,8 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
     private GoogleIdService googleIdService;
     @Autowired
     private AppleIdService appleIdService;
+    @Autowired
+    private TicketRepository ticketRepository;
 
     private final ParticipantRepository repository;
     private final ParticipantMapper mapper;
@@ -68,6 +75,16 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
 
     public ParticipantResponseDto signUpApple(String token) {
         return signUpWithIdProvider(token, appleIdService, Role.ROLE_PARTICIPANT);
+    }
+
+    @Override
+    protected void prepareForDelete(Participant user) {
+        List<Ticket> tickets = ticketRepository.findAllByParticipantId(user.getId());
+        for(Ticket ticket : tickets) {
+            Event event = ticket.getId().getEvent();
+            event.setPeopleCount(event.getPeopleCount() - 1);
+        }
+        ticketRepository.deleteAll(tickets);
     }
 
     @Override
