@@ -4,7 +4,6 @@ import com.ringo.dto.common.TicketCode;
 import com.ringo.dto.company.TicketDto;
 import com.ringo.service.company.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -70,9 +69,9 @@ public class TicketController {
             }
     )
     @PostMapping(value = "/validate", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<TicketDto> validateTicket(@RequestBody TicketCode ticketCode) {
-        return ResponseEntity.ok()
-                .body(ticketService.validateTicket(ticketCode));
+    public ResponseEntity<Void> validateTicket(@RequestBody TicketCode ticketCode) {
+        ticketService.validateTicket(ticketCode);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Get acquired tickets for current participant")
@@ -89,13 +88,6 @@ public class TicketController {
     public ResponseEntity<List<TicketDto>> getMyTickets() {
         return ResponseEntity.ok()
                 .body(ticketService.getMyTickets());
-    }
-
-
-    @GetMapping(value = "/{id}/ticket-qr", produces = {"application/json"})
-    public ResponseEntity<String> getTicketQr(@Parameter(description = "Event id") @PathVariable("id") Long id) {
-        return ResponseEntity.ok()
-                .body(ticketService.getTicketQrCode(id).toString());
     }
 
     @PostMapping(value = "/issue/{event_id}/{email}", produces = {"application/json"})

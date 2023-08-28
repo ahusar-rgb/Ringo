@@ -12,7 +12,7 @@ import com.ringo.it.util.ItTestConsts;
 import com.ringo.mock.dto.CategoryDtoMock;
 import com.ringo.mock.dto.CurrencyDtoMock;
 import com.ringo.mock.dto.EventDtoMock;
-import com.ringo.mock.dto.RegistrationFormMock;
+import com.ringo.mock.model.RegistrationFormMock;
 import com.ringo.model.form.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -284,7 +284,6 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
-        organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
         EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
         Long photoOfEvent1 = eventTemplate.addPhoto(organisationToken.getAccessToken(), event.getId(), new File("src/test/java/com/ringo/resources/test_picture_1.jpeg"), "image/jpeg")
@@ -507,6 +506,40 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void deleteOrganisationWithEventsWithTickets() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+        addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
+
+        TokenDto participantToken = createParticipantActivated();
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+
+        organisationTemplate.delete(organisationToken.getAccessToken(), ItTestConsts.HTTP_BAD_REQUEST);
+
+        eventTemplate.leaveEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken.getAccessToken());
+        participantTemplate.delete(participantToken.getAccessToken());
+    }
+
+    @Test
     void deleteCategoryWithEvents() {
         String adminToken = loginTemplate.getAdminToken();
 
@@ -557,8 +590,74 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void deleteEventWithTickets() {
-        //TODO: implement
+    void deleteWithTickets() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+        addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
+
+        TokenDto participantToken = createParticipantActivated();
+
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_BAD_REQUEST);
+
+        eventTemplate.leaveEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        participantTemplate.delete(participantToken.getAccessToken());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken.getAccessToken());
+    }
+
+    @Test
+    void deleteParticipantWithTickets() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+        organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
+
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+
+        addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
+
+
+        TokenDto participantToken = createParticipantActivated();
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+
+        participantTemplate.delete(participantToken.getAccessToken());
+
+        EventResponseDto found = eventTemplate.findById(event.getId(), ItTestConsts.HTTP_SUCCESS);
+        assertThat(found.getPeopleCount()).isEqualTo(0);
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken.getAccessToken());
     }
 
     @Test

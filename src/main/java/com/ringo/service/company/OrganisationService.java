@@ -70,6 +70,9 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     @Override
     public void prepareForDelete(Organisation user) {
+        if(user.getHostedEvents().stream().anyMatch(event -> event.getPeopleCount() > 0))
+            throw new UserException("Cannot delete organisation with events that have participants");
+
         for(Event event : user.getHostedEvents()) {
             eventCleanUpService.cleanUpEvent(event);
         }

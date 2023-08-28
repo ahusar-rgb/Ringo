@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.ringo.exception.AuthException;
+import com.ringo.exception.UserException;
 import com.ringo.model.company.Ticket;
 import com.ringo.model.security.User;
 import lombok.AllArgsConstructor;
@@ -106,7 +106,7 @@ public class JwtService {
         try {
             return verifier.verify(ticketCode);
         } catch (Exception e) {
-            throw new AuthException("Ticket code is not valid");
+            throw new UserException("Ticket code is not valid");
         }
     }
 

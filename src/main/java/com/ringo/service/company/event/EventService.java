@@ -122,6 +122,9 @@ public class EventService {
         );
         throwIfNotHost(event);
 
+        if(event.getPeopleCount() > 0)
+            throw new UserException("Event cannot be deleted because it has participants");
+
         eventCleanUpService.cleanUpEvent(event);
         repository.deleteById(id);
     }

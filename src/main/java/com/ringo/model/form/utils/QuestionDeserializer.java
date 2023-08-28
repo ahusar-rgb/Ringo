@@ -74,7 +74,8 @@ public class QuestionDeserializer extends StdDeserializer<Question> {
             question.setContent(node.get("content").asText());
         if(node.get("required") != null)
             question.setRequired(node.get("required").asBoolean());
-        if(node.get("id") != null)
-            question.setId(node.get("id").asLong());
+        if(node.get("id") == null)
+            throw new UserException("Question id is not specified");
+        question.setId(node.get("id").asLong());
     }
 }

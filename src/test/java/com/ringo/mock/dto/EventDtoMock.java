@@ -18,12 +18,12 @@ public class EventDtoMock {
                 .isTicketNeeded(true)
                 .description("Test description")
                 .categoryIds(new ArrayList<>())
-                .price(1.0f)
+                .price(0.0f)
                 .currencyId(1L)
                 .coordinates(new Coordinates(50.0, 50.0))
                 .address("Test address")
                 .startTime(LocalDateTime.of(2021, 1, 1, 1, 1).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)))
-                .endTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)))
+                .endTime(LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)))
                 .capacity(100)
                 .build();
     }

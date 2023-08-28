@@ -33,7 +33,6 @@ public class EventInteractionService {
     private final ParticipantRepository participantRepository;
 
     public TicketDto joinEvent(Long id, RegistrationSubmission submission) {
-        Participant participant = participantService.getFullActiveUser();
         Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
@@ -42,28 +41,28 @@ public class EventInteractionService {
             throw new UserException("Event is already full");
 
         validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
+        Participant participant = participantService.getFullActiveUser();
 
         TicketDto ticketDto = ticketService.issueTicket(event, participant, submission);
 
         event.setPeopleCount(event.getPeopleCount() + 1);
-        event = repository.save(event);
+        repository.save(event);
 
         ticketDto.setEvent(mapper.toDtoSmall(event));
         return ticketDto;
     }
 
-    public TicketDto leaveEvent(Long id) {
+    public EventSmallDto leaveEvent(Long id) {
         Participant participant = participantService.getFullActiveUser();
         Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        TicketDto ticketDto = ticketService.cancelTicket(event, participant);
+        ticketService.cancelTicket(event, participant);
         event.setPeopleCount(event.getPeopleCount() - 1);
         event = repository.save(event);
 
-        ticketDto.setEvent(mapper.toDtoSmall(event));
-        return ticketDto;
+        return mapper.toDtoSmall(event);
     }
 
     public EventResponseDto saveEvent(Long id) {

@@ -11,7 +11,6 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
 import com.ringo.mock.common.MultipartFileMock;
 import com.ringo.mock.dto.EventDtoMock;
-import com.ringo.mock.dto.RegistrationFormMock;
 import com.ringo.mock.model.*;
 import com.ringo.model.company.Category;
 import com.ringo.model.company.Currency;

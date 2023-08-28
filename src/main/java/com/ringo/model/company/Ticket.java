@@ -33,6 +33,9 @@ public class Ticket {
     @Column(name = "is_validated", nullable = false)
     private Boolean isValidated;
 
+    @Column(name = "is_paid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isPaid;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "registration_submission", columnDefinition = "JSONB")
     private RegistrationSubmission registrationSubmission;

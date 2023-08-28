@@ -1,4 +1,4 @@
-package com.ringo.mock.dto;
+package com.ringo.mock.model;
 
 import com.ringo.model.form.*;
 
