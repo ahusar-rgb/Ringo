@@ -83,8 +83,10 @@ public class EventTemplate extends EndpointTemplate {
         return actual;
     }
 
-    public EventResponseDto removeMainPhoto(String token, Long id) {
-        Response response = httpDeleteWithParams(token, id.toString() + "/photos/main", ItTestConsts.HTTP_SUCCESS);
+    public EventResponseDto removeMainPhoto(String token, Long id, int expectedStatusCode) {
+        Response response = httpDeleteWithParams(token, id.toString() + "/photos/main", expectedStatusCode);
+        if(expectedStatusCode != ItTestConsts.HTTP_SUCCESS)
+            return null;
         EventResponseDto actual = response.getBody().as(EventResponseDto.class);
         assertThat(actual).isNotNull();
         return actual;

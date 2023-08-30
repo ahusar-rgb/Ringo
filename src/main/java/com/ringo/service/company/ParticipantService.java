@@ -8,14 +8,10 @@ import com.ringo.dto.company.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
-import com.ringo.model.company.Event;
-import com.ringo.model.company.Participant;
-import com.ringo.model.company.Ticket;
+import com.ringo.model.company.*;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
-import com.ringo.repository.ParticipantRepository;
-import com.ringo.repository.TicketRepository;
-import com.ringo.repository.UserRepository;
+import com.ringo.repository.*;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +31,10 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
     private AppleIdService appleIdService;
     @Autowired
     private TicketRepository ticketRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     private final ParticipantRepository repository;
     private final ParticipantMapper mapper;
@@ -84,6 +84,22 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
             Event event = ticket.getId().getEvent();
             event.setPeopleCount(event.getPeopleCount() - 1);
         }
+        for(Event event : user.getSavedEvents())
+            event.setPeopleSaved(event.getPeopleSaved() - 1);
+
+        if(user.getReviews() != null) {
+            for(Review review : user.getReviews()) {
+                Organisation organisation = review.getOrganisation();
+                organisation.getReviews().remove(review);
+                reviewRepository.delete(review);
+
+                Float rating = reviewRepository.getAverageRatingByOrganisationId(organisation.getId());
+                organisation.setRating(rating);
+
+                organisationRepository.save(organisation);
+            }
+        }
+
         ticketRepository.deleteAll(tickets);
     }
 

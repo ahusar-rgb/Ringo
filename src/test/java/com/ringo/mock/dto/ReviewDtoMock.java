@@ -4,9 +4,9 @@ import com.ringo.dto.company.ReviewRequestDto;
 
 public class ReviewDtoMock {
     public static ReviewRequestDto getReviewDtoMock() {
-        ReviewRequestDto dto = new ReviewRequestDto();
-        dto.setRate(5);
-        dto.setComment("comment");
-        return dto;
+        return ReviewRequestDto.builder()
+                .comment("test")
+                .rate(5)
+                .build();
     }
 }

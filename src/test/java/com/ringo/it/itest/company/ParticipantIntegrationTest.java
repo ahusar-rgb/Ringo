@@ -1,10 +1,14 @@
 package com.ringo.it.itest.company;
 
+import com.ringo.dto.ReviewPageRequestDto;
+import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.dto.company.ParticipantRequestDto;
 import com.ringo.dto.company.ParticipantResponseDto;
+import com.ringo.dto.company.ReviewRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.itest.common.AbstractIntegrationTest;
 import com.ringo.it.template.company.ParticipantTemplate;
+import com.ringo.it.template.company.ReviewTemplate;
 import com.ringo.it.template.security.LoginTemplate;
 import com.ringo.it.util.ItTestConsts;
 import com.ringo.mock.dto.ParticipantDtoMock;
@@ -25,6 +29,9 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private LoginTemplate loginTemplate;
+
+    @Autowired
+    private ReviewTemplate reviewTemplate;
 
     @Test
     void createSuccess() {
@@ -82,5 +89,34 @@ public class ParticipantIntegrationTest extends AbstractIntegrationTest {
         assertThat(actual.getProfilePictureId()).isNull();
 
         participantTemplate.delete(token.getAccessToken());
+    }
+
+    @Test
+    void deleteParticipantWithReviews() {
+        TokenDto organisationToken = createOrganisationActivated();
+        OrganisationResponseDto organisation = organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
+
+        TokenDto participantToken = createParticipantActivated();
+
+        reviewTemplate.createReview(participantToken.getAccessToken(), organisation.getId(), ReviewRequestDto.builder()
+                .rate(5)
+                .comment("test review")
+                .build(),
+                ItTestConsts.HTTP_SUCCESS);
+
+        OrganisationResponseDto actual = organisationTemplate.findById(null, organisation.getId(), ItTestConsts.HTTP_SUCCESS);
+        assertThat(actual.getRating()).isEqualTo(5.0f);
+
+        participantTemplate.delete(participantToken.getAccessToken());
+
+        actual = organisationTemplate.findById(null, organisation.getId(), ItTestConsts.HTTP_SUCCESS);
+        assertThat(actual.getRating()).isNull();
+
+        ReviewPageRequestDto request = new ReviewPageRequestDto();
+        request.setPage(0);
+        request.setSize(10);
+        assertThat(reviewTemplate.findAllByOrganisation(null, organisation.getId(), request).size()).isEqualTo(0);
+
+        organisationTemplate.delete(organisationToken.getAccessToken());
     }
 }

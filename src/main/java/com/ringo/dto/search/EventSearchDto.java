@@ -23,6 +23,7 @@ public class EventSearchDto extends GenericSearchDto<Event>{
     private String search;
     private Long[] categoryIds;
     private Long hostId;
+    private Boolean isActive;
     private Boolean isTicketNeeded;
     private Float priceMin;
     private Float priceMax;
@@ -73,6 +74,9 @@ public class EventSearchDto extends GenericSearchDto<Event>{
         }
         if (isTicketNeeded != null) {
             filters.add(criteriaBuilder.equal(root.get("isTicketNeeded"), isTicketNeeded));
+        }
+        if(isActive != null) {
+            filters.add(criteriaBuilder.equal(root.get("isActive"), isActive));
         }
 
         if(currencyId != null) {

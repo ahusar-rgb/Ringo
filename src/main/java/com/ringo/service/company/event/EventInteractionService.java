@@ -37,7 +37,7 @@ public class EventInteractionService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        if(event.getPeopleCount() >= event.getCapacity())
+        if(event.getCapacity() != null && event.getPeopleCount() >= event.getCapacity())
             throw new UserException("Event is already full");
 
         validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);

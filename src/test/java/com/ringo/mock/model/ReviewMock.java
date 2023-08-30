@@ -7,7 +7,7 @@ public class ReviewMock {
         Review review = new Review();
         review.setId(1L);
         review.setRate(5);
-        review.setComment("comment");
+        review.setComment("test");
         return review;
     }
 }

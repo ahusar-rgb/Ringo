@@ -560,6 +560,7 @@ public class EventServiceTest {
     void removeMainPhotoSuccess() {
         //given
         Event event = EventMock.getEventMock();
+        event.setIsActive(false);
         Organisation organisation = OrganisationMock.getOrganisationMock();
         organisation.setId(event.getHost().getId());
 
@@ -572,6 +573,26 @@ public class EventServiceTest {
         assertThat(dto.getMainPhoto()).isNull();
 
         verify(eventPhotoService, times(1)).removeMainPhoto(event);
+    }
+
+    @Test
+    void removeMainPhotoEventActive() {
+        //given
+        Event event = EventMock.getEventMock();
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
+
+        //then
+        assertThatThrownBy(() -> eventService.removeMainPhoto(event.getId()))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Main photo cannot be removed from active event");
+
+        verify(eventPhotoService, never()).removeMainPhoto(event);
+        verify(eventRepository, never()).save(any());
     }
 
     @Test
@@ -650,10 +671,37 @@ public class EventServiceTest {
         //then
         assertThatThrownBy(() -> eventService.removePhoto(event.getId(), event.getPhotos().get(0).getId()))
                 .isInstanceOf(UserException.class)
-                .hasMessage("Event must have at least one photo");
+                .hasMessage("Active event must have at least one photo");
 
         verify(eventRepository, never()).save(any());
         verify(eventPhotoService, never()).delete(any());
+    }
+
+    @Test
+    void removePhotoSuccessInactive() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setIsActive(false);
+        event.setPhotos(new ArrayList<>());
+        event.getPhotos().add(EventPhotoMock.getEventPhotoMock());
+
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
+        when(eventPhotoRepository.findById(event.getPhotos().get(0).getId())).thenReturn(Optional.of(event.getPhotos().get(0)));
+
+        //then
+        Long photoId = event.getPhotos().get(0).getId();
+        eventService.removePhoto(event.getId(), photoId);
+
+        verify(eventRepository, times(1)).save(eventCaptor.capture());
+        verify(eventPhotoService, times(1)).delete(photoId);
+
+        Event saved = eventCaptor.getValue();
+        assertThat(saved.getPhotos().size()).isEqualTo(0);
     }
 
     @Test
