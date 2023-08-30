@@ -66,7 +66,9 @@ public class AppleIdService implements IdProvider {
 
         if(!claims.get("iss").equals(APPLE_ISS))
             throw new AuthException("Invalid issuer");
-        if(!claims.get("aud").equals(config.getAppleAud()))
+        if(!claims.get("aud").equals(config.getAppleAud1())
+                && !claims.get("aud").equals(config.getAppleAud2())
+                && !claims.get("aud").equals(config.getAppleAud3()))
             throw new AuthException("Invalid audience");
 
         return claims;

@@ -411,22 +411,56 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
 
         EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
 
-        addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
+        File photo = new File("src/test/java/com/ringo/resources/test_picture_1.jpeg");
+        EventResponseDto addPhotoResponseDto = eventTemplate.addPhoto(organisationToken.getAccessToken(), event.getId(), photo, "image/jpeg");
+        eventTemplate.setMainPhoto(organisationToken.getAccessToken(), event.getId(), addPhotoResponseDto.getPhotos().get(0).getId());
 
-        EventResponseDto beforeRemove = eventTemplate.findById(event.getId(), ItTestConsts.HTTP_SUCCESS);
+        EventResponseDto beforeRemove = eventTemplate.findById(organisationToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(beforeRemove.getMainPhoto()).isNotNull();
 
-        EventResponseDto removePhotoResponseDto = eventTemplate.removeMainPhoto(organisationToken.getAccessToken(), event.getId());
+        EventResponseDto removePhotoResponseDto = eventTemplate.removeMainPhoto(organisationToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(removePhotoResponseDto.getMainPhoto()).isNull();
         assertThat(removePhotoResponseDto.getPhotos().size()).isEqualTo(1);
 
-        EventResponseDto found = eventTemplate.findById(event.getId(), ItTestConsts.HTTP_SUCCESS);
+        EventResponseDto found = eventTemplate.findById(organisationToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(found).isEqualTo(removePhotoResponseDto);
 
         photoTemplate.findPhoto(removePhotoResponseDto.getPhotos().get(0).getNormalId(), ItTestConsts.HTTP_SUCCESS);
         photoTemplate.findPhoto(removePhotoResponseDto.getPhotos().get(0).getLazyId(), ItTestConsts.HTTP_SUCCESS);
         photoTemplate.findPhoto(beforeRemove.getMainPhoto().getMediumQualityId(), ItTestConsts.HTTP_NOT_FOUND);
         photoTemplate.findPhoto(beforeRemove.getMainPhoto().getLowQualityId(), ItTestConsts.HTTP_NOT_FOUND);
+
+        eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
+        categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
+        currencyTemplate.delete(adminToken, currency.getId());
+        organisationTemplate.delete(organisationToken.getAccessToken());
+    }
+
+    @Test
+    void removeMainPhotoActive() {
+        String adminToken = loginTemplate.getAdminToken();
+
+        CurrencyDto currency = currencyTemplate.create(adminToken, CurrencyDtoMock.getCurrencyDtoMock());
+        List<CategoryDto> categories = List.of(
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock()),
+                categoryTemplate.create(adminToken, CategoryDtoMock.getCategoryDtoMock())
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
+
+        TokenDto organisationToken = createOrganisationActivated();
+        organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
+
+        EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
+
+        addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
+
+        eventTemplate.removeMainPhoto(organisationToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_BAD_REQUEST);
+        EventResponseDto found = eventTemplate.findById(event.getId(), ItTestConsts.HTTP_SUCCESS);
+        assertThat(found.getMainPhoto()).isNotNull();
 
         eventTemplate.delete(organisationToken.getAccessToken(), event.getId());
         categories.forEach(category -> categoryTemplate.delete(adminToken, category.getId()));

@@ -1,5 +1,6 @@
 package com.ringo.auth;
 
+import com.ringo.config.ApplicationProperties;
 import com.ringo.config.Constants;
 import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.auth.ForgotPasswordForm;
@@ -36,8 +37,7 @@ public class AuthenticationService {
     private final AppleIdService appleIdService;
     private final UserRepository userRepository;
     private final EmailSender emailSender;
-
-    private static final String FORGOT_PASSWORD_URL = "http://localhost:8080/api/auth/reset-password-form";
+    private final ApplicationProperties config;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -152,7 +152,7 @@ public class AuthenticationService {
         if (!jwtService.isTokenValid(user, token, TokenType.RECOVER))
             throw new AuthException("Invalid token");
 
-        return "<form action=\"/api/auth/reset-password?token=" + token + "\" method=\"post\">\n" +
+        return "<form action=\"http://" + config.getDomainName() + "/api/auth/reset-password?token=" + token + "\" method=\"post\">\n" +
                 "    <label for=\"newPassword\">New password:</label><br>\n" +
                 "    <input type=\"password\" id=\"newPassword\" name=\"newPassword\"><br>\n" +
                 "    <input type=\"submit\" value=\"Submit\">\n" +

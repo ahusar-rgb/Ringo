@@ -45,7 +45,7 @@ public class ReviewTemplate extends EndpointTemplate {
     public List<ReviewResponseDto> findAllByOrganisation(String token, Long organisationId, ReviewPageRequestDto dto) {
         Response response = httpGetWithParams(
                 token,
-                "organisations/" + organisationId + "/reviews?page=" + dto.getPage() + "&size=" + dto.getSize(),
+                organisationId + "/reviews?page=" + dto.getPage() + "&size=" + dto.getSize(),
                 ItTestConsts.HTTP_SUCCESS
         );
         return response.getBody().as(List.class);

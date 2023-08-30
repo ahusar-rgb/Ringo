@@ -104,7 +104,7 @@ public class ReviewService {
         Participant participant = null;
         try {
             participant = participantService.getFullActiveUser();
-        } catch (NotFoundException ignored) {}
+        } catch (NotFoundException | UserException ignored) {}
 
         Page<Review> page = repository.findAll(
                 request.getSpecification(

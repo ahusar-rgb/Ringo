@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.time.LocalDateTime;
+
 @Mapper(componentModel = "spring", uses = {LabelMapper.class})
 public interface OrganisationMapper extends AbstractUserMapper<OrganisationRequestDto, Organisation, OrganisationResponseDto> {
 
@@ -25,15 +27,21 @@ public interface OrganisationMapper extends AbstractUserMapper<OrganisationReque
     @Mapping(target = "contacts", source = "contacts")
     default OrganisationResponseDto toDtoDetails(Organisation entity) {
         OrganisationResponseDto dto = toDto(entity);
-        dto.setPastEventsCount((int)entity.getHostedEvents().stream()
-                .filter(event -> event.getEndTime().isBefore(java.time.LocalDateTime.now()))
-                .count()
-        );
-        dto.setUpcomingEventsCount((int)entity.getHostedEvents().stream()
-                .filter(event -> event.getStartTime()
-                        .isAfter(java.time.LocalDateTime.now()))
-                .count()
-        );
+
+        if(entity.getHostedEvents().isEmpty()) {
+            dto.setPastEventsCount(0);
+            dto.setUpcomingEventsCount(0);
+        } else {
+            dto.setPastEventsCount((int)entity.getHostedEvents().stream()
+                    .filter(event -> event.getEndTime().isBefore(LocalDateTime.now()))
+                    .count()
+            );
+            dto.setUpcomingEventsCount((int)entity.getHostedEvents().stream()
+                    .filter(event -> event.getStartTime()
+                            .isAfter(LocalDateTime.now()))
+                    .count()
+            );
+        }
 
         return dto;
     }

@@ -61,6 +61,24 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
     }
 
     @Test
+    void deleteParticipantsWithSavedEvents() {
+        TokenDto organisation = createOrganisationActivated();
+        EventResponseDto event = createEventActivated(loginTemplate.getAdminToken(), organisation.getAccessToken());
+
+        TokenDto participant = createParticipantActivated();
+
+        eventTemplate.saveEvent(participant.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+
+        participantTemplate.delete(participant.getAccessToken());
+
+        EventResponseDto found = eventTemplate.findById(loginTemplate.getAdminToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        assertThat(found.getPeopleSaved()).isEqualTo(0);
+
+        cleanUpEvent(loginTemplate.getAdminToken(), organisation.getAccessToken(), event);
+        organisationTemplate.delete(organisation.getAccessToken());
+    }
+
+    @Test
     void joinEventSuccess() {
         TokenDto organisationToken = createOrganisationActivated();
         EventResponseDto event = createEventActivated(loginTemplate.getAdminToken(), organisationToken.getAccessToken());

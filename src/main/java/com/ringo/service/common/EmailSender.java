@@ -1,5 +1,6 @@
 package com.ringo.service.common;
 
+import com.ringo.config.ApplicationProperties;
 import com.ringo.exception.InternalException;
 import com.ringo.model.company.Ticket;
 import jakarta.activation.DataSource;
@@ -26,6 +27,8 @@ import java.util.Base64;
 public class EmailSender {
 
     private final JavaMailSender mailSender;
+
+    private final ApplicationProperties config;
 
     @Value("${PATH_TO_EMAIL_TEMPLATE}")
     private String pathToEmailTemplate;
@@ -73,14 +76,14 @@ public class EmailSender {
 
     public void sendVerificationEmail(String email, String username, String verificationToken) {
         String subject = "Email verification";
-        String text = "Username: %s\nPlease verify your email by clicking on the link below:\nhttp://localhost:8080/api/auth/verify-email?token=%s"
-                .formatted(username, verificationToken);
+        String text = "Username: %s\nPlease verify your email by clicking on the link below:\nhttp://%s/api/auth/verify-email?token=%s"
+                .formatted(username, config.getDomainName(), verificationToken);
         send(email, subject, text);
     }
 
     public void sendRecoveredPasswordEmail(String email, String recoveryToken) {
         String subject = "Password Reset";
-        String text = "To reset your password, click here: http://localhost:8080/api/auth/reset-password-form?token=%s".formatted(recoveryToken);
+        String text = "To reset your password, click here: http://%s/api/auth/reset-password-form?token=%s".formatted(config.getDomainName(), recoveryToken);
         send(email, subject, text);
     }
 }

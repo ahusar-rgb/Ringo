@@ -163,8 +163,8 @@ public class EventService {
 
         if(event.getMainPhoto() != null && Objects.equals(event.getMainPhoto().getHighQualityPhoto().getId(), photoId))
             throw new UserException("Main photo cannot be removed");
-        if(event.getPhotos().size() <= 1)
-            throw new UserException("Event must have at least one photo");
+        if(event.getIsActive() && event.getPhotos().size() <= 1)
+            throw new UserException("Active event must have at least one photo");
         if(!event.getPhotos().contains(photo))
             throw new UserException("Photo [id: %d] is not owned by the event".formatted(photoId));
 
@@ -232,6 +232,9 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(eventId))
         );
         throwIfNotHost(event);
+
+        if(event.getIsActive())
+            throw new UserException("Main photo cannot be removed from active event");
 
         eventPhotoService.removeMainPhoto(event);
         event.setMainPhoto(null);
