@@ -9,7 +9,7 @@ import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.List;
 
 @Component
 public class GoogleIdService implements IdProvider {
@@ -18,7 +18,9 @@ public class GoogleIdService implements IdProvider {
 
     public GoogleIdService(ApplicationProperties applicationProperties) {
         verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
-                .setAudience(Collections.singletonList(applicationProperties.getGoogleClientId()))
+                .setAudience(List.of(applicationProperties.getGoogleClientId1(),
+                        applicationProperties.getGoogleClientId2(),
+                        applicationProperties.getGoogleClientId3()))
                 .build();
     }
 
