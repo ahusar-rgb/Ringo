@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
     private Integer mergeDistanceFactor;
     private Integer maxPhotoCount;
-    private String googleClientId;
+    private String googleClientId1;
+    private String googleClientId2;
+    private String googleClientId3;
     private String appleAud1;
     private String appleAud2;
     private String appleAud3;
