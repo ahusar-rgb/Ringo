@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class ReviewPageRequestDto {
@@ -34,7 +34,7 @@ public class ReviewPageRequestDto {
                 query.orderBy(
                         criteriaBuilder.desc(
                                 criteriaBuilder.selectCase()
-                                        .when(criteriaBuilder.equal(root.get("participant").get("id"), userId), LocalDate.now())
+                                        .when(criteriaBuilder.equal(root.get("participant").get("id"), userId), LocalDateTime.now())
                                         .otherwise(root.get("createdAt"))
                         )
                 );

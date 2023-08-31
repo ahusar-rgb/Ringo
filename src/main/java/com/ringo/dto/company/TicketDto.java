@@ -1,5 +1,6 @@
 package com.ringo.dto.company;
 
+import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.form.RegistrationSubmission;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +18,6 @@ public class TicketDto {
     private String expiryDate;
     private Boolean isValidated;
     private String ticketCode;
+    private RegistrationForm registrationForm;
     private RegistrationSubmission registrationSubmission;
 }

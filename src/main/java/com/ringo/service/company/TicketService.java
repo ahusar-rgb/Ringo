@@ -60,6 +60,7 @@ public class TicketService {
 
         TicketDto ticketDto = mapper.toDto(repository.save(ticket));
         ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
+        ticketDto.setRegistrationForm(event.getRegistrationForm());
 
         BufferedImage qrCode = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
 
@@ -87,6 +88,7 @@ public class TicketService {
 
         TicketDto dto = mapper.toDto(ticket);
         dto.setEvent(eventMapper.toDtoSmall(ticket.getId().getEvent()));
+        dto.setRegistrationForm(ticket.getId().getEvent().getRegistrationForm());
         return dto;
     }
 

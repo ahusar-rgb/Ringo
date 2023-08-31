@@ -113,6 +113,7 @@ public class EventInteractionService {
 
         TicketDto ticketDto = ticketService.getTicketWithCode(event, participant);
         ticketDto.setEvent(mapper.toDtoSmall(event));
+        ticketDto.setRegistrationForm(event.getRegistrationForm());
         return ticketDto;
     }
 }
