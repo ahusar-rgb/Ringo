@@ -27,6 +27,9 @@ public class Organisation extends User {
     @Column(name = "rating")
     private Float rating;
 
+    @Column(name = "stripe_account_id")
+    private String stripeAccountId;
+
     @OrderBy("ordinal")
     @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Label> contacts;

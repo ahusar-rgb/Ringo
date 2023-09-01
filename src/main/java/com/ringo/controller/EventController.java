@@ -269,7 +269,7 @@ public class EventController {
             }
     )
     @PostMapping(value = "/{id}/join", produces = {"application/json"})
-    public ResponseEntity<TicketDto> joinEvent(
+    public ResponseEntity<JoinEventResult> joinEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
             @Parameter(description = "Registration submission") @RequestBody(required = false) RegistrationSubmission submission) {
         return ResponseEntity.ok(eventInteractionService.joinEvent(id, submission));

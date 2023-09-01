@@ -120,6 +120,11 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
     }
 
     @Override
+    protected void throwIfNotReadyForActivation(Participant user) {
+
+    }
+
+    @Override
     public void throwIfUniqueConstraintsViolated(Participant user) {
         if(user.getUsername() != null) {
             User found = userRepository.findByUsername(user.getUsername()).orElse(null);

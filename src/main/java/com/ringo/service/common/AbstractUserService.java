@@ -37,6 +37,8 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
 
     protected abstract void throwIfRequiredFieldsNotFilled(T user);
 
+    protected abstract void throwIfNotReadyForActivation(T user);
+
     protected abstract void throwIfUniqueConstraintsViolated(T user);
 
     //    This method is called before saving the user to the database.
@@ -149,6 +151,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
             throw new UserException("User [email: %s] is already active".formatted(user.getEmail()));
 
         throwIfRequiredFieldsNotFilled(user);
+        throwIfNotReadyForActivation(user);
         if (!user.getEmailVerified()) {
             throw new UserException("Email is not verified");
         }

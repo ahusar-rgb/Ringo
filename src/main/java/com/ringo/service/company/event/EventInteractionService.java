@@ -2,6 +2,7 @@ package com.ringo.service.company.event;
 
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.company.JoinEventResult;
 import com.ringo.dto.company.TicketDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
@@ -32,7 +33,7 @@ public class EventInteractionService {
     private final RegistrationValidator validator;
     private final ParticipantRepository participantRepository;
 
-    public TicketDto joinEvent(Long id, RegistrationSubmission submission) {
+    public JoinEventResult joinEvent(Long id, RegistrationSubmission submission) {
         Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
@@ -43,13 +44,21 @@ public class EventInteractionService {
         validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
         Participant participant = participantService.getFullActiveUser();
 
-        TicketDto ticketDto = ticketService.issueTicket(event, participant, submission);
+        if(event.getPrice() == null || event.getPrice() == 0) {
+            TicketDto ticketDto = ticketService.issueTicket(event, participant, submission);
 
-        event.setPeopleCount(event.getPeopleCount() + 1);
-        repository.save(event);
+            event.setPeopleCount(event.getPeopleCount() + 1);
+            repository.save(event);
 
-        ticketDto.setEvent(mapper.toDtoSmall(event));
-        return ticketDto;
+            ticketDto.setEvent(mapper.toDtoSmall(event));
+            return JoinEventResult.builder()
+                    .ticket(ticketDto)
+                    .build();
+        }
+
+        return JoinEventResult.builder()
+                .paymentIntentSecret(ticketService.initPayment(event))
+                .build();
     }
 
     public EventSmallDto leaveEvent(Long id) {

@@ -92,6 +92,11 @@ public class OrganisationController {
         return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
     }
 
+    @GetMapping(value = "account-link", produces = {"application/json"})
+    public ResponseEntity<String> getAccountLink() {
+        return ResponseEntity.ok(organisationService.getAccountLink());
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deleteOrganisation() {
         organisationService.delete();

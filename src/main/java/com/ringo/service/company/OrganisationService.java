@@ -17,6 +17,7 @@ import com.ringo.repository.UserRepository;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.event.EventCleanUpService;
+import com.ringo.service.payment.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,16 +38,19 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     private final OrganisationMapper mapper;
     private final OrganisationRepository organisationRepository;
+    private final PaymentService paymentService;
 
     public OrganisationService(UserRepository userRepository,
                                OrganisationRepository repository,
                                PasswordEncoder passwordEncoder,
                                OrganisationMapper mapper,
                                PhotoService photoService,
-                               AuthenticationService authenticationService){
+                               AuthenticationService authenticationService,
+                               PaymentService paymentService){
         super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService);
         this.mapper = mapper;
         this.organisationRepository = repository;
+        this.paymentService = paymentService;
     }
 
 
@@ -66,6 +70,9 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     protected void prepareForSave(Organisation user) {
         if(user.getContacts() != null)
             user.getContacts().forEach(contact -> contact.setOrganisation(user));
+
+        String customerId = paymentService.createAccount(user);
+        user.setStripeAccountId(customerId);
     }
 
     @Override
@@ -95,6 +102,11 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         return signUpWithIdProvider(token, appleIdService, Role.ROLE_ORGANISATION);
     }
 
+    public String getAccountLink() {
+        Organisation organisation = getFullUser();
+        return paymentService.getAccountLink(organisation.getStripeAccountId());
+    }
+
 
     @Override
     public void throwIfRequiredFieldsNotFilled(Organisation organisation) {
@@ -102,6 +114,12 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
             throw new UserException("Username is not set");
         if(organisation.getName() == null)
             throw new UserException("Name is not set");
+    }
+
+    @Override
+    protected void throwIfNotReadyForActivation(Organisation user) {
+        if(user.getStripeAccountId() == null)
+            throw new UserException("Stripe account is not set");
     }
 
     @Override

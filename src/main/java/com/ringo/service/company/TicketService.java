@@ -17,6 +17,8 @@ import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.TicketRepository;
 import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.QrCodeGenerator;
+import com.ringo.service.payment.PaymentData;
+import com.ringo.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class TicketService {
     private final JwtService jwtService;
     private final EmailSender emailSender;
     private final QrCodeGenerator qrCodeGenerator;
+    private final PaymentService paymentService;
 
     public TicketDto issueTicket(Event event, Participant participant, RegistrationSubmission submission) {
 
@@ -186,5 +189,9 @@ public class TicketService {
             throw new UserException("Current user is not the host of this event");
 
         issueTicket(event, participant, null);
+    }
+
+    public String initPayment(Event event) {
+        return paymentService.initPayment(event.getHost(), new PaymentData(event.getPrice(), event.getCurrency()));
     }
 }
