@@ -27,22 +27,22 @@ public class StripeService implements PaymentService {
     }
 
     @Override
-    public String initPayment(Organisation organisation, PaymentData paymentData) {
-        log.info("Init payment: {}, customerId: {}", paymentData, organisation.getStripeAccountId());
+    public PaymentIntent initPayment(PaymentData paymentData) {
+        log.info("Init payment: {}", paymentData);
         Long amount = (long)(paymentData.getAmount() * 100);
         String currency = paymentData.getCurrency().getName().toLowerCase();
         Long applicationFee = (long)(amount * config.getApplicationFeeInPercent() / 100);
 
         PaymentIntentCreateParams params = getPaymentIntentParams(amount, currency, applicationFee);
         RequestOptions requestOptions = RequestOptions.builder()
-                .setStripeAccount(organisation.getStripeAccountId())
-                .setIdempotencyKey(organisation.getEmail())
+                .setStripeAccount(paymentData.getAccountId())
+                .setIdempotencyKey(paymentData.getIdempotencyKey())
                 .build();
 
         try {
             PaymentIntent paymentIntent = PaymentIntent.create(params, requestOptions);
             log.info("Payment intent created: {}", paymentIntent.getId());
-            return paymentIntent.getClientSecret();
+            return paymentIntent;
         } catch (StripeException e) {
             log.error(e.getMessage());
             throw new InternalException("Failed to create payment intent");

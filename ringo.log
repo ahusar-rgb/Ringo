@@ -1,771 +1,333 @@
-2023-09-01 17:58:04.033 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3043 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 17:58:04.049 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 17:58:05.772 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 17:58:05.974 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 187 ms. Found 13 JPA repository interfaces.
-2023-09-01 17:58:06.989 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 17:58:07.007 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 17:58:07.007 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 17:58:07.246 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 17:58:07.247 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2768 ms
-2023-09-01 17:58:07.435 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 17:58:07.827 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2565a7d0
-2023-09-01 17:58:07.831 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 17:58:08.216 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 17:58:08.393 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 17:58:08.524 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 17:58:08.956 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 17:58:08.972 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 17:58:08.976 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 17:58:08.978 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 17:58:09.100 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 17:58:09.252 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 17:58:09.392 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 17:58:09.475 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 17:58:09.947 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 17:58:11.497 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 17:58:11.510 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 17:58:17.939 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 17:58:18.758 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 17:58:19.246 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 17:58:23.434 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@43b60ce1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7133bb00, org.springframework.security.web.context.SecurityContextHolderFilter@6ffbae2e, org.springframework.security.web.header.HeaderWriterFilter@3de9a4f4, org.springframework.web.filter.CorsFilter@398f6622, org.springframework.security.web.authentication.logout.LogoutFilter@343418b2, com.ringo.auth.JwtFilter@579b1d86, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4fd727d7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@24e95bd4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4e260e04, org.springframework.security.web.session.SessionManagementFilter@6c4fee11, org.springframework.security.web.access.ExceptionTranslationFilter@52b23f41, org.springframework.security.web.access.intercept.AuthorizationFilter@9b7701f]
-2023-09-01 17:58:24.803 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 17:58:24.832 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 21.463 seconds (process running for 22.365)
-2023-09-01 17:58:24.885 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 17:58:24.892 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 17:58:24.897 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 17:59:02.511 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3063 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 17:59:02.516 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 17:59:04.321 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 17:59:04.520 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 185 ms. Found 13 JPA repository interfaces.
-2023-09-01 17:59:05.539 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 17:59:05.558 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 17:59:05.559 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 17:59:05.742 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 17:59:05.742 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2749 ms
-2023-09-01 17:59:05.934 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 17:59:06.221 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@9f0fc36
-2023-09-01 17:59:06.225 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 17:59:06.443 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 17:59:06.643 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 17:59:06.801 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 17:59:07.332 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 17:59:07.352 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 17:59:07.355 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 17:59:07.358 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 17:59:07.392 [main] INFO  liquibase.changelog - Creating database history table with name: public.databasechangelog
-2023-09-01 17:59:07.410 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 17:59:07.726 [main] INFO  liquibase.changelog - Table category created
-2023-09-01 17:59:07.734 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-1::aleksandr (generated) ran successfully in 27ms
-2023-09-01 17:59:07.758 [main] INFO  liquibase.changelog - Table category_event created
-2023-09-01 17:59:07.765 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-2::aleksandr (generated) ran successfully in 17ms
-2023-09-01 17:59:07.793 [main] INFO  liquibase.changelog - Table currency created
-2023-09-01 17:59:07.797 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-3::aleksandr (generated) ran successfully in 22ms
-2023-09-01 17:59:07.830 [main] INFO  liquibase.changelog - Table event created
-2023-09-01 17:59:07.834 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-4::aleksandr (generated) ran successfully in 28ms
-2023-09-01 17:59:07.851 [main] INFO  liquibase.changelog - Table event_main_photo created
-2023-09-01 17:59:07.855 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-5::aleksandr (generated) ran successfully in 14ms
-2023-09-01 17:59:07.872 [main] INFO  liquibase.changelog - Table event_photo created
-2023-09-01 17:59:07.875 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-6::aleksandr (generated) ran successfully in 13ms
-2023-09-01 17:59:07.893 [main] INFO  liquibase.changelog - Table event_save created
-2023-09-01 17:59:07.896 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-7::aleksandr (generated) ran successfully in 14ms
-2023-09-01 17:59:07.908 [main] INFO  liquibase.changelog - Table exchange_rates created
-2023-09-01 17:59:07.910 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-8::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:07.928 [main] INFO  liquibase.changelog - Table label created
-2023-09-01 17:59:07.930 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-9::aleksandr (generated) ran successfully in 13ms
-2023-09-01 17:59:07.944 [main] INFO  liquibase.changelog - Table organisation created
-2023-09-01 17:59:07.947 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-10::aleksandr (generated) ran successfully in 12ms
-2023-09-01 17:59:07.958 [main] INFO  liquibase.changelog - Table participant created
-2023-09-01 17:59:07.961 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-11::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:07.978 [main] INFO  liquibase.changelog - Table photo created
-2023-09-01 17:59:07.982 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-12::aleksandr (generated) ran successfully in 16ms
-2023-09-01 17:59:07.996 [main] INFO  liquibase.changelog - Table review created
-2023-09-01 17:59:07.999 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-13::aleksandr (generated) ran successfully in 10ms
-2023-09-01 17:59:08.013 [main] INFO  liquibase.changelog - Table ticket created
-2023-09-01 17:59:08.016 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-14::aleksandr (generated) ran successfully in 13ms
-2023-09-01 17:59:08.038 [main] INFO  liquibase.changelog - Table users created
-2023-09-01 17:59:08.040 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-15::aleksandr (generated) ran successfully in 17ms
-2023-09-01 17:59:08.058 [main] INFO  liquibase.changelog - Unique constraint added to category(name)
-2023-09-01 17:59:08.062 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-16::aleksandr (generated) ran successfully in 14ms
-2023-09-01 17:59:08.079 [main] INFO  liquibase.changelog - Unique constraint added to currency(name)
-2023-09-01 17:59:08.082 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-17::aleksandr (generated) ran successfully in 13ms
-2023-09-01 17:59:08.097 [main] INFO  liquibase.changelog - Unique constraint added to currency(symbol)
-2023-09-01 17:59:08.100 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-18::aleksandr (generated) ran successfully in 11ms
-2023-09-01 17:59:08.121 [main] INFO  liquibase.changelog - Unique constraint added to review(participant_id, organisation_id)
-2023-09-01 17:59:08.124 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-19::aleksandr (generated) ran successfully in 16ms
-2023-09-01 17:59:08.141 [main] INFO  liquibase.changelog - Unique constraint added to users(username)
-2023-09-01 17:59:08.145 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-20::aleksandr (generated) ran successfully in 12ms
-2023-09-01 17:59:08.159 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (event_id)
-2023-09-01 17:59:08.162 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-21::aleksandr (generated) ran successfully in 10ms
-2023-09-01 17:59:08.174 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (high_quality_photo_id)
-2023-09-01 17:59:08.178 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-22::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:08.192 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (lazy_photo_id)
-2023-09-01 17:59:08.196 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-23::aleksandr (generated) ran successfully in 11ms
-2023-09-01 17:59:08.207 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (low_quality_photo_id)
-2023-09-01 17:59:08.211 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-24::aleksandr (generated) ran successfully in 8ms
-2023-09-01 17:59:08.224 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (medium_quality_photo_id)
-2023-09-01 17:59:08.228 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-25::aleksandr (generated) ran successfully in 10ms
-2023-09-01 17:59:08.243 [main] INFO  liquibase.changelog - Foreign key constraint added to event (currency_id)
-2023-09-01 17:59:08.247 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-26::aleksandr (generated) ran successfully in 11ms
-2023-09-01 17:59:08.261 [main] INFO  liquibase.changelog - Foreign key constraint added to event (host_id)
-2023-09-01 17:59:08.263 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-27::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:08.274 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (event_id)
-2023-09-01 17:59:08.278 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-28::aleksandr (generated) ran successfully in 8ms
-2023-09-01 17:59:08.289 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (lazy_photo_id)
-2023-09-01 17:59:08.291 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-29::aleksandr (generated) ran successfully in 8ms
-2023-09-01 17:59:08.303 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (photo_id)
-2023-09-01 17:59:08.306 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-30::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:08.318 [main] INFO  liquibase.changelog - Foreign key constraint added to exchange_rates (from_id)
-2023-09-01 17:59:08.321 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-31::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:08.331 [main] INFO  liquibase.changelog - Foreign key constraint added to exchange_rates (to_id)
-2023-09-01 17:59:08.333 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-32::aleksandr (generated) ran successfully in 7ms
-2023-09-01 17:59:08.346 [main] INFO  liquibase.changelog - Foreign key constraint added to label (organisation_id)
-2023-09-01 17:59:08.348 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-33::aleksandr (generated) ran successfully in 8ms
-2023-09-01 17:59:08.367 [main] INFO  liquibase.changelog - Foreign key constraint added to organisation (id)
-2023-09-01 17:59:08.372 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-34::aleksandr (generated) ran successfully in 19ms
-2023-09-01 17:59:08.384 [main] INFO  liquibase.changelog - Foreign key constraint added to participant (id)
-2023-09-01 17:59:08.387 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-35::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:08.399 [main] INFO  liquibase.changelog - Foreign key constraint added to review (organisation_id)
-2023-09-01 17:59:08.403 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-36::aleksandr (generated) ran successfully in 10ms
-2023-09-01 17:59:08.417 [main] INFO  liquibase.changelog - Foreign key constraint added to review (participant_id)
-2023-09-01 17:59:08.422 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-37::aleksandr (generated) ran successfully in 11ms
-2023-09-01 17:59:08.444 [main] INFO  liquibase.changelog - Foreign key constraint added to ticket (event_id)
-2023-09-01 17:59:08.448 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-38::aleksandr (generated) ran successfully in 11ms
-2023-09-01 17:59:08.464 [main] INFO  liquibase.changelog - Foreign key constraint added to ticket (participant_id)
-2023-09-01 17:59:08.470 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-39::aleksandr (generated) ran successfully in 14ms
-2023-09-01 17:59:08.490 [main] INFO  liquibase.changelog - Foreign key constraint added to users (profile_picture)
-2023-09-01 17:59:08.494 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-40::aleksandr (generated) ran successfully in 13ms
-2023-09-01 17:59:08.511 [main] INFO  liquibase.changelog - Foreign key constraint added to category_event (category_id)
-2023-09-01 17:59:08.517 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-41::aleksandr (generated) ran successfully in 14ms
-2023-09-01 17:59:08.536 [main] INFO  liquibase.changelog - Foreign key constraint added to category_event (event_id)
-2023-09-01 17:59:08.540 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-42::aleksandr (generated) ran successfully in 13ms
-2023-09-01 17:59:08.560 [main] INFO  liquibase.changelog - Foreign key constraint added to event_save (event_id)
-2023-09-01 17:59:08.565 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-43::aleksandr (generated) ran successfully in 18ms
-2023-09-01 17:59:08.579 [main] INFO  liquibase.changelog - Foreign key constraint added to event_save (participant_id)
-2023-09-01 17:59:08.581 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693228463167-44::aleksandr (generated) ran successfully in 9ms
-2023-09-01 17:59:08.594 [main] INFO  liquibase.changelog - Columns stripe_account_id(VARCHAR(255)) added to organisation
-2023-09-01 17:59:08.598 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/001-changelog.xml::1693482277097-1::aleksandr (generated) ran successfully in 10ms
-2023-09-01 17:59:08.624 [main] INFO  liquibase.changelog - Custom SQL executed
-2023-09-01 17:59:08.628 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/01-category.sql::raw::includeAll ran successfully in 24ms
-2023-09-01 17:59:08.646 [main] INFO  liquibase.changelog - Custom SQL executed
-2023-09-01 17:59:08.651 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/02-currency.sql::raw::includeAll ran successfully in 17ms
-2023-09-01 17:59:08.684 [main] INFO  liquibase.changelog - Custom SQL executed
-2023-09-01 17:59:08.688 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/09-get_distance.sql::raw::includeAll ran successfully in 29ms
-2023-09-01 17:59:08.700 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 17:59:08.864 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 17:59:08.987 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 17:59:09.575 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 17:59:11.229 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 17:59:11.243 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 17:59:17.168 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 17:59:17.902 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 17:59:19.121 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 17:59:22.823 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4a0d3295, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@254c4757, org.springframework.security.web.context.SecurityContextHolderFilter@785d3dc3, org.springframework.security.web.header.HeaderWriterFilter@33c4dc6c, org.springframework.web.filter.CorsFilter@9d818b5, org.springframework.security.web.authentication.logout.LogoutFilter@20deb6f5, com.ringo.auth.JwtFilter@7c8ecc27, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@52dc358a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@364b2c46, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@67cb11de, org.springframework.security.web.session.SessionManagementFilter@33de7cc, org.springframework.security.web.access.ExceptionTranslationFilter@7198edd, org.springframework.security.web.access.intercept.AuthorizationFilter@9fcca41]
-2023-09-01 17:59:23.463 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 17:59:23.481 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 21.73 seconds (process running for 23.194)
-2023-09-01 17:59:23.723 [main] INFO  com.ringo.RingoApplication - 
+2023-09-02 14:20:41.902 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 11485 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-09-02 14:20:41.916 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-09-02 14:20:43.461 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-02 14:20:43.657 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 181 ms. Found 14 JPA repository interfaces.
+2023-09-02 14:20:44.605 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-09-02 14:20:44.621 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-09-02 14:20:44.622 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-09-02 14:20:44.823 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-09-02 14:20:44.824 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2534 ms
+2023-09-02 14:20:45.007 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-09-02 14:20:45.361 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@376b5cb2
+2023-09-02 14:20:45.363 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-09-02 14:20:45.802 [main] INFO  liquibase.database - Set default schema name to public
+2023-09-02 14:20:45.970 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+2023-09-02 14:20:46.077 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
+2023-09-02 14:20:46.489 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
+2023-09-02 14:20:46.509 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
+2023-09-02 14:20:46.513 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
+2023-09-02 14:20:46.515 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
+2023-09-02 14:20:46.700 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2023-09-02 14:20:46.884 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2023-09-02 14:20:47.013 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-02 14:20:47.090 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-09-02 14:20:47.556 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-09-02 14:20:49.025 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-02 14:20:49.038 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-02 14:20:54.589 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
+2023-09-02 14:20:55.853 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
+2023-09-02 14:20:56.349 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
+2023-09-02 14:20:58.938 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4b3a6383, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@689c5fdc, org.springframework.security.web.context.SecurityContextHolderFilter@1e71b70d, org.springframework.security.web.header.HeaderWriterFilter@5a050bf9, org.springframework.web.filter.CorsFilter@65589d76, org.springframework.security.web.authentication.logout.LogoutFilter@7aa91a69, com.ringo.auth.JwtFilter@70a9f4b7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3c36f10b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3456e3b3, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5bc971ef, org.springframework.security.web.session.SessionManagementFilter@4643d88c, org.springframework.security.web.access.ExceptionTranslationFilter@7bcbf479, org.springframework.security.web.access.intercept.AuthorizationFilter@28816098]
+2023-09-02 14:20:59.442 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-02 14:20:59.457 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 18.215 seconds (process running for 19.329)
+2023-09-02 14:20:59.561 [main] INFO  com.ringo.RingoApplication - 
 ----------------------------------------------------------
 	Application 'Ringo' is running! Access URLs:
 	Local: 		http://localhost:8080/
 	External: 	http://127.0.0.1:8080/
 	Profile(s): 	[]
 ----------------------------------------------------------
-2023-09-01 17:59:53.117 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 17:59:53.119 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 17:59:53.129 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 9 ms
-2023-09-01 17:59:53.279 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: aahusar@gmail.com, role: ROLE_ORGANISATION
-2023-09-01 17:59:53.396 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Stripe account is not set
-2023-09-01 18:00:07.485 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:00:07.494 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:00:07.500 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 18:01:25.512 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3156 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:01:25.518 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:01:27.250 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:01:27.474 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 210 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:01:28.582 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:01:28.798 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2882 ms
-2023-09-01 18:01:28.988 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:01:29.260 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7bec8cb0
-2023-09-01 18:01:29.265 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:01:30.863 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:01:31.007 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:01:31.810 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:01:33.732 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:01:33.763 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:01:40.261 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:01:41.482 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:01:42.308 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:01:45.070 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2022e444, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@25215e78, org.springframework.security.web.context.SecurityContextHolderFilter@611f774a, org.springframework.security.web.header.HeaderWriterFilter@4005dc6b, org.springframework.web.filter.CorsFilter@f1f41b5, org.springframework.security.web.authentication.logout.LogoutFilter@57916acc, com.ringo.auth.JwtFilter@353b5d86, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@35cefec6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7dc8d054, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@35d472c1, org.springframework.security.web.session.SessionManagementFilter@5cb3fff1, org.springframework.security.web.access.ExceptionTranslationFilter@6786016, org.springframework.security.web.access.intercept.AuthorizationFilter@30c6a810]
-2023-09-01 18:01:45.622 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:01:45.642 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 20.792 seconds (process running for 21.781)
-2023-09-01 18:01:45.666 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:01:45.670 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:01:45.673 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 18:04:35.431 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3268 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:04:35.435 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:04:37.058 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:04:37.274 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 200 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:04:38.480 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:04:38.504 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:04:38.504 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:04:38.718 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:04:38.719 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2870 ms
-2023-09-01 18:04:38.915 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:04:39.236 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@786a3477
-2023-09-01 18:04:39.241 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:04:39.687 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:04:39.864 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:04:40.016 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:04:40.440 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:04:40.457 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:04:40.460 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:04:40.462 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:04:40.564 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:04:40.722 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:04:40.862 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:04:40.952 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:04:41.420 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:04:42.900 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:04:42.911 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:04:48.176 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:04:49.329 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:04:50.168 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:04:53.712 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@47d57aae, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@19315d74, org.springframework.security.web.context.SecurityContextHolderFilter@51baea92, org.springframework.security.web.header.HeaderWriterFilter@229050ef, org.springframework.web.filter.CorsFilter@22e8f04c, org.springframework.security.web.authentication.logout.LogoutFilter@7c900524, com.ringo.auth.JwtFilter@fcdeb50, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@44a65503, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6bf6dc1d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@774d1f78, org.springframework.security.web.session.SessionManagementFilter@5d2d89a6, org.springframework.security.web.access.ExceptionTranslationFilter@8381edd, org.springframework.security.web.access.intercept.AuthorizationFilter@67573db5]
-2023-09-01 18:04:54.182 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:04:54.196 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 19.417 seconds (process running for 20.252)
-2023-09-01 18:04:54.266 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:04:57.530 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:04:57.531 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:04:57.534 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
-2023-09-01 18:04:57.640 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: aahusar@gmail.com, role: ROLE_ORGANISATION
-2023-09-01 18:04:57.778 [http-nio-8080-exec-1] INFO  c.r.service.payment.StripeService - Create customer for user: aahusar@gmail.com
-2023-09-01 18:04:58.757 [http-nio-8080-exec-1] WARN  c.r.exception.GlobalExceptionHandler - Failed to create payment account for user aahusar@gmail.com
-2023-09-01 18:05:28.010 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:05:28.027 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:05:28.033 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 18:05:36.873 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3285 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:05:36.877 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:05:38.696 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:05:38.909 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 200 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:05:39.943 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:05:39.961 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:05:39.961 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:05:40.136 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:05:40.136 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2811 ms
-2023-09-01 18:05:40.336 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:05:40.548 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1b4a3a1
-2023-09-01 18:05:40.551 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:05:40.744 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:05:40.889 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:05:41.029 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:05:41.447 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:05:41.468 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:05:41.471 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:05:41.473 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:05:41.562 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:05:41.721 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:05:41.855 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:05:41.927 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:05:42.388 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:05:44.012 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:05:44.027 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:05:50.120 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:05:50.991 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:05:52.160 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:05:56.068 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@387d2104, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@541d5c48, org.springframework.security.web.context.SecurityContextHolderFilter@6786016, org.springframework.security.web.header.HeaderWriterFilter@31a45131, org.springframework.web.filter.CorsFilter@66008321, org.springframework.security.web.authentication.logout.LogoutFilter@490cce64, com.ringo.auth.JwtFilter@72090715, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4005dc6b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@30cf6802, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3c01d268, org.springframework.security.web.session.SessionManagementFilter@30b9d1f0, org.springframework.security.web.access.ExceptionTranslationFilter@1ca0f80, org.springframework.security.web.access.intercept.AuthorizationFilter@22f9cea5]
-2023-09-01 18:05:56.782 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:05:56.806 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 20.584 seconds (process running for 21.813)
-2023-09-01 18:05:56.904 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:06:00.118 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:06:00.118 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:06:00.120 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2023-09-01 18:06:00.300 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: aahusar@gmail.com, role: ROLE_ORGANISATION
-2023-09-01 18:06:14.883 [http-nio-8080-exec-1] INFO  c.r.service.payment.StripeService - Create customer for user: aahusar@gmail.com
-2023-09-01 18:06:42.985 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3303 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:06:42.989 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:06:44.499 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:06:44.688 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 174 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:06:45.635 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:06:45.652 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:06:45.653 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:06:45.797 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:06:45.798 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2470 ms
-2023-09-01 18:06:45.970 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:06:46.180 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@46ea78f0
-2023-09-01 18:06:46.183 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:06:46.469 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:06:46.602 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:06:46.719 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:06:47.056 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:06:47.075 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:06:47.079 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:06:47.083 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:06:47.174 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:06:47.317 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:06:47.433 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:06:47.493 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:06:47.913 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:06:49.284 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:06:49.295 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:06:53.475 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:06:54.325 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:06:55.178 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:06:58.226 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@f6bcac8, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7b00a3ea, org.springframework.security.web.context.SecurityContextHolderFilter@50c903e, org.springframework.security.web.header.HeaderWriterFilter@2e619363, org.springframework.web.filter.CorsFilter@7906de2f, org.springframework.security.web.authentication.logout.LogoutFilter@20b42094, com.ringo.auth.JwtFilter@7585531b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@63782ad0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@33ded464, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@cd90676, org.springframework.security.web.session.SessionManagementFilter@786f4b15, org.springframework.security.web.access.ExceptionTranslationFilter@62c2a477, org.springframework.security.web.access.intercept.AuthorizationFilter@41a6a728]
-2023-09-01 18:06:58.679 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:06:58.693 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 16.292 seconds (process running for 16.953)
-2023-09-01 18:06:58.759 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:07:03.402 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:07:03.403 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:07:03.405 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2023-09-01 18:07:03.498 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: aahusar@gmail.com, role: ROLE_ORGANISATION
-2023-09-01 18:07:03.629 [http-nio-8080-exec-1] INFO  c.r.service.payment.StripeService - Create customer for user: aahusar@gmail.com
-2023-09-01 18:07:05.732 [http-nio-8080-exec-1] INFO  c.r.service.payment.StripeService - Account created: acct_1NlYw8CmigJ0wpcR
-2023-09-01 18:07:47.994 [http-nio-8080-exec-3] WARN  c.r.exception.GlobalExceptionHandler - Failed to create account link
-2023-09-01 18:07:56.363 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:07:56.367 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:07:56.371 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 18:11:59.146 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3400 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:11:59.150 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:12:00.706 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:12:00.914 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 194 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:12:01.921 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:12:01.945 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:12:01.945 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:12:02.134 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:12:02.134 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2634 ms
-2023-09-01 18:12:02.316 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:12:02.567 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7bec8cb0
-2023-09-01 18:12:02.571 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:12:02.886 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:12:03.016 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:12:03.177 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:12:03.610 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:12:03.629 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:12:03.632 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:12:03.634 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:12:03.725 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:12:03.878 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:12:04.008 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:12:04.097 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:12:04.630 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:12:06.212 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:12:06.227 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:12:10.847 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:12:12.075 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:12:12.985 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:12:16.079 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@25215e78, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@35d472c1, org.springframework.security.web.context.SecurityContextHolderFilter@229050ef, org.springframework.security.web.header.HeaderWriterFilter@30cf6802, org.springframework.web.filter.CorsFilter@30c0993e, org.springframework.security.web.authentication.logout.LogoutFilter@9d464e7, com.ringo.auth.JwtFilter@4ff7de80, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7dc8d054, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@67775d80, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@720eae47, org.springframework.security.web.session.SessionManagementFilter@1ad1a318, org.springframework.security.web.access.ExceptionTranslationFilter@78b00778, org.springframework.security.web.access.intercept.AuthorizationFilter@4a8b4dd0]
-2023-09-01 18:12:16.572 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:12:16.586 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 18.117 seconds (process running for 19.089)
-2023-09-01 18:12:16.659 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:12:21.729 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:12:21.729 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:12:21.732 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2023-09-01 18:12:56.491 [http-nio-8080-exec-6] INFO  c.ringo.auth.AuthenticationService - User [email: aahusar@gmail.com] is authenticated
-2023-09-01 18:13:50.257 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Failed to create account link
-2023-09-01 18:14:19.253 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:14:19.259 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:14:19.266 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 18:14:24.586 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3458 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:14:24.592 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:14:26.323 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:14:26.534 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 193 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:14:27.564 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:14:27.586 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:14:27.587 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:14:27.764 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:14:27.765 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2756 ms
-2023-09-01 18:14:27.981 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:14:28.196 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2ab9e43e
-2023-09-01 18:14:28.200 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:14:28.368 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:14:28.504 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:14:28.649 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:14:29.037 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:14:29.054 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:14:29.057 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:14:29.060 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:14:29.163 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:14:29.313 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:14:29.475 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:14:29.548 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:14:30.032 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:14:31.602 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:14:31.615 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:14:36.436 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:14:37.275 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:14:38.140 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:14:41.466 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@51baea92, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@606b29ba, org.springframework.security.web.context.SecurityContextHolderFilter@56967355, org.springframework.security.web.header.HeaderWriterFilter@7e0adf35, org.springframework.web.filter.CorsFilter@33a1bb90, org.springframework.security.web.authentication.logout.LogoutFilter@53a8059, com.ringo.auth.JwtFilter@e8c381e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@32c2f3ee, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@a47611a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@44a65503, org.springframework.security.web.session.SessionManagementFilter@2984638a, org.springframework.security.web.access.ExceptionTranslationFilter@6c83c686, org.springframework.security.web.access.intercept.AuthorizationFilter@5d2d89a6]
-2023-09-01 18:14:42.118 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:14:42.135 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 18.22 seconds (process running for 19.028)
-2023-09-01 18:14:42.217 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:14:45.438 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:14:45.439 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:14:45.441 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2023-09-01 18:16:26.939 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3493 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:16:26.945 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:16:29.372 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:16:29.626 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 235 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:16:31.084 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:16:31.105 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:16:31.105 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:16:31.457 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:16:31.457 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3968 ms
-2023-09-01 18:16:31.667 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:16:31.963 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1805383
-2023-09-01 18:16:31.967 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:16:32.245 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:16:32.396 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:16:32.550 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:16:32.996 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:16:33.015 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:16:33.018 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:16:33.020 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:16:33.127 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:16:33.276 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:16:33.415 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:16:33.505 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:16:34.094 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:16:35.818 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:16:35.836 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:16:41.188 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:16:42.047 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:16:43.189 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:16:46.760 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@75f8a6c8, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3e71f228, org.springframework.security.web.context.SecurityContextHolderFilter@630d7bce, org.springframework.security.web.header.HeaderWriterFilter@66557a82, org.springframework.web.filter.CorsFilter@18e0f894, org.springframework.security.web.authentication.logout.LogoutFilter@4a8b4dd0, com.ringo.auth.JwtFilter@2ca93dee, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@769580de, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@156b69bc, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@42b479e7, org.springframework.security.web.session.SessionManagementFilter@47c06ea9, org.springframework.security.web.access.ExceptionTranslationFilter@4b6a7362, org.springframework.security.web.access.intercept.AuthorizationFilter@6a4430d7]
-2023-09-01 18:16:47.242 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:16:47.257 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 21.284 seconds (process running for 22.985)
-2023-09-01 18:16:47.541 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:16:49.724 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:16:49.724 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:16:49.726 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2023-09-01 18:16:58.947 [http-nio-8080-exec-2] WARN  c.r.exception.GlobalExceptionHandler - Failed to create account link
-2023-09-01 18:17:13.267 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3510 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:17:13.273 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:17:15.253 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:17:15.543 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 270 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:17:16.812 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:17:16.832 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:17:16.833 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:17:17.041 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:17:17.042 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3270 ms
-2023-09-01 18:17:17.248 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:17:17.510 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@fabef2e
-2023-09-01 18:17:17.516 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:17:17.743 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:17:17.931 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:17:18.114 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:17:18.634 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:17:18.658 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:17:18.663 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:17:18.666 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:17:18.786 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:17:19.007 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:17:19.152 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:17:19.234 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:17:19.751 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:17:21.638 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:17:21.655 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:17:27.268 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:17:28.126 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:17:28.618 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:17:31.646 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@601f58a3, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@387d2104, org.springframework.security.web.context.SecurityContextHolderFilter@1b4d6eff, org.springframework.security.web.header.HeaderWriterFilter@e53a969, org.springframework.web.filter.CorsFilter@22e8f04c, org.springframework.security.web.authentication.logout.LogoutFilter@7e471ad, com.ringo.auth.JwtFilter@fcdeb50, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@78b00778, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4005dc6b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@541d5c48, org.springframework.security.web.session.SessionManagementFilter@15411d35, org.springframework.security.web.access.ExceptionTranslationFilter@7ad4085c, org.springframework.security.web.access.intercept.AuthorizationFilter@5401976b]
-2023-09-01 18:17:32.386 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:17:32.401 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 20.03 seconds (process running for 20.869)
-2023-09-01 18:17:32.490 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:17:40.273 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:17:40.273 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:17:40.277 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
-2023-09-01 18:17:41.032 [http-nio-8080-exec-2] ERROR c.r.service.payment.StripeService - You must update your Connect branding settings with business name, icon, brand color in order to create an account link. You can set the missing fields at https://dashboard.stripe.com/settings/connect; request-id: req_ByCeLKrZCCIIhq
-2023-09-01 18:25:32.273 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3658 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:25:32.278 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:25:34.201 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:25:34.463 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 245 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:25:35.763 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:25:35.785 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:25:35.785 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:25:36.076 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:25:36.076 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3333 ms
-2023-09-01 18:25:36.273 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:25:36.550 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@667797f
-2023-09-01 18:25:36.553 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:25:36.738 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:25:36.892 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:25:37.029 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:25:37.458 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:25:37.477 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:25:37.481 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:25:37.483 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:25:37.585 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:25:37.759 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:25:37.877 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:25:37.975 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:25:38.485 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:25:40.079 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:25:40.094 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:25:45.031 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:25:45.877 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:25:46.709 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:25:49.442 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4847fe15, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@30c6a810, org.springframework.security.web.context.SecurityContextHolderFilter@117f1636, org.springframework.security.web.header.HeaderWriterFilter@1c7294c, org.springframework.web.filter.CorsFilter@3ec8c874, org.springframework.security.web.authentication.logout.LogoutFilter@26415f0b, com.ringo.auth.JwtFilter@45e6f47a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1ad1a318, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@8381edd, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4a8b4dd0, org.springframework.security.web.session.SessionManagementFilter@66557a82, org.springframework.security.web.access.ExceptionTranslationFilter@15411d35, org.springframework.security.web.access.intercept.AuthorizationFilter@3b887e2b]
-2023-09-01 18:25:49.992 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:25:50.010 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 18.519 seconds (process running for 20.007)
-2023-09-01 18:25:50.075 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:26:13.566 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:26:13.567 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:26:13.570 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2023-09-01 18:34:05.910 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:34:05.946 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:34:05.957 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 18:36:39.564 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3872 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:36:39.569 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:36:41.292 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:36:41.537 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 228 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:36:42.512 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:36:42.531 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:36:42.531 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:36:42.699 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:36:42.700 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2706 ms
-2023-09-01 18:36:42.853 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:36:43.114 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@786a3477
-2023-09-01 18:36:43.118 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:36:43.345 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:36:43.478 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:36:43.606 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:36:44.094 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:36:44.119 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:36:44.122 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:36:44.125 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:36:44.213 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:36:44.388 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:36:44.530 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:36:44.617 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:36:45.118 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:36:46.722 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:36:46.735 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:36:52.308 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:36:53.124 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:36:54.311 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:36:57.121 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@47d57aae, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@19315d74, org.springframework.security.web.context.SecurityContextHolderFilter@51baea92, org.springframework.security.web.header.HeaderWriterFilter@229050ef, org.springframework.web.filter.CorsFilter@22e8f04c, org.springframework.security.web.authentication.logout.LogoutFilter@7c900524, com.ringo.auth.JwtFilter@fcdeb50, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@44a65503, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6bf6dc1d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@774d1f78, org.springframework.security.web.session.SessionManagementFilter@5d2d89a6, org.springframework.security.web.access.ExceptionTranslationFilter@8381edd, org.springframework.security.web.access.intercept.AuthorizationFilter@67573db5]
-2023-09-01 18:36:57.545 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:36:57.559 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 18.735 seconds (process running for 20.184)
-2023-09-01 18:36:57.626 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:37:01.451 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:37:01.452 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:37:01.454 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2023-09-01 18:37:01.543 [http-nio-8080-exec-2] INFO  c.r.s.common.AbstractUserService - save: akmrbat@gmail.com, role: ROLE_ORGANISATION
-2023-09-01 18:37:01.672 [http-nio-8080-exec-2] INFO  c.r.service.payment.StripeService - Create customer for user: akmrbat@gmail.com
-2023-09-01 18:37:03.711 [http-nio-8080-exec-2] INFO  c.r.service.payment.StripeService - Account created: acct_1NlZP8Cdr73OxpTc
-2023-09-01 18:37:52.939 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: akmrbat@gmail.com] is authenticated
-2023-09-01 18:38:55.285 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:38:55.298 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:38:55.305 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 18:41:04.936 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 3989 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 18:41:04.941 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 18:41:06.753 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 18:41:06.941 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 173 ms. Found 13 JPA repository interfaces.
-2023-09-01 18:41:07.998 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 18:41:08.016 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 18:41:08.016 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 18:41:08.190 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 18:41:08.190 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2859 ms
-2023-09-01 18:41:08.355 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 18:41:08.608 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1805383
-2023-09-01 18:41:08.612 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 18:41:08.915 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 18:41:09.043 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 18:41:09.147 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 18:41:09.567 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 18:41:09.594 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 18:41:09.597 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 18:41:09.600 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 18:41:09.720 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 18:41:09.897 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 18:41:10.016 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 18:41:10.096 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 18:41:10.619 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 18:41:12.222 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 18:41:12.248 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:41:16.894 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 18:41:17.405 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 18:41:18.225 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 18:41:21.481 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@b106842, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@29c808c8, org.springframework.security.web.context.SecurityContextHolderFilter@7be03bb2, org.springframework.security.web.header.HeaderWriterFilter@7b6bf067, org.springframework.web.filter.CorsFilter@18e0f894, org.springframework.security.web.authentication.logout.LogoutFilter@770feaab, com.ringo.auth.JwtFilter@2ca93dee, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@774e5726, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@595dda6d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@265b5f05, org.springframework.security.web.session.SessionManagementFilter@1b6c7e3c, org.springframework.security.web.access.ExceptionTranslationFilter@6a4430d7, org.springframework.security.web.access.intercept.AuthorizationFilter@2e619363]
-2023-09-01 18:41:21.950 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 18:41:21.967 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 17.702 seconds (process running for 19.122)
-2023-09-01 18:41:22.046 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 18:41:47.732 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 18:41:47.733 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 18:41:47.737 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
-2023-09-01 18:41:47.831 [http-nio-8080-exec-1] INFO  c.r.s.common.AbstractUserService - save: olgusa@taltech.ee, role: ROLE_PARTICIPANT
-2023-09-01 18:43:09.776 [http-nio-8080-exec-6] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
-2023-09-01 18:43:27.057 [http-nio-8080-exec-7] WARN  c.r.exception.GlobalExceptionHandler - Bad credentials
-2023-09-01 18:43:50.848 [http-nio-8080-exec-9] WARN  c.r.exception.GlobalExceptionHandler - Email is already verified
-2023-09-01 18:44:01.887 [http-nio-8080-exec-10] INFO  c.ringo.auth.AuthenticationService - User [email: olgusa@taltech.ee] is authenticated
-2023-09-01 18:44:36.847 [http-nio-8080-exec-2] INFO  c.ringo.auth.AuthenticationService - User [email: aahusar@gmail.com] is authenticated
-2023-09-01 18:44:46.492 [http-nio-8080-exec-1] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=null)
-2023-09-01 18:45:00.987 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 1, IMG_5412.JPG
-2023-09-01 18:45:00.987 [http-nio-8080-exec-3] INFO  c.r.s.company.event.EventService - photo type: image/jpeg
-2023-09-01 18:45:01.770 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
-2023-09-01 18:45:03.606 [http-nio-8080-exec-3] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
-2023-09-01 18:45:09.514 [http-nio-8080-exec-4] INFO  c.r.s.company.event.EventService - setMainPhoto: 1
-2023-09-01 18:45:09.544 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - findPhoto: 1
-2023-09-01 18:45:09.798 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
-2023-09-01 18:45:10.069 [http-nio-8080-exec-4] INFO  c.ringo.service.common.PhotoService - savePhoto: jpeg
-2023-09-01 18:45:15.105 [http-nio-8080-exec-5] INFO  c.r.s.company.event.EventService - setActive: 1
-2023-09-01 18:45:38.623 [http-nio-8080-exec-3] INFO  c.r.s.c.event.EventSearchService - searchEvents: EventSearchDto(search=null, categoryIds=null, hostId=null, isActive=null, isTicketNeeded=null, priceMin=null, priceMax=null, currencyId=null, latitude=null, longitude=null, maxDistance=null, startTimeMin=null, startTimeMax=null, endTimeMin=null, endTimeMax=null)
-2023-09-01 18:45:48.787 [http-nio-8080-exec-4] INFO  c.ringo.auth.AuthenticationService - User [email: olgusa@taltech.ee] is authenticated
-2023-09-01 18:46:08.729 [http-nio-8080-exec-5] INFO  c.r.service.payment.StripeService - Init payment: PaymentData(amount=300.0, currency=com.ringo.model.company.Currency@4b039c6d), customerId: acct_1NlYw8CmigJ0wpcR
-2023-09-01 18:46:09.560 [http-nio-8080-exec-5] INFO  c.r.service.payment.StripeService - Payment intent created: pi_3NlZXxCmigJ0wpcR0jWj2esM
-2023-09-01 18:47:25.128 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 18:47:25.153 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 18:47:25.179 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 19:12:37.321 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 4376 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 19:12:37.325 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 19:12:39.015 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 19:12:39.211 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 185 ms. Found 13 JPA repository interfaces.
-2023-09-01 19:12:40.210 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 19:12:40.232 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 19:12:40.232 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 19:12:40.412 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 19:12:40.412 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2637 ms
-2023-09-01 19:12:40.595 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 19:12:40.851 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@9f0fc36
-2023-09-01 19:12:40.854 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 19:12:41.205 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 19:12:41.357 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 19:12:41.592 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 19:12:42.052 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 19:12:42.071 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 19:12:42.075 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 19:12:42.077 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 19:12:42.167 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 19:12:42.309 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 19:12:42.442 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 19:12:42.535 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 19:12:43.057 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 19:12:44.705 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 19:12:44.720 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 19:12:50.884 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 19:12:52.166 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 19:12:52.694 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 19:12:55.213 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@53c4b36b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@8f08b5, org.springframework.security.web.context.SecurityContextHolderFilter@147b7f3c, org.springframework.security.web.header.HeaderWriterFilter@3658b0ce, org.springframework.web.filter.CorsFilter@2e03b52f, org.springframework.security.web.authentication.logout.LogoutFilter@6e3ba10a, com.ringo.auth.JwtFilter@373e3dac, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@29c808c8, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@265b5f05, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5eb1fd44, org.springframework.security.web.session.SessionManagementFilter@7cfc6110, org.springframework.security.web.access.ExceptionTranslationFilter@64b95cd7, org.springframework.security.web.access.intercept.AuthorizationFilter@5590d10f]
-2023-09-01 19:12:55.743 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 19:12:55.759 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 19.105 seconds (process running for 20.165)
-2023-09-01 19:12:55.845 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 19:13:06.272 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 19:13:06.273 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 19:13:06.274 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2023-09-01 19:13:06.458 [http-nio-8080-exec-2] INFO  c.r.service.payment.StripeService - Init payment: PaymentData(amount=300.0, currency=com.ringo.model.company.Currency@507d64aa), customerId: acct_1NlYw8CmigJ0wpcR
-2023-09-01 19:13:07.357 [http-nio-8080-exec-2] INFO  c.r.service.payment.StripeService - Payment intent created: pi_3NlZy3CmigJ0wpcR1A4gx0eK
-2023-09-01 19:13:10.945 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 19:13:10.949 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 19:13:10.954 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2023-09-01 19:16:50.600 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 4505 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
-2023-09-01 19:16:50.605 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
-2023-09-01 19:16:52.395 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-01 19:16:52.607 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 197 ms. Found 13 JPA repository interfaces.
-2023-09-01 19:16:53.624 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2023-09-01 19:16:53.647 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2023-09-01 19:16:53.648 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
-2023-09-01 19:16:53.827 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2023-09-01 19:16:53.828 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2756 ms
-2023-09-01 19:16:54.014 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-09-01 19:16:54.272 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@ce561cc
-2023-09-01 19:16:54.275 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-09-01 19:16:54.636 [main] INFO  liquibase.database - Set default schema name to public
-2023-09-01 19:16:54.768 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-2023-09-01 19:16:54.891 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
-2023-09-01 19:16:55.319 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
-2023-09-01 19:16:55.340 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
-2023-09-01 19:16:55.343 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
-2023-09-01 19:16:55.347 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
-2023-09-01 19:16:55.454 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2023-09-01 19:16:55.591 [main] INFO  liquibase.lockservice - Successfully released change log lock
-2023-09-01 19:16:55.715 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-01 19:16:55.782 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-09-01 19:16:56.227 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2023-09-01 19:16:57.687 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-01 19:16:57.700 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 19:17:03.133 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
-2023-09-01 19:17:03.649 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
-2023-09-01 19:17:04.144 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
-2023-09-01 19:17:07.109 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@77652fc6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4924c27e, org.springframework.security.web.context.SecurityContextHolderFilter@7572c6dd, org.springframework.security.web.header.HeaderWriterFilter@3aba9252, org.springframework.web.filter.CorsFilter@5ae3f536, org.springframework.security.web.authentication.logout.LogoutFilter@6bf6dc1d, com.ringo.auth.JwtFilter@65f1bf2c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6389e793, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@284d1c98, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7b04dba0, org.springframework.security.web.session.SessionManagementFilter@78b00778, org.springframework.security.web.access.ExceptionTranslationFilter@3a8f9d53, org.springframework.security.web.access.intercept.AuthorizationFilter@541d5c48]
-2023-09-01 19:17:07.581 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-01 19:17:07.595 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 17.689 seconds (process running for 18.594)
-2023-09-01 19:17:07.658 [main] INFO  com.ringo.RingoApplication - 
-----------------------------------------------------------
-	Application 'Ringo' is running! Access URLs:
-	Local: 		http://localhost:8080/
-	External: 	http://127.0.0.1:8080/
-	Profile(s): 	[]
-----------------------------------------------------------
-2023-09-01 19:17:10.159 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-01 19:17:10.160 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2023-09-01 19:17:10.163 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
-2023-09-01 19:17:10.361 [http-nio-8080-exec-1] INFO  c.r.service.payment.StripeService - Init payment: PaymentData(amount=300.0, currency=com.ringo.model.company.Currency@3e67f5f2), customerId: acct_1NlYw8CmigJ0wpcR
-2023-09-01 19:17:11.192 [http-nio-8080-exec-1] INFO  c.r.service.payment.StripeService - Payment intent created: pi_3Nla1yCmigJ0wpcR0n2TCngD
-2023-09-01 19:22:13.616 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-01 19:22:13.640 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2023-09-01 19:22:13.651 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-09-02 14:21:09.879 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-09-02 14:21:09.880 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-09-02 14:21:09.882 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2023-09-02 14:21:09.960 [http-nio-8080-exec-2] INFO  c.ringo.controller.StripeController - Webhook from stripe received: {
+  "id": "evt_3Nlrt2CkVoLPfCXz1tQfvbU2",
+  "object": "event",
+  "api_version": "2022-11-15",
+  "created": 1693653669,
+  "data": {
+    "object": {
+      "id": "pi_3Nlrt2CkVoLPfCXz1lFkSVqC",
+      "object": "payment_intent",
+      "amount": 2000,
+      "amount_capturable": 0,
+      "amount_details": {
+        "tip": {
+        }
+      },
+      "amount_received": 2000,
+      "application": null,
+      "application_fee_amount": null,
+      "automatic_payment_methods": null,
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "client_secret": "pi_3Nlrt2CkVoLPfCXz1lFkSVqC_secret_g4RJBxOB8beYDjVdvkTPH5Ey5",
+      "confirmation_method": "automatic",
+      "created": 1693653668,
+      "currency": "usd",
+      "customer": null,
+      "description": "(created by Stripe CLI)",
+      "invoice": null,
+      "last_payment_error": null,
+      "latest_charge": "ch_3Nlrt2CkVoLPfCXz1hPehJiA",
+      "livemode": false,
+      "metadata": {
+      },
+      "next_action": null,
+      "on_behalf_of": null,
+      "payment_method": "pm_1Nlrt2CkVoLPfCXzDEPgJRa7",
+      "payment_method_options": {
+        "card": {
+          "installments": null,
+          "mandate_options": null,
+          "network": null,
+          "request_three_d_secure": "automatic"
+        }
+      },
+      "payment_method_types": [
+        "card"
+      ],
+      "processing": null,
+      "receipt_email": null,
+      "review": null,
+      "setup_future_usage": null,
+      "shipping": {
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "line1": "510 Townsend St",
+          "line2": null,
+          "postal_code": "94103",
+          "state": "CA"
+        },
+        "carrier": null,
+        "name": "Jenny Rosen",
+        "phone": null,
+        "tracking_number": null
+      },
+      "source": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "succeeded",
+      "transfer_data": null,
+      "transfer_group": null
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 2,
+  "request": {
+    "id": "req_lbW2ynVU5cVqv6",
+    "idempotency_key": "3d377389-a890-49a1-b4c4-36edcee6d76c"
+  },
+  "type": "payment_intent.succeeded"
+}
+2023-09-02 14:21:09.960 [http-nio-8080-exec-1] INFO  c.ringo.controller.StripeController - Webhook from stripe received: {
+  "id": "evt_3Nlrt2CkVoLPfCXz1d3XkHVz",
+  "object": "event",
+  "api_version": "2022-11-15",
+  "created": 1693653669,
+  "data": {
+    "object": {
+      "id": "ch_3Nlrt2CkVoLPfCXz1hPehJiA",
+      "object": "charge",
+      "amount": 2000,
+      "amount_captured": 2000,
+      "amount_refunded": 0,
+      "application": null,
+      "application_fee": null,
+      "application_fee_amount": null,
+      "balance_transaction": "txn_3Nlrt2CkVoLPfCXz1WSfQBJq",
+      "billing_details": {
+        "address": {
+          "city": null,
+          "country": null,
+          "line1": null,
+          "line2": null,
+          "postal_code": null,
+          "state": null
+        },
+        "email": null,
+        "name": null,
+        "phone": null
+      },
+      "calculated_statement_descriptor": "Stripe",
+      "captured": true,
+      "created": 1693653668,
+      "currency": "usd",
+      "customer": null,
+      "description": "(created by Stripe CLI)",
+      "destination": null,
+      "dispute": null,
+      "disputed": false,
+      "failure_balance_transaction": null,
+      "failure_code": null,
+      "failure_message": null,
+      "fraud_details": {
+      },
+      "invoice": null,
+      "livemode": false,
+      "metadata": {
+      },
+      "on_behalf_of": null,
+      "order": null,
+      "outcome": {
+        "network_status": "approved_by_network",
+        "reason": null,
+        "risk_level": "normal",
+        "risk_score": 10,
+        "seller_message": "Payment complete.",
+        "type": "authorized"
+      },
+      "paid": true,
+      "payment_intent": "pi_3Nlrt2CkVoLPfCXz1lFkSVqC",
+      "payment_method": "pm_1Nlrt2CkVoLPfCXzDEPgJRa7",
+      "payment_method_details": {
+        "card": {
+          "brand": "visa",
+          "checks": {
+            "address_line1_check": null,
+            "address_postal_code_check": null,
+            "cvc_check": null
+          },
+          "country": "US",
+          "exp_month": 9,
+          "exp_year": 2024,
+          "fingerprint": "W31KkhmRyzpFEbLS",
+          "funding": "credit",
+          "installments": null,
+          "last4": "4242",
+          "mandate": null,
+          "network": "visa",
+          "network_token": {
+            "used": false
+          },
+          "three_d_secure": null,
+          "wallet": null
+        },
+        "type": "card"
+      },
+      "receipt_email": null,
+      "receipt_number": null,
+      "receipt_url": "https://pay.stripe.com/receipts/payment/CAcaFwoVYWNjdF8xTjZiS1NDa1ZvTFBmQ1h6KKW1zKcGMgY30LQQf1c6LBYrsgGgyxUxjhCJlnXTCIo6WOsPFSxHLOUrUgcRffUZTVWCmk39hIlIexqF",
+      "refunded": false,
+      "review": null,
+      "shipping": {
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "line1": "510 Townsend St",
+          "line2": null,
+          "postal_code": "94103",
+          "state": "CA"
+        },
+        "carrier": null,
+        "name": "Jenny Rosen",
+        "phone": null,
+        "tracking_number": null
+      },
+      "source": null,
+      "source_transfer": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "succeeded",
+      "transfer_data": null,
+      "transfer_group": null
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 2,
+  "request": {
+    "id": "req_lbW2ynVU5cVqv6",
+    "idempotency_key": "3d377389-a890-49a1-b4c4-36edcee6d76c"
+  },
+  "type": "charge.succeeded"
+}
+2023-09-02 14:21:09.960 [http-nio-8080-exec-3] INFO  c.ringo.controller.StripeController - Webhook from stripe received: {
+  "id": "evt_3Nlrt2CkVoLPfCXz19rOsf5a",
+  "object": "event",
+  "api_version": "2022-11-15",
+  "created": 1693653668,
+  "data": {
+    "object": {
+      "id": "pi_3Nlrt2CkVoLPfCXz1lFkSVqC",
+      "object": "payment_intent",
+      "amount": 2000,
+      "amount_capturable": 0,
+      "amount_details": {
+        "tip": {
+        }
+      },
+      "amount_received": 0,
+      "application": null,
+      "application_fee_amount": null,
+      "automatic_payment_methods": null,
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "client_secret": "pi_3Nlrt2CkVoLPfCXz1lFkSVqC_secret_g4RJBxOB8beYDjVdvkTPH5Ey5",
+      "confirmation_method": "automatic",
+      "created": 1693653668,
+      "currency": "usd",
+      "customer": null,
+      "description": "(created by Stripe CLI)",
+      "invoice": null,
+      "last_payment_error": null,
+      "latest_charge": null,
+      "livemode": false,
+      "metadata": {
+      },
+      "next_action": null,
+      "on_behalf_of": null,
+      "payment_method": null,
+      "payment_method_options": {
+        "card": {
+          "installments": null,
+          "mandate_options": null,
+          "network": null,
+          "request_three_d_secure": "automatic"
+        }
+      },
+      "payment_method_types": [
+        "card"
+      ],
+      "processing": null,
+      "receipt_email": null,
+      "review": null,
+      "setup_future_usage": null,
+      "shipping": {
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "line1": "510 Townsend St",
+          "line2": null,
+          "postal_code": "94103",
+          "state": "CA"
+        },
+        "carrier": null,
+        "name": "Jenny Rosen",
+        "phone": null,
+        "tracking_number": null
+      },
+      "source": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "requires_payment_method",
+      "transfer_data": null,
+      "transfer_group": null
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 2,
+  "request": {
+    "id": "req_lbW2ynVU5cVqv6",
+    "idempotency_key": "3d377389-a890-49a1-b4c4-36edcee6d76c"
+  },
+  "type": "payment_intent.created"
+}
+2023-09-02 14:21:09.995 [http-nio-8080-exec-3] ERROR c.r.exception.GlobalExceptionHandler - java.lang.NullPointerException: Cannot invoke "String.split(String, int)" because "sigHeader" is null
+2023-09-02 14:21:09.995 [http-nio-8080-exec-2] ERROR c.r.exception.GlobalExceptionHandler - java.lang.NullPointerException: Cannot invoke "String.split(String, int)" because "sigHeader" is null
+2023-09-02 14:21:09.995 [http-nio-8080-exec-1] ERROR c.r.exception.GlobalExceptionHandler - java.lang.NullPointerException: Cannot invoke "String.split(String, int)" because "sigHeader" is null
+2023-09-02 14:21:55.537 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-02 14:21:55.543 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-09-02 14:21:55.548 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

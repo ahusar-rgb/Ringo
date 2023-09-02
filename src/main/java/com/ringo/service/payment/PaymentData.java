@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class PaymentData {
+    private String accountId;
     private Float amount;
     private Currency currency;
+    private String idempotencyKey;
 }

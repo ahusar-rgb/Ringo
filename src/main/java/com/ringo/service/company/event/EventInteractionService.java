@@ -13,6 +13,7 @@ import com.ringo.model.company.Participant;
 import com.ringo.model.form.RegistrationSubmission;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.ParticipantRepository;
+import com.ringo.service.company.JoiningIntentService;
 import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.RegistrationValidator;
 import com.ringo.service.company.TicketService;
@@ -32,6 +33,7 @@ public class EventInteractionService {
     private final EventPersonalizedMapper personalizedMapper;
     private final RegistrationValidator validator;
     private final ParticipantRepository participantRepository;
+    private final JoiningIntentService joiningIntentService;
 
     public JoinEventResult joinEvent(Long id, RegistrationSubmission submission) {
         Event event = repository.findActiveById(id).orElseThrow(
@@ -45,7 +47,7 @@ public class EventInteractionService {
         Participant participant = participantService.getFullActiveUser();
 
         if(event.getPrice() == null || event.getPrice() == 0) {
-            TicketDto ticketDto = ticketService.issueTicket(event, participant, submission);
+            TicketDto ticketDto = ticketService.issueTicket(joiningIntentService.create(participant, event)));
 
             event.setPeopleCount(event.getPeopleCount() + 1);
             repository.save(event);
@@ -57,7 +59,7 @@ public class EventInteractionService {
         }
 
         return JoinEventResult.builder()
-                .paymentIntentSecret(ticketService.initPayment(event))
+                .paymentIntentSecret(joiningIntentService.create(participant, event))
                 .build();
     }
 

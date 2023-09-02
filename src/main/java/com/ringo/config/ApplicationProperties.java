@@ -18,7 +18,8 @@ public class ApplicationProperties {
 
     private String stripePublicKey;
     private String stripeSecretKey;
+    private String stripeWebhookSecret;
     private Double applicationFeeInPercent;
-    private String stripeReauthUrl;
     private String stripeReturnUrl;
+    private String stripeReauthUrl;
 }

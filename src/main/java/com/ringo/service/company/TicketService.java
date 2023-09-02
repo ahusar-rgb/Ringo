@@ -12,13 +12,13 @@ import com.ringo.mapper.company.EventMapper;
 import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
 import com.ringo.model.form.RegistrationSubmission;
+import com.ringo.model.payment.JoiningIntent;
+import com.ringo.model.payment.JoiningIntentStatus;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.TicketRepository;
 import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.QrCodeGenerator;
-import com.ringo.service.payment.PaymentData;
-import com.ringo.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,9 +46,11 @@ public class TicketService {
     private final JwtService jwtService;
     private final EmailSender emailSender;
     private final QrCodeGenerator qrCodeGenerator;
-    private final PaymentService paymentService;
 
-    public TicketDto issueTicket(Event event, Participant participant, RegistrationSubmission submission) {
+    public TicketDto issueTicket(JoiningIntent joiningIntent) {
+        Event event = joiningIntent.getEvent();
+        Participant participant = joiningIntent.getParticipant();
+        RegistrationSubmission submission = joiningIntent.getRegistrationSubmission();
 
         throwIfTicketExists(event, participant);
 
@@ -188,10 +190,13 @@ public class TicketService {
         if(!isUserHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
-        issueTicket(event, participant, null);
-    }
-
-    public String initPayment(Event event) {
-        return paymentService.initPayment(event.getHost(), new PaymentData(event.getPrice(), event.getCurrency()));
+        issueTicket(JoiningIntent.builder()
+                .event(event)
+                .participant(participant)
+                .registrationSubmission(null)
+                .paymentIntentId(null)
+                .status(JoiningIntentStatus.NO_PAYMENT)
+                .build()
+        );
     }
 }
