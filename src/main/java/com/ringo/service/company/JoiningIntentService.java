@@ -20,7 +20,6 @@ public class JoiningIntentService {
     private final PaymentService paymentService;
 
     public JoiningIntent create(Participant participant, Event event) {
-
         PaymentIntent paymentIntent = paymentService.initPayment(
                 new PaymentData(
                         event.getHost().getStripeAccountId(),
@@ -38,6 +37,18 @@ public class JoiningIntentService {
             .event(event)
             .paymentIntentId(paymentIntent.getId())
             .status(JoiningIntentStatus.CREATED)
+            .createdAt(LocalDateTime.now())
+            .build();
+
+        return stripePaymentRepository.save(joiningIntent);
+    }
+
+
+    public JoiningIntent createNoPayment(Participant participant, Event event) {
+        JoiningIntent joiningIntent = JoiningIntent.builder()
+            .participant(participant)
+            .event(event)
+            .status(JoiningIntentStatus.NO_PAYMENT)
             .createdAt(LocalDateTime.now())
             .build();
 

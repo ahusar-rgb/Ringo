@@ -8,6 +8,7 @@ import com.ringo.model.payment.JoiningIntentStatus;
 import com.ringo.service.company.JoiningIntentService;
 import com.ringo.service.company.TicketService;
 import com.stripe.exception.SignatureVerificationException;
+import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.StripeObject;
 import com.stripe.net.Webhook;
@@ -38,7 +39,7 @@ public class StripeController {
 
         //validate webhook
         String sigHeader = headers.get("Stripe-Signature");
-        com.stripe.model.Event event;
+        Event event;
         try {
             event = Webhook.constructEvent(payload, sigHeader, config.getStripeWebhookSecret());
         } catch (JsonSyntaxException e) {
@@ -48,17 +49,23 @@ public class StripeController {
         }
 
         if (event.getType().equals(PAYMENT_SUCCESSFUL)) {
-            Optional<StripeObject> object = event.getDataObjectDeserializer().getObject();
-            if(object.isPresent()) {
-                PaymentIntent paymentIntent = (PaymentIntent) object.get();
-                JoiningIntent joiningIntent = joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_SUCCEEDED);
-                ticketService.issueTicket(joiningIntent);
-            } else {
-                throw new UserException("Invalid payload");
-            }
+            PaymentIntent paymentIntent = getPaymentIntent(event);
+            JoiningIntent joiningIntent = joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_SUCCEEDED);
+            ticketService.issueTicket(joiningIntent);
+            //sse notification
         } else if(event.getType().equals(PAYMENT_FAILED)) {
-            System.out.println("Payment failed");
-            //TODO: sse failed payment
+            PaymentIntent paymentIntent = getPaymentIntent(event);
+            joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_FAILED);
+            //sse notification
+        }
+    }
+
+    private PaymentIntent getPaymentIntent(Event event) {
+        Optional<StripeObject> object = event.getDataObjectDeserializer().getObject();
+        if(object.isPresent()) {
+            return (PaymentIntent) object.get();
+        } else {
+            throw new UserException("Invalid payload");
         }
     }
 }

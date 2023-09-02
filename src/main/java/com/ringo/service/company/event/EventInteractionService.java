@@ -47,7 +47,7 @@ public class EventInteractionService {
         Participant participant = participantService.getFullActiveUser();
 
         if(event.getPrice() == null || event.getPrice() == 0) {
-            TicketDto ticketDto = ticketService.issueTicket(joiningIntentService.create(participant, event)));
+            TicketDto ticketDto = ticketService.issueTicket(joiningIntentService.createNoPayment(participant, event));
 
             event.setPeopleCount(event.getPeopleCount() + 1);
             repository.save(event);
@@ -59,7 +59,7 @@ public class EventInteractionService {
         }
 
         return JoinEventResult.builder()
-                .paymentIntentSecret(joiningIntentService.create(participant, event))
+                .paymentIntentId(joiningIntentService.create(participant, event).getPaymentIntentId())
                 .build();
     }
 

@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class JoinEventResult {
-    private String paymentIntentSecret;
+    private String paymentIntentId;
     private TicketDto ticket;
 }

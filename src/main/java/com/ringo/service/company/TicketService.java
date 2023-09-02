@@ -13,7 +13,6 @@ import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
 import com.ringo.model.form.RegistrationSubmission;
 import com.ringo.model.payment.JoiningIntent;
-import com.ringo.model.payment.JoiningIntentStatus;
 import com.ringo.repository.EventRepository;
 import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.TicketRepository;
@@ -46,6 +45,7 @@ public class TicketService {
     private final JwtService jwtService;
     private final EmailSender emailSender;
     private final QrCodeGenerator qrCodeGenerator;
+    private final JoiningIntentService joinIntentService;
 
     public TicketDto issueTicket(JoiningIntent joiningIntent) {
         Event event = joiningIntent.getEvent();
@@ -190,13 +190,6 @@ public class TicketService {
         if(!isUserHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
-        issueTicket(JoiningIntent.builder()
-                .event(event)
-                .participant(participant)
-                .registrationSubmission(null)
-                .paymentIntentId(null)
-                .status(JoiningIntentStatus.NO_PAYMENT)
-                .build()
-        );
+        issueTicket(joinIntentService.createNoPayment(participant, event));
     }
 }
