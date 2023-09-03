@@ -1,9 +1,9 @@
 CREATE FUNCTION get_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION, lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
-   returns DECIMAL 
+   returns DECIMAL
    language plpgsql
   as
 $$
-declare 
+declare
 -- variable declaration
     phi1 DOUBLE PRECISION;
     phi2 DOUBLE PRECISION;
@@ -13,7 +13,7 @@ declare
     c DOUBLE PRECISION;
 begin
  -- logic
-    phi1 = lat1 * PI() / 180; 
+    phi1 = lat1 * PI() / 180;
     phi2 = lat2 * PI() / 180;
     delta_phi = phi2 - phi1;
     delta_lambda = (lon2 - lon1) * PI() / 180;
