@@ -49,11 +49,13 @@ public class StripeController {
         }
 
         if (event.getType().equals(PAYMENT_SUCCESSFUL)) {
+            log.info("Payment successful");
             PaymentIntent paymentIntent = getPaymentIntent(event);
             JoiningIntent joiningIntent = joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_SUCCEEDED);
             ticketService.issueTicket(joiningIntent);
             //sse notification
         } else if(event.getType().equals(PAYMENT_FAILED)) {
+            log.info("Payment failed");
             PaymentIntent paymentIntent = getPaymentIntent(event);
             joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_FAILED);
             //sse notification

@@ -33,12 +33,13 @@ public class JoiningIntentService {
             throw new RuntimeException("Payment already exists");
 
         JoiningIntent joiningIntent = JoiningIntent.builder()
-            .participant(participant)
-            .event(event)
-            .paymentIntentId(paymentIntent.getId())
-            .status(JoiningIntentStatus.CREATED)
-            .createdAt(LocalDateTime.now())
-            .build();
+                .participant(participant)
+                .event(event)
+                .paymentIntentId(paymentIntent.getId())
+                .status(JoiningIntentStatus.CREATED)
+                .paymentIntentClientSecret(paymentIntent.getClientSecret())
+                .createdAt(LocalDateTime.now())
+                .build();
 
         return stripePaymentRepository.save(joiningIntent);
     }

@@ -59,7 +59,7 @@ public class EventInteractionService {
         }
 
         return JoinEventResult.builder()
-                .paymentIntentId(joiningIntentService.create(participant, event).getPaymentIntentId())
+                .paymentIntentClientSecret(joiningIntentService.create(participant, event).getPaymentIntentClientSecret())
                 .build();
     }
 

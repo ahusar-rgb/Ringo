@@ -331,3 +331,189 @@
 2023-09-02 14:21:55.537 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-09-02 14:21:55.543 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2023-09-02 14:21:55.548 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-09-03 13:06:28.660 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 19040 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-09-03 13:06:28.664 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-09-03 13:06:30.348 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-03 13:06:30.566 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 204 ms. Found 14 JPA repository interfaces.
+2023-09-03 13:06:31.610 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 443 (http)
+2023-09-03 13:06:31.627 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-09-03 13:06:31.628 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-09-03 13:06:31.827 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-09-03 13:06:31.827 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2753 ms
+2023-09-03 13:06:32.019 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-09-03 13:06:32.256 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@46ea78f0
+2023-09-03 13:06:32.259 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-09-03 13:06:32.629 [main] INFO  liquibase.database - Set default schema name to public
+2023-09-03 13:06:32.781 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+2023-09-03 13:06:32.912 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
+2023-09-03 13:06:33.317 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/001-changelog.xml
+2023-09-03 13:06:33.341 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
+2023-09-03 13:06:33.345 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
+2023-09-03 13:06:33.365 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
+2023-09-03 13:06:33.467 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2023-09-03 13:06:33.623 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2023-09-03 13:06:33.753 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-03 13:06:33.830 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-09-03 13:06:34.293 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-09-03 13:06:35.737 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-03 13:06:35.750 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-03 13:06:41.177 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
+2023-09-03 13:06:42.358 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
+2023-09-03 13:06:42.919 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
+2023-09-03 13:06:44.933 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5ed921c9, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@21080d55, org.springframework.security.web.context.SecurityContextHolderFilter@7c0fd22d, org.springframework.security.web.header.HeaderWriterFilter@9b7701f, org.springframework.web.filter.CorsFilter@6be8e6ee, org.springframework.security.web.authentication.logout.LogoutFilter@7ddb114d, com.ringo.auth.JwtFilter@2ea3f905, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@b52d046, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@67205ec8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6b6eaa73, org.springframework.security.web.session.SessionManagementFilter@7b16d337, org.springframework.security.web.access.ExceptionTranslationFilter@10117005, org.springframework.security.web.access.intercept.AuthorizationFilter@7ce069de]
+2023-09-03 13:06:45.388 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 443 (http) with context path ''
+2023-09-03 13:06:45.418 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 17.384 seconds (process running for 18.085)
+2023-09-03 13:06:45.498 [main] INFO  com.ringo.RingoApplication - 
+----------------------------------------------------------
+	Application 'Ringo' is running! Access URLs:
+	Local: 		http://localhost:443/
+	External: 	http://127.0.0.1:443/
+	Profile(s): 	[]
+----------------------------------------------------------
+2023-09-03 13:06:55.050 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-03 13:06:55.053 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-09-03 13:06:55.056 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-09-03 13:41:28.296 [main] INFO  com.ringo.RingoApplication - Starting RingoApplication using Java 17.0.2 with PID 19780 (/Users/aleksandr/Ringo/build/classes/java/main started by aleksandr in /Users/aleksandr/Ringo)
+2023-09-03 13:41:28.301 [main] INFO  com.ringo.RingoApplication - No active profile set, falling back to 1 default profile: "default"
+2023-09-03 13:41:29.907 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-03 13:41:30.101 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 181 ms. Found 14 JPA repository interfaces.
+2023-09-03 13:41:31.067 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 443 (http)
+2023-09-03 13:41:31.087 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-09-03 13:41:31.088 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-09-03 13:41:31.267 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-09-03 13:41:31.268 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2547 ms
+2023-09-03 13:41:31.455 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-09-03 13:41:31.728 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@32dcfeea
+2023-09-03 13:41:31.732 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-09-03 13:41:31.914 [main] INFO  liquibase.database - Set default schema name to public
+2023-09-03 13:41:32.103 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+2023-09-03 13:41:32.261 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/000-changelog.xml
+2023-09-03 13:41:32.672 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/01-category.sql
+2023-09-03 13:41:32.675 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/02-currency.sql
+2023-09-03 13:41:32.676 [main] INFO  liquibase.changelog - Reading resource: liquibase/change-logs/09-get_distance.sql
+2023-09-03 13:41:32.705 [main] INFO  liquibase.changelog - Creating database history table with name: public.databasechangelog
+2023-09-03 13:41:32.718 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2023-09-03 13:41:32.935 [main] INFO  liquibase.changelog - Table category created
+2023-09-03 13:41:32.938 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-1::aleksandr (generated) ran successfully in 39ms
+2023-09-03 13:41:32.959 [main] INFO  liquibase.changelog - Table category_event created
+2023-09-03 13:41:32.967 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-2::aleksandr (generated) ran successfully in 19ms
+2023-09-03 13:41:32.988 [main] INFO  liquibase.changelog - Table currency created
+2023-09-03 13:41:32.993 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-3::aleksandr (generated) ran successfully in 18ms
+2023-09-03 13:41:33.020 [main] INFO  liquibase.changelog - Table event created
+2023-09-03 13:41:33.025 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-4::aleksandr (generated) ran successfully in 23ms
+2023-09-03 13:41:33.042 [main] INFO  liquibase.changelog - Table event_main_photo created
+2023-09-03 13:41:33.044 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-5::aleksandr (generated) ran successfully in 10ms
+2023-09-03 13:41:33.059 [main] INFO  liquibase.changelog - Table event_photo created
+2023-09-03 13:41:33.062 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-6::aleksandr (generated) ran successfully in 11ms
+2023-09-03 13:41:33.075 [main] INFO  liquibase.changelog - Table event_save created
+2023-09-03 13:41:33.078 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-7::aleksandr (generated) ran successfully in 10ms
+2023-09-03 13:41:33.091 [main] INFO  liquibase.changelog - Table exchange_rates created
+2023-09-03 13:41:33.093 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-8::aleksandr (generated) ran successfully in 10ms
+2023-09-03 13:41:33.108 [main] INFO  liquibase.changelog - Table joining_intent created
+2023-09-03 13:41:33.111 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-9::aleksandr (generated) ran successfully in 13ms
+2023-09-03 13:41:33.126 [main] INFO  liquibase.changelog - Table label created
+2023-09-03 13:41:33.128 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-10::aleksandr (generated) ran successfully in 12ms
+2023-09-03 13:41:33.143 [main] INFO  liquibase.changelog - Table organisation created
+2023-09-03 13:41:33.146 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-11::aleksandr (generated) ran successfully in 12ms
+2023-09-03 13:41:33.159 [main] INFO  liquibase.changelog - Table participant created
+2023-09-03 13:41:33.162 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-12::aleksandr (generated) ran successfully in 11ms
+2023-09-03 13:41:33.177 [main] INFO  liquibase.changelog - Table photo created
+2023-09-03 13:41:33.179 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-13::aleksandr (generated) ran successfully in 12ms
+2023-09-03 13:41:33.191 [main] INFO  liquibase.changelog - Table review created
+2023-09-03 13:41:33.194 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-14::aleksandr (generated) ran successfully in 10ms
+2023-09-03 13:41:33.209 [main] INFO  liquibase.changelog - Table ticket created
+2023-09-03 13:41:33.211 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-15::aleksandr (generated) ran successfully in 11ms
+2023-09-03 13:41:33.226 [main] INFO  liquibase.changelog - Table users created
+2023-09-03 13:41:33.229 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-16::aleksandr (generated) ran successfully in 12ms
+2023-09-03 13:41:33.244 [main] INFO  liquibase.changelog - Unique constraint added to category(name)
+2023-09-03 13:41:33.246 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-17::aleksandr (generated) ran successfully in 11ms
+2023-09-03 13:41:33.265 [main] INFO  liquibase.changelog - Unique constraint added to currency(name)
+2023-09-03 13:41:33.268 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-18::aleksandr (generated) ran successfully in 13ms
+2023-09-03 13:41:33.286 [main] INFO  liquibase.changelog - Unique constraint added to currency(symbol)
+2023-09-03 13:41:33.290 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-19::aleksandr (generated) ran successfully in 14ms
+2023-09-03 13:41:33.308 [main] INFO  liquibase.changelog - Unique constraint added to review(participant_id, organisation_id)
+2023-09-03 13:41:33.312 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-20::aleksandr (generated) ran successfully in 13ms
+2023-09-03 13:41:33.331 [main] INFO  liquibase.changelog - Unique constraint added to joining_intent(payment_intent_id)
+2023-09-03 13:41:33.335 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-21::aleksandr (generated) ran successfully in 15ms
+2023-09-03 13:41:33.352 [main] INFO  liquibase.changelog - Unique constraint added to users(username)
+2023-09-03 13:41:33.356 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-22::aleksandr (generated) ran successfully in 14ms
+2023-09-03 13:41:33.374 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (event_id)
+2023-09-03 13:41:33.376 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-23::aleksandr (generated) ran successfully in 11ms
+2023-09-03 13:41:33.387 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (high_quality_photo_id)
+2023-09-03 13:41:33.391 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-24::aleksandr (generated) ran successfully in 8ms
+2023-09-03 13:41:33.402 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (lazy_photo_id)
+2023-09-03 13:41:33.405 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-25::aleksandr (generated) ran successfully in 9ms
+2023-09-03 13:41:33.419 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (low_quality_photo_id)
+2023-09-03 13:41:33.422 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-26::aleksandr (generated) ran successfully in 10ms
+2023-09-03 13:41:33.434 [main] INFO  liquibase.changelog - Foreign key constraint added to event_main_photo (medium_quality_photo_id)
+2023-09-03 13:41:33.437 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-27::aleksandr (generated) ran successfully in 9ms
+2023-09-03 13:41:33.449 [main] INFO  liquibase.changelog - Foreign key constraint added to event (currency_id)
+2023-09-03 13:41:33.452 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-28::aleksandr (generated) ran successfully in 9ms
+2023-09-03 13:41:33.467 [main] INFO  liquibase.changelog - Foreign key constraint added to event (host_id)
+2023-09-03 13:41:33.472 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-29::aleksandr (generated) ran successfully in 13ms
+2023-09-03 13:41:33.489 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (event_id)
+2023-09-03 13:41:33.493 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-30::aleksandr (generated) ran successfully in 12ms
+2023-09-03 13:41:33.507 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (lazy_photo_id)
+2023-09-03 13:41:33.511 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-31::aleksandr (generated) ran successfully in 10ms
+2023-09-03 13:41:33.527 [main] INFO  liquibase.changelog - Foreign key constraint added to event_photo (photo_id)
+2023-09-03 13:41:33.531 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-32::aleksandr (generated) ran successfully in 12ms
+2023-09-03 13:41:33.547 [main] INFO  liquibase.changelog - Foreign key constraint added to exchange_rates (from_id)
+2023-09-03 13:41:33.552 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-33::aleksandr (generated) ran successfully in 12ms
+2023-09-03 13:41:33.567 [main] INFO  liquibase.changelog - Foreign key constraint added to exchange_rates (to_id)
+2023-09-03 13:41:33.571 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-34::aleksandr (generated) ran successfully in 10ms
+2023-09-03 13:41:33.584 [main] INFO  liquibase.changelog - Foreign key constraint added to joining_intent (event_id)
+2023-09-03 13:41:33.587 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-35::aleksandr (generated) ran successfully in 9ms
+2023-09-03 13:41:33.596 [main] INFO  liquibase.changelog - Foreign key constraint added to joining_intent (participant_id)
+2023-09-03 13:41:33.599 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-36::aleksandr (generated) ran successfully in 8ms
+2023-09-03 13:41:33.608 [main] INFO  liquibase.changelog - Foreign key constraint added to label (organisation_id)
+2023-09-03 13:41:33.610 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-37::aleksandr (generated) ran successfully in 7ms
+2023-09-03 13:41:33.619 [main] INFO  liquibase.changelog - Foreign key constraint added to organisation (id)
+2023-09-03 13:41:33.622 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-38::aleksandr (generated) ran successfully in 6ms
+2023-09-03 13:41:33.632 [main] INFO  liquibase.changelog - Foreign key constraint added to participant (id)
+2023-09-03 13:41:33.634 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-39::aleksandr (generated) ran successfully in 7ms
+2023-09-03 13:41:33.644 [main] INFO  liquibase.changelog - Foreign key constraint added to review (organisation_id)
+2023-09-03 13:41:33.646 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-40::aleksandr (generated) ran successfully in 7ms
+2023-09-03 13:41:33.658 [main] INFO  liquibase.changelog - Foreign key constraint added to review (participant_id)
+2023-09-03 13:41:33.661 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-41::aleksandr (generated) ran successfully in 8ms
+2023-09-03 13:41:33.671 [main] INFO  liquibase.changelog - Foreign key constraint added to ticket (event_id)
+2023-09-03 13:41:33.673 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-42::aleksandr (generated) ran successfully in 7ms
+2023-09-03 13:41:33.681 [main] INFO  liquibase.changelog - Foreign key constraint added to ticket (participant_id)
+2023-09-03 13:41:33.684 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-43::aleksandr (generated) ran successfully in 7ms
+2023-09-03 13:41:33.692 [main] INFO  liquibase.changelog - Foreign key constraint added to users (profile_picture)
+2023-09-03 13:41:33.694 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-44::aleksandr (generated) ran successfully in 6ms
+2023-09-03 13:41:33.702 [main] INFO  liquibase.changelog - Foreign key constraint added to category_event (category_id)
+2023-09-03 13:41:33.705 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-45::aleksandr (generated) ran successfully in 6ms
+2023-09-03 13:41:33.713 [main] INFO  liquibase.changelog - Foreign key constraint added to category_event (event_id)
+2023-09-03 13:41:33.716 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-46::aleksandr (generated) ran successfully in 7ms
+2023-09-03 13:41:33.726 [main] INFO  liquibase.changelog - Foreign key constraint added to event_save (event_id)
+2023-09-03 13:41:33.728 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-47::aleksandr (generated) ran successfully in 8ms
+2023-09-03 13:41:33.737 [main] INFO  liquibase.changelog - Foreign key constraint added to event_save (participant_id)
+2023-09-03 13:41:33.739 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/000-changelog.xml::1693737632048-48::aleksandr (generated) ran successfully in 6ms
+2023-09-03 13:41:33.765 [main] INFO  liquibase.changelog - Custom SQL executed
+2023-09-03 13:41:33.768 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/01-category.sql::raw::includeAll ran successfully in 24ms
+2023-09-03 13:41:33.785 [main] INFO  liquibase.changelog - Custom SQL executed
+2023-09-03 13:41:33.789 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/02-currency.sql::raw::includeAll ran successfully in 13ms
+2023-09-03 13:41:33.864 [main] INFO  liquibase.changelog - Custom SQL executed
+2023-09-03 13:41:33.868 [main] INFO  liquibase.changelog - ChangeSet liquibase/change-logs/09-get_distance.sql::raw::includeAll ran successfully in 69ms
+2023-09-03 13:41:33.880 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2023-09-03 13:41:34.030 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-03 13:41:34.125 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-09-03 13:41:34.611 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-09-03 13:41:36.156 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-03 13:41:36.171 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-03 13:41:41.712 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: USD
+2023-09-03 13:41:43.022 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: EUR
+2023-09-03 13:41:43.910 [main] INFO  c.r.service.common.CurrencyExchanger - Updated exchange rates for currency: UAH
+2023-09-03 13:41:47.224 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@40b63796, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@15fb5531, org.springframework.security.web.context.SecurityContextHolderFilter@35069061, org.springframework.security.web.header.HeaderWriterFilter@6d7453ad, org.springframework.web.filter.CorsFilter@32b273c1, org.springframework.security.web.authentication.logout.LogoutFilter@69e0d31d, com.ringo.auth.JwtFilter@204d101, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6fc1a561, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@501dd0b4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@62e099d7, org.springframework.security.web.session.SessionManagementFilter@401835ac, org.springframework.security.web.access.ExceptionTranslationFilter@627e21c9, org.springframework.security.web.access.intercept.AuthorizationFilter@264e6ac3]
+2023-09-03 13:41:47.672 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 443 (http) with context path ''
+2023-09-03 13:41:47.687 [main] INFO  com.ringo.RingoApplication - Started RingoApplication in 20.048 seconds (process running for 20.937)
+2023-09-03 13:41:47.864 [main] INFO  com.ringo.RingoApplication - 
+----------------------------------------------------------
+	Application 'Ringo' is running! Access URLs:
+	Local: 		http://localhost:443/
+	External: 	http://127.0.0.1:443/
+	Profile(s): 	[]
+----------------------------------------------------------
+2023-09-03 13:42:13.279 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-03 13:42:13.285 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-09-03 13:42:13.289 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

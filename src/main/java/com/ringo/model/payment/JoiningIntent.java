@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "stripe_payment")
+@Table(name = "joining_intent")
 public class JoiningIntent extends AbstractEntity {
     @OneToOne
     private Participant participant;
@@ -27,8 +27,11 @@ public class JoiningIntent extends AbstractEntity {
     @OneToOne
     private Event event;
 
-    @Column(name = "payment_intent_id", nullable = false, unique = true)
+    @Column(name = "payment_intent_id", unique = true)
     private String paymentIntentId;
+
+    @Column(name = "payment_intent_client_secret")
+    private String paymentIntentClientSecret;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
