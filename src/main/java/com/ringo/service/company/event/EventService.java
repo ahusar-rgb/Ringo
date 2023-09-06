@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,7 +73,7 @@ public class EventService {
         }
 
         event.setIsActive(false);
-        event.setCreatedAt(LocalDateTime.now());
+        event.setCreatedAt(Instant.now());
 
         return mapper.toDtoDetails(repository.save(event));
     }
@@ -87,7 +87,7 @@ public class EventService {
         throwIfNotHost(event);
 
         mapper.partialUpdate(event, dto);
-        event.setUpdatedAt(LocalDateTime.now());
+        event.setUpdatedAt(Instant.now());
 
         if(dto.getCurrencyId() != null) {
             Currency currency = currencyRepository.findById(dto.getCurrencyId()).orElseThrow(

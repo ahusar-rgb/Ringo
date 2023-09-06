@@ -33,7 +33,7 @@ public class RegistrationValidator {
 
                 Question question;
                 try {
-                    question = form.getQuestions().get(answer.getQuestionId().intValue());
+                    question = form.getQuestions().get(answer.getQuestionId());
                 } catch (IndexOutOfBoundsException e) {
                     throw new UserException("Answer for question [id: %d] is invalid".formatted(answer.getQuestionId()));
                 }

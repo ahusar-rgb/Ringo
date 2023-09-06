@@ -14,7 +14,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,10 +57,10 @@ public class Event extends AbstractActiveEntity {
     private Currency currency;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @Column(name = "finish_time")
-    private LocalDateTime endTime;
+    private Instant endTime;
 
     @Column(name = "capacity")
     private Integer capacity;

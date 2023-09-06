@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "ticket")
@@ -25,10 +25,10 @@ public class Ticket {
     private TicketId id;
 
     @Column(name = "time_of_submission", nullable = false)
-    private LocalDateTime timeOfSubmission;
+    private Instant timeOfSubmission;
 
     @Column(name = "expiry_date", nullable = false)
-    private LocalDateTime expiryDate;
+    private Instant expiryDate;
 
     @Column(name = "is_validated", nullable = false)
     private Boolean isValidated;

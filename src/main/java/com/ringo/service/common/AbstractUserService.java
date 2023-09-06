@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 @Slf4j
@@ -49,7 +49,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     public R save(S dto, Role role) {
         log.info("save: {}, role: {}", dto.getEmail(), role);
         User _user = buildFromDto(dto);
-        _user.setCreatedAt(LocalDateTime.now());
+        _user.setCreatedAt(Instant.now());
         _user.setIsActive(true);
 
         T user = abstractUserMapper.fromUser(_user);
@@ -59,7 +59,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfRequiredFieldsNotFilled(user);
 
         user.setRole(role);
-        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedAt(Instant.now());
         user.setIsActive(false);
         user.setEmailVerified(false);
         user.setWithIdProvider(false);
@@ -78,7 +78,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfUniqueConstraintsViolated(user);
 
         user.setRole(role);
-        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedAt(Instant.now());
         user.setUsername("user" + System.currentTimeMillis());
         user.setIsActive(false);
         user.setWithIdProvider(true);
@@ -166,7 +166,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfUniqueConstraintsViolated(user);
         throwIfRequiredFieldsNotFilled(user);
 
-        user.setUpdatedAt(LocalDateTime.now());
+        user.setUpdatedAt(Instant.now());
         prepareForSave(user);
 
         R responseDto = abstractUserMapper.toDto(repository.save(user));

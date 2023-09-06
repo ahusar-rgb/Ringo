@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class DataInitializer {
                 .email(config.getAdminLogin())
                 .emailVerified(true)
                 .withIdProvider(false)
-                .createdAt(LocalDateTime.now())
+                .createdAt(Instant.now())
                 .name("Admin")
                 .isActive(true)
                 .role(Role.ROLE_ADMIN)

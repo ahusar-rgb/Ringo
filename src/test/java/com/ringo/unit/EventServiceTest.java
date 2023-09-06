@@ -36,6 +36,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,8 +137,8 @@ public class EventServiceTest {
         assertThat(saved.getCategories().contains(categories.get(1))).isTrue();
         assertThat(saved.getCategories().contains(categories.get(2))).isTrue();
         assertThat(saved.getHost()).usingRecursiveComparison().ignoringFields("id").isEqualTo(organisation);
-        assertThat(saved.getStartTime().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getStartTime());
-        assertThat(saved.getEndTime().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
+        assertThat(saved.getStartTime().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getStartTime());
+        assertThat(saved.getEndTime().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
         assertThat(saved.getCreatedAt()).isNotNull();
         assertThat(saved.getIsActive()).isFalse();
 
@@ -225,8 +227,8 @@ public class EventServiceTest {
         assertThat(saved.getLatitude()).isEqualTo(eventRequestDto.getCoordinates().latitude());
         assertThat(saved.getLongitude()).isEqualTo(eventRequestDto.getCoordinates().longitude());
         assertThat(saved.getIsTicketNeeded()).isEqualTo(eventRequestDto.getIsTicketNeeded());
-        assertThat(saved.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))).isEqualTo(eventRequestDto.getStartTime());
-        assertThat(saved.getEndTime().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
+        assertThat(saved.getStartTime().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))).isEqualTo(eventRequestDto.getStartTime());
+        assertThat(saved.getEndTime().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
         assertThat(saved.getCurrency()).usingRecursiveComparison().ignoringFields("id").isEqualTo(currency);
         assertThat(saved.getCategories().size()).isEqualTo(3);
         assertThat(saved.getCategories().contains(category1)).isTrue();

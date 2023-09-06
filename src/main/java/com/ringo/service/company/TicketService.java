@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.image.BufferedImage;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static java.lang.Float.compare;
@@ -51,7 +51,7 @@ public class TicketService {
 
         Ticket ticket = Ticket.builder()
                 .id(new TicketId(participant, event))
-                .timeOfSubmission(LocalDateTime.now())
+                .timeOfSubmission(Instant.now())
                 .expiryDate(event.getEndTime())
                 .isValidated(false)
                 .isPaid(event.getPrice() != null && compare(event.getPrice(), 0f) != 0)
@@ -107,7 +107,7 @@ public class TicketService {
         Ticket ticket = repository.findById(new TicketId(participant, event))
                 .orElseThrow(() -> new NotFoundException("Ticket not found"));
 
-        if(ticket.getExpiryDate().isBefore(LocalDateTime.now()))
+        if(ticket.getExpiryDate().isBefore(Instant.now()))
             throw new UserException("Ticket expired");
 
         return ticket;
@@ -156,7 +156,7 @@ public class TicketService {
                 .orElseThrow(() -> new UserException("The user is not registered for this event"));
 
         if(ticket.getIsPaid()) {
-            if (ticket.getExpiryDate().isAfter(LocalDateTime.now())) //not expired
+            if (ticket.getExpiryDate().isAfter(Instant.now())) //not expired
                 throw new UserException("Can't cancel a ticket for a paid event");
         }
 
