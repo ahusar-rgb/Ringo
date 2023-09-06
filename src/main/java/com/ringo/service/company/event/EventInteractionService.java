@@ -18,6 +18,7 @@ import com.ringo.service.company.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -39,6 +40,9 @@ public class EventInteractionService {
 
         if(event.getCapacity() != null && event.getPeopleCount() >= event.getCapacity())
             throw new UserException("Event is already full");
+
+        if(event.getEndTime().isBefore(Instant.now()))
+            throw new UserException("Event has already ended");
 
         validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
         Participant participant = participantService.getFullActiveUser();
