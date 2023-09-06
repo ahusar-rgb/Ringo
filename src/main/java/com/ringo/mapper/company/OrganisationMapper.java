@@ -23,8 +23,6 @@ public interface OrganisationMapper extends AbstractUserMapper<OrganisationReque
 
     @Override
     @Named("toDtoDetails")
-    @Mapping(target = "profilePictureId", source = "profilePicture.id")
-    @Mapping(target = "contacts", source = "contacts")
     default OrganisationResponseDto toDtoDetails(Organisation entity) {
         OrganisationResponseDto dto = toDto(entity);
 
@@ -33,12 +31,11 @@ public interface OrganisationMapper extends AbstractUserMapper<OrganisationReque
             dto.setUpcomingEventsCount(0);
         } else {
             dto.setPastEventsCount((int)entity.getHostedEvents().stream()
-                    .filter(event -> event.getEndTime().isBefore(Instant.now()))
+                    .filter(event -> event.getEndTime().isBefore(Instant.now()) && event.getIsActive())
                     .count()
             );
             dto.setUpcomingEventsCount((int)entity.getHostedEvents().stream()
-                    .filter(event -> event.getStartTime()
-                            .isAfter(Instant.now()))
+                    .filter(event -> event.getStartTime().isAfter(Instant.now()) && event.getIsActive())
                     .count()
             );
         }
