@@ -4,11 +4,10 @@ import com.ringo.config.ApplicationProperties;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
+import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class DataInitializer {
                 .email(config.getAdminLogin())
                 .emailVerified(true)
                 .withIdProvider(false)
-                .createdAt(Instant.now())
+                .createdAt(Time.getLocalUTC())
                 .name("Admin")
                 .isActive(true)
                 .role(Role.ROLE_ADMIN)

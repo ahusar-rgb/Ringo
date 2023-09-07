@@ -12,10 +12,6 @@ import com.ringo.model.photo.EventPhoto;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +38,8 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "mainPhotoId", expression = "java(entity.getMainPhoto() == null ? null : entity.getMainPhoto().getHighQualityPhoto().getId())")
     @Mapping(target = "coordinates", expression = "java(new Coordinates(entity.getLatitude(), entity.getLongitude()))")
     @Mapping(target = "hostId", source = "host.id")
-    @Mapping(target = "startTime", source = "startTime", qualifiedByName = "toString")
-    @Mapping(target = "endTime", source = "endTime", qualifiedByName = "toString")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
     public abstract EventSmallDto toDtoSmall(Event entity);
 
     @Named("toDtoSmallList")
@@ -63,8 +59,8 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Named("toDtoDetails")
     @Mapping(target = "coordinates", expression = "java(new Coordinates(entity.getLatitude(), entity.getLongitude()))")
     @Mapping(target = "photos", expression = "java(getPhotosWithoutMain(entity))")
-    @Mapping(target = "startTime", source = "startTime", qualifiedByName = "toString")
-    @Mapping(target = "endTime", source = "endTime", qualifiedByName = "toString")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
     public abstract EventResponseDto toDtoDetails(Event entity);
 
     @Named("getPhotosWithoutMain")
@@ -89,8 +85,8 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "photos", ignore = true)
     @Mapping(target = "peopleCount", expression = "java(0)")
     @Mapping(target = "peopleSaved", expression = "java(0)")
-    @Mapping(target = "startTime", source = "startTime", qualifiedByName = "toInstant")
-    @Mapping(target = "endTime", source = "endTime", qualifiedByName = "toInstant")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
     public abstract Event toEntity(EventRequestDto eventRequestDto);
 
     @Mapping(target = "id", ignore = true)
@@ -105,20 +101,8 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "currency", ignore = true)
     @Mapping(target = "latitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLatitude() : eventSmallDto.getCoordinates().latitude())")
     @Mapping(target = "longitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLongitude() : eventSmallDto.getCoordinates().longitude())")
-    @Mapping(target = "startTime", source = "startTime", qualifiedByName = "toInstant")
-    @Mapping(target = "endTime", source = "endTime", qualifiedByName = "toInstant")
+    @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract void partialUpdate(@MappingTarget Event event, EventRequestDto eventSmallDto);
-
-    @Named("toInstant")
-    public Instant toInstant(String string) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT);
-        return LocalDateTime.parse(string, formatter).toInstant(ZoneOffset.UTC);
-    }
-
-    @Named("toString")
-    public String toString(Instant instant) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT);
-        return formatter.format(instant.atZone(ZoneOffset.UTC));
-    }
 }

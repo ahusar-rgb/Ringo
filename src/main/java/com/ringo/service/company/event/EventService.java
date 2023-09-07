@@ -20,13 +20,13 @@ import com.ringo.repository.EventRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
 import com.ringo.service.company.OrganisationService;
 import com.ringo.service.company.RegistrationValidator;
+import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,7 +73,7 @@ public class EventService {
         }
 
         event.setIsActive(false);
-        event.setCreatedAt(Instant.now());
+        event.setCreatedAt(Time.getLocalUTC());
 
         return mapper.toDtoDetails(repository.save(event));
     }
@@ -87,7 +87,7 @@ public class EventService {
         throwIfNotHost(event);
 
         mapper.partialUpdate(event, dto);
-        event.setUpdatedAt(Instant.now());
+        event.setUpdatedAt(Time.getLocalUTC());
 
         if(dto.getCurrencyId() != null) {
             Currency currency = currencyRepository.findById(dto.getCurrencyId()).orElseThrow(

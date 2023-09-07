@@ -6,7 +6,6 @@ import com.ringo.model.company.Ticket;
 import com.ringo.model.company.TicketId;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class TicketMock {
     public static Ticket getTicketMock() {
@@ -16,8 +15,8 @@ public class TicketMock {
 
         return Ticket.builder()
                 .id(new TicketId(participant, event))
-                .timeOfSubmission(LocalDateTime.of(2021, 1, 1, 1, 1).toInstant(ZoneOffset.UTC))
-                .expiryDate(LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC))
+                .timeOfSubmission(LocalDateTime.of(2021, 1, 1, 1, 1))
+                .expiryDate(LocalDateTime.now().plusDays(1))
                 .isValidated(false)
                 .registrationSubmission(null)
                 .build();

@@ -4,7 +4,6 @@ import com.ringo.it.util.IdGenerator;
 import com.ringo.model.company.Event;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.HashSet;
 
 public class EventMock {
@@ -22,8 +21,8 @@ public class EventMock {
                 .latitude(50.0)
                 .longitude(50.0)
                 .address("Test address")
-                .startTime(LocalDateTime.of(2021, 1, 1, 1, 1).toInstant(ZoneOffset.UTC))
-                .endTime(LocalDateTime.of(2025, 1, 1, 1, 1).toInstant(ZoneOffset.UTC))
+                .startTime(LocalDateTime.of(2021, 1, 1, 1, 1))
+                .endTime(LocalDateTime.of(2025, 1, 1, 1, 1))
                 .host(OrganisationMock.getOrganisationMock())
                 .capacity(100)
                 .build();

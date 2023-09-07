@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
@@ -16,8 +16,8 @@ import java.time.Instant;
 @NoArgsConstructor
 public class AbstractAuditableEntity extends AbstractEntity {
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 }

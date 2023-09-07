@@ -13,6 +13,7 @@ import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
 import com.ringo.repository.UserRepository;
 import com.ringo.repository.common.AbstractUserRepository;
+import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Optional;
 
 @Slf4j
@@ -49,7 +49,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     public R save(S dto, Role role) {
         log.info("save: {}, role: {}", dto.getEmail(), role);
         User _user = buildFromDto(dto);
-        _user.setCreatedAt(Instant.now());
+        _user.setCreatedAt(Time.getLocalUTC());
         _user.setIsActive(true);
 
         T user = abstractUserMapper.fromUser(_user);
@@ -59,7 +59,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfRequiredFieldsNotFilled(user);
 
         user.setRole(role);
-        user.setCreatedAt(Instant.now());
+        user.setCreatedAt(Time.getLocalUTC());
         user.setIsActive(false);
         user.setEmailVerified(false);
         user.setWithIdProvider(false);
@@ -78,7 +78,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfUniqueConstraintsViolated(user);
 
         user.setRole(role);
-        user.setCreatedAt(Instant.now());
+        user.setCreatedAt(Time.getLocalUTC());
         user.setUsername("user" + System.currentTimeMillis());
         user.setIsActive(false);
         user.setWithIdProvider(true);
@@ -166,7 +166,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfUniqueConstraintsViolated(user);
         throwIfRequiredFieldsNotFilled(user);
 
-        user.setUpdatedAt(Instant.now());
+        user.setUpdatedAt(Time.getLocalUTC());
         prepareForSave(user);
 
         R responseDto = abstractUserMapper.toDto(repository.save(user));

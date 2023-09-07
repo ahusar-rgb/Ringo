@@ -14,7 +14,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,10 +57,10 @@ public class Event extends AbstractActiveEntity {
     private Currency currency;
 
     @Column(name = "start_time", nullable = false)
-    private Instant startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "finish_time")
-    private Instant endTime;
+    private LocalDateTime endTime;
 
     @Column(name = "capacity")
     private Integer capacity;
@@ -77,7 +77,7 @@ public class Event extends AbstractActiveEntity {
     @OrderBy("ordinal ASC")
     private List<EventPhoto> photos = new ArrayList<>();
 
-    @Column(name = "photoCount", columnDefinition = "INT DEFAULT 0")
+    @Column(name = "photo_count", columnDefinition = "INT DEFAULT 0")
     @Builder.Default
     private Integer photoCount = 0;
 

@@ -22,7 +22,7 @@ public class EventDtoMock {
                 .currencyId(1L)
                 .coordinates(new Coordinates(50.0, 50.0))
                 .address("Test address")
-                .startTime(LocalDateTime.of(2021, 1, 1, 1, 1).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)))
+                .startTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)))
                 .endTime(LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)))
                 .capacity(100)
                 .build();

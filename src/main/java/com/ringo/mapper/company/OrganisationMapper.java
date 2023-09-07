@@ -4,11 +4,10 @@ import com.ringo.dto.company.OrganisationRequestDto;
 import com.ringo.dto.company.OrganisationResponseDto;
 import com.ringo.mapper.common.AbstractUserMapper;
 import com.ringo.model.company.Organisation;
+import com.ringo.service.time.Time;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.time.Instant;
 
 @Mapper(componentModel = "spring", uses = {LabelMapper.class})
 public interface OrganisationMapper extends AbstractUserMapper<OrganisationRequestDto, Organisation, OrganisationResponseDto> {
@@ -31,11 +30,11 @@ public interface OrganisationMapper extends AbstractUserMapper<OrganisationReque
             dto.setUpcomingEventsCount(0);
         } else {
             dto.setPastEventsCount((int)entity.getHostedEvents().stream()
-                    .filter(event -> event.getEndTime().isBefore(Instant.now()) && event.getIsActive())
+                    .filter(event -> event.getEndTime().isBefore(Time.getLocalUTC()) && event.getIsActive())
                     .count()
             );
             dto.setUpcomingEventsCount((int)entity.getHostedEvents().stream()
-                    .filter(event -> event.getStartTime().isAfter(Instant.now()) && event.getIsActive())
+                    .filter(event -> event.getStartTime().isAfter(Time.getLocalUTC()) && event.getIsActive())
                     .count()
             );
         }

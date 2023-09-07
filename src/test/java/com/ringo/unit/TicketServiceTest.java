@@ -16,7 +16,6 @@ import com.ringo.repository.TicketRepository;
 import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.QrCodeGenerator;
 import com.ringo.service.company.OrganisationService;
-import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.TicketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,8 +41,6 @@ public class TicketServiceTest {
     private EventRepository eventRepository;
     @Spy
     private EventMapper eventMapper;
-    @Mock
-    private ParticipantService participantService;
     @Mock
     private ParticipantRepository participantRepository;
     @Mock
@@ -75,7 +72,7 @@ public class TicketServiceTest {
 
         ticketMapper = new TicketMapperImpl();
         ReflectionTestUtils.setField(ticketMapper, "participantMapper", new ParticipantMapperImpl());
-        ReflectionTestUtils.setField(ticketService, "mapper", ticketMapper);
+        ReflectionTestUtils.setField(ticketMapper, "eventMapper", eventMapper);
         ReflectionTestUtils.setField(ticketService, "mapper", ticketMapper);
     }
 

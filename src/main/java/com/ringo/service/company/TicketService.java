@@ -17,13 +17,13 @@ import com.ringo.repository.ParticipantRepository;
 import com.ringo.repository.TicketRepository;
 import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.QrCodeGenerator;
+import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.image.BufferedImage;
-import java.time.Instant;
 import java.util.List;
 
 import static java.lang.Float.compare;
@@ -51,7 +51,7 @@ public class TicketService {
 
         Ticket ticket = Ticket.builder()
                 .id(new TicketId(participant, event))
-                .timeOfSubmission(Instant.now())
+                .timeOfSubmission(Time.getLocalUTC())
                 .expiryDate(event.getEndTime())
                 .isValidated(false)
                 .isPaid(event.getPrice() != null && compare(event.getPrice(), 0f) != 0)
@@ -60,14 +60,12 @@ public class TicketService {
 
         TicketDto ticketDto = mapper.toDto(repository.save(ticket));
         ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
-        ticketDto.setRegistrationForm(event.getRegistrationForm());
 
         BufferedImage qrCode = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
 
         try {
             emailSender.sendTicket(ticket, qrCode);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new InternalException("Failed to send the ticket by email");
         }
 
@@ -85,11 +83,7 @@ public class TicketService {
 
     public TicketDto scanTicket(TicketCode ticketCode) {
         Ticket ticket = getTicketFromCode(ticketCode);
-
-        TicketDto dto = mapper.toDto(ticket);
-        dto.setEvent(eventMapper.toDtoSmall(ticket.getId().getEvent()));
-        dto.setRegistrationForm(ticket.getId().getEvent().getRegistrationForm());
-        return dto;
+        return mapper.toDto(ticket);
     }
 
     public Ticket getTicketFromCode(TicketCode ticketCode) {
@@ -98,7 +92,7 @@ public class TicketService {
         Event event = eventRepository.findById(jwt.getClaim("event").asLong())
                 .orElseThrow(() -> new NotFoundException("Event not found"));
 
-        if(!isUserHostOfEvent(event))
+        if(notHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
         Participant participant = participantRepository.findById(jwt.getClaim("participant").asLong())
@@ -107,7 +101,7 @@ public class TicketService {
         Ticket ticket = repository.findById(new TicketId(participant, event))
                 .orElseThrow(() -> new NotFoundException("Ticket not found"));
 
-        if(ticket.getExpiryDate().isBefore(Instant.now()))
+        if(ticket.getExpiryDate().isBefore(Time.getLocalUTC()))
             throw new UserException("Ticket expired");
 
         return ticket;
@@ -124,15 +118,15 @@ public class TicketService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found"));
 
-        if(!isUserHostOfEvent(event))
+        if(notHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
         return mapper.toDtoList(repository.findAllByEventId(event.getId()));
     }
 
-    private boolean isUserHostOfEvent(Event event) {
+    private boolean notHostOfEvent(Event event) {
         Organisation organisation = organisationService.getFullActiveUser();
-        return event.getHost().getId().equals(organisation.getId());
+        return !event.getHost().getId().equals(organisation.getId());
     }
 
     public List<TicketDto> getMyTickets() {
@@ -151,17 +145,16 @@ public class TicketService {
         }).toList();
     }
 
-    public TicketDto cancelTicket(Event event, Participant participant) {
+    public void cancelTicket(Event event, Participant participant) {
         Ticket ticket = repository.findById(new TicketId(participant, event))
                 .orElseThrow(() -> new UserException("The user is not registered for this event"));
 
         if(ticket.getIsPaid()) {
-            if (ticket.getExpiryDate().isAfter(Instant.now())) //not expired
+            if (ticket.getExpiryDate().isAfter(Time.getLocalUTC())) //not expired
                 throw new UserException("Can't cancel a ticket for a paid event");
         }
 
         repository.delete(ticket);
-        return mapper.toDto(ticket);
     }
 
     public TicketDto getTicketWithCode(Event event, Participant participant) {
@@ -182,7 +175,7 @@ public class TicketService {
         if(event.getRegistrationForm() != null)
             throw new UserException("Can't issue a ticket to a user for an event with a registration form");
 
-        if(!isUserHostOfEvent(event))
+        if(notHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
         issueTicket(event, participant, null);
