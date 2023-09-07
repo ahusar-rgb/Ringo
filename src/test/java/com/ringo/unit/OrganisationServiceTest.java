@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -132,8 +133,8 @@ public class OrganisationServiceTest {
         assertThat(saved).usingRecursiveComparison().ignoringFields("createdAt", "id", "password").isEqualTo(organisation);
         assertThat(saved.getPassword()).isNotNull();
         assertThat(saved.getPassword()).isNotEqualTo(organisation.getPassword());
-        assertThat(saved.getCreatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
-        assertThat(saved.getCreatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
+        assertThat(saved.getCreatedAt().atZone(ZoneId.systemDefault()).getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
+        assertThat(saved.getCreatedAt().atZone(ZoneId.systemDefault()).getYear()).isEqualTo(LocalDate.now().getYear());
         assertThat(saved.getUpdatedAt()).isNull();
         assertThat(saved.getWithIdProvider()).isFalse();
 
@@ -206,8 +207,8 @@ public class OrganisationServiceTest {
         Organisation saved = organisationCaptor.getValue();
         assertThat(saved).isNotNull();
         assertThat(saved).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(organisation);
-        assertThat(saved.getUpdatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
-        assertThat(saved.getUpdatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
+        assertThat(saved.getUpdatedAt().atZone(ZoneId.systemDefault()).getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
+        assertThat(saved.getUpdatedAt().atZone(ZoneId.systemDefault()).getYear()).isEqualTo(LocalDate.now().getYear());
 
         assertThat(responseDto).isNotNull();
         OrganisationResponseDto expectedDto = mapper.toDto(organisation);

@@ -10,6 +10,7 @@ import com.ringo.model.company.Ticket;
 import com.ringo.model.security.User;
 import lombok.AllArgsConstructor;
 
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Date;
 
@@ -39,7 +40,7 @@ public class JwtService {
         return JWT.create()
                 .withIssuer(config.getIssuer())
                 .withSubject(ticket.getId().getParticipant().getEmail())
-                .withExpiresAt(ticket.getExpiryDate().toInstant(ZoneOffset.UTC))
+                .withExpiresAt(Instant.from(ticket.getExpiryDate().atZone(ZoneOffset.UTC)))
                 .withClaim(TYPE_CLAIM, TokenType.TICKET.getValue())
                 .withClaim("event", ticket.getId().getEvent().getId())
                 .withClaim("participant", ticket.getId().getParticipant().getId())

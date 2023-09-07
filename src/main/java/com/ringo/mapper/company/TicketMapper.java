@@ -12,9 +12,11 @@ public interface TicketMapper extends SingleDtoEntityMapper<TicketDto, Ticket> {
 
     @Override
     @Mapping(target = "participant", source = "id.participant")
-    @Mapping(target = "event", ignore = true)
+    @Mapping(target = "event", source = "id.event", qualifiedByName = "toDtoSmall")
     @Mapping(target = "ticketCode", ignore = true)
     @Mapping(target = "timeOfSubmission", source = "timeOfSubmission", dateFormat = Constants.DATE_TIME_FORMAT)
     @Mapping(target = "expiryDate", source = "expiryDate", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "registrationForm", source = "id.event.registrationForm")
+    @Mapping(target = "registrationSubmission", source = "registrationSubmission")
     TicketDto toDto(Ticket entity);
 }

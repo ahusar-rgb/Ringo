@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -138,8 +139,8 @@ public class ParticipantServiceTest {
         assertThat(saved).usingRecursiveComparison().ignoringFields("createdAt", "id", "password").isEqualTo(participant);
         assertThat(saved.getPassword()).isNotNull();
         assertThat(saved.getPassword()).isNotEqualTo(participant.getPassword());
-        assertThat(saved.getCreatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
-        assertThat(saved.getCreatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
+        assertThat(saved.getCreatedAt().atZone(ZoneId.systemDefault()).getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
+        assertThat(saved.getCreatedAt().atZone(ZoneId.systemDefault()).getYear()).isEqualTo(LocalDate.now().getYear());
         assertThat(saved.getUpdatedAt()).isNull();
         assertThat(saved.getWithIdProvider()).isFalse();
 
@@ -213,8 +214,8 @@ public class ParticipantServiceTest {
         Participant saved = participantCaptor.getValue();
         assertThat(saved).isNotNull();
         assertThat(saved).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(participant);
-        assertThat(saved.getUpdatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
-        assertThat(saved.getUpdatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
+        assertThat(saved.getUpdatedAt().atZone(ZoneId.systemDefault()).getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
+        assertThat(saved.getUpdatedAt().atZone(ZoneId.systemDefault()).getYear()).isEqualTo(LocalDate.now().getYear());
 
         assertThat(responseDto).isNotNull();
         ParticipantResponseDto expectedDto = mapper.toDto(participant);

@@ -16,7 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        uses = {EventMainPhotoMapper.class, EventPhotoMapper.class, CategoryMapper.class, CurrencyMapper.class, OrganisationMapper.class},
+        uses = {
+                EventMainPhotoMapper.class,
+                EventPhotoMapper.class,
+                CategoryMapper.class,
+                CurrencyMapper.class,
+                OrganisationMapper.class,
+        },
         imports = {Coordinates.class})
 public abstract class EventMapper implements EntityMapper<EventRequestDto, EventResponseDto, Event> {
 

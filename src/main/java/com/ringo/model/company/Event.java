@@ -77,7 +77,7 @@ public class Event extends AbstractActiveEntity {
     @OrderBy("ordinal ASC")
     private List<EventPhoto> photos = new ArrayList<>();
 
-    @Column(name = "photoCount", columnDefinition = "INT DEFAULT 0")
+    @Column(name = "photo_count", columnDefinition = "INT DEFAULT 0")
     @Builder.Default
     private Integer photoCount = 0;
 

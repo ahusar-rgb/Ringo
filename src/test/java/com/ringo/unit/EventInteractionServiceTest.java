@@ -52,8 +52,6 @@ public class EventInteractionServiceTest {
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;
 
-    private EventPersonalizedMapper personalizedMapper;
-
 
     @BeforeEach
     void init() {
@@ -69,7 +67,7 @@ public class EventInteractionServiceTest {
 
         ReflectionTestUtils.setField(eventInteractionService, "mapper", eventMapper);
 
-        personalizedMapper = new EventPersonalizedMapper(
+        EventPersonalizedMapper personalizedMapper = new EventPersonalizedMapper(
                 eventMapper,
                 ticketService,
                 participantService
@@ -240,7 +238,7 @@ public class EventInteractionServiceTest {
     void joinEventInvalidForm() {
         //given
         Event event = EventMock.getEventMock();
-        Participant participant = ParticipantMock.getParticipantMock();
+        ParticipantMock.getParticipantMock();
         RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
 
         //when
@@ -290,7 +288,6 @@ public class EventInteractionServiceTest {
         //when
         when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
         when(participantService.getFullActiveUser()).thenReturn(participant);
-        when(ticketService.cancelTicket(event, participant)).thenReturn(new TicketDto());
         when(repository.save(eventCaptor.capture())).thenReturn(changedEvent);
 
         //then
