@@ -65,7 +65,11 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     @Override
     protected void prepareForSave(Organisation user) {
         if(user.getContacts() != null)
-            user.getContacts().forEach(contact -> contact.setOrganisation(user));
+            user.getContacts().forEach(contact -> {
+                if(contact.getOrdinal() == null)
+                    throw new UserException("Contact ordinal is not set");
+                contact.setOrganisation(user);
+            });
     }
 
     @Override
