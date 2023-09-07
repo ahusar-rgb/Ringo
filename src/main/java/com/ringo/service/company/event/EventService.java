@@ -192,7 +192,7 @@ public class EventService {
             if(Objects.equals(mainPhotoId, eventPhoto.getPhoto().getId()))
                 throw new UserException("Main photo cannot be moved");
 
-            eventPhoto.setOrdinal(eventPhoto.getOrdinal());
+            eventPhoto.setOrdinal(eventPhotoDto.getOrdinal());
 
             newPhotos.add(eventPhoto);
         }
