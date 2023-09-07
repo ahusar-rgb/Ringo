@@ -298,6 +298,10 @@ public class EventService {
         Event event = repository.findFullById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
+
+        if(event.getPeopleCount() >0)
+            throw new UserException("Cannot change registration form of event with participants");
+
         throwIfNotHost(event);
         return setRegistrationForm(id, null);
     }
