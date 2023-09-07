@@ -281,7 +281,7 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        if(event.getPeopleCount() >0)
+        if(event.getPeopleCount() > 0)
             throw new UserException("Cannot change registration form of event with participants");
 
         throwIfNotHost(event);
@@ -299,8 +299,8 @@ public class EventService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        if(event.getPeopleCount() >0)
-            throw new UserException("Cannot change registration form of event with participants");
+        if(event.getPeopleCount() > 0)
+            throw new UserException("Cannot remove registration form of event with participants");
 
         throwIfNotHost(event);
         return setRegistrationForm(id, null);

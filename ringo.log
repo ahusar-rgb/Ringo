@@ -2360,3 +2360,390 @@ com.auth0.jwt.exceptions.JWTDecodeException: The token was expected to have 3 pa
 2023-09-07 17:16:51.136 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-09-07 17:16:51.140 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2023-09-07 17:16:51.144 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-09-07 20:03:25.192 [Test worker] INFO  com.ringo.RingoApplicationTests - Starting RingoApplicationTests using Java 19.0.2 with PID 3327 (started by aleksandr in /Users/aleksandr/Ringo)
+2023-09-07 20:03:25.196 [Test worker] INFO  com.ringo.RingoApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2023-09-07 20:03:26.881 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-07 20:03:27.229 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 333 ms. Found 13 JPA repository interfaces.
+2023-09-07 20:03:27.979 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-09-07 20:03:27.987 [Test worker] WARN  o.s.w.c.s.GenericWebApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: Driver org.postgresql.Driver claims to not accept jdbcUrl, ${DB_URL}
+2023-09-07 20:03:28.003 [Test worker] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2023-09-07 20:03:28.029 [Test worker] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: Driver org.postgresql.Driver claims to not accept jdbcUrl, ${DB_URL}
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1132)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:907)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:584)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:434)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:137)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:59)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:47)
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1388)
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:545)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:137)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:108)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:184)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:118)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:127)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:241)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:138)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$10(ClassBasedTestDescriptor.java:377)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:382)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$11(ClassBasedTestDescriptor.java:377)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:376)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$6(ClassBasedTestDescriptor.java:289)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:288)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$4(ClassBasedTestDescriptor.java:278)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:277)
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:105)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:104)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$2(NodeTestTask.java:123)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:123)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:90)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:99)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:79)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:75)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:62)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:193)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+Caused by: java.lang.RuntimeException: Driver org.postgresql.Driver claims to not accept jdbcUrl, ${DB_URL}
+	at com.zaxxer.hikari.util.DriverDataSource.<init>(DriverDataSource.java:110)
+	at com.zaxxer.hikari.pool.PoolBase.initializeDataSource(PoolBase.java:326)
+	at com.zaxxer.hikari.pool.PoolBase.<init>(PoolBase.java:112)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:93)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:280)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1798)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1748)
+	... 108 common frames omitted
+2023-09-07 20:03:28.055 [Test worker] ERROR o.s.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] to prepare test instance [com.ringo.RingoApplicationTests@44492c06]
+java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@17f8db6 testClass = com.ringo.RingoApplicationTests, locations = [], classes = [com.ringo.RingoApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceLocations = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@9da1, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@62fad19, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@4f2613d1, org.springframework.boot.test.graphql.tester.HttpGraphQlTesterContextCustomizer@7d3430a7, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@350ec41e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@e260766, org.springframework.boot.test.web.reactive.server.WebTestClientContextCustomizer@4275c20c, org.springframework.boot.test.context.SpringBootTestAnnotation@867759dd], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:142)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:127)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:191)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:130)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:241)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:138)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$10(ClassBasedTestDescriptor.java:377)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:382)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$11(ClassBasedTestDescriptor.java:377)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:310)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:734)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:376)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$6(ClassBasedTestDescriptor.java:289)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:288)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$4(ClassBasedTestDescriptor.java:278)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:277)
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:105)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:104)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$2(NodeTestTask.java:123)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:123)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:90)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:99)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:79)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:75)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:62)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:193)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: Driver org.postgresql.Driver claims to not accept jdbcUrl, ${DB_URL}
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1132)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:907)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:584)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:434)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:137)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:59)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:47)
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1388)
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:545)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:137)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:108)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:184)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:118)
+	... 85 common frames omitted
+Caused by: java.lang.RuntimeException: Driver org.postgresql.Driver claims to not accept jdbcUrl, ${DB_URL}
+	at com.zaxxer.hikari.util.DriverDataSource.<init>(DriverDataSource.java:110)
+	at com.zaxxer.hikari.pool.PoolBase.initializeDataSource(PoolBase.java:326)
+	at com.zaxxer.hikari.pool.PoolBase.<init>(PoolBase.java:112)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:93)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:280)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1798)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1748)
+	... 108 common frames omitted
+2023-09-07 20:03:28.774 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:30.102 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:30.152 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:30.180 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending GET request to null/auth/refresh-token
+2023-09-07 20:03:30.220 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:30.252 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:30.280 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:30.303 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:30.329 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.367 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.397 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.428 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.480 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.510 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.540 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.565 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.602 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.629 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.657 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.686 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.719 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.744 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.773 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.793 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.815 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.837 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.861 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.889 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.913 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.936 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:30.971 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:30.994 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.024 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.051 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:31.083 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.110 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.135 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:31.159 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.182 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.206 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.225 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.255 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:31.272 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/auth/login
+2023-09-07 20:03:31.300 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.325 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.351 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.375 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.400 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.420 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.450 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:31.473 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:31.492 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:31.516 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:31.539 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.573 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.594 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.613 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.633 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/participants/sign-up
+2023-09-07 20:03:31.650 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.671 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.693 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.712 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.732 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.758 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.789 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.809 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.827 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.848 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:31.866 [Test worker] INFO  c.r.i.t.common.EndpointTemplate - Sending POST request to null/organisations/sign-up
+2023-09-07 20:03:32.998 [Test worker] INFO  c.r.s.c.event.EventSearchService - findEventById: 1694106212993
+2023-09-07 20:03:33.010 [Test worker] INFO  c.r.s.c.event.EventSearchService - findEventById: 1694106213006
+2023-09-07 20:03:33.027 [Test worker] INFO  c.r.s.c.event.EventSearchService - findEventById: 1694106213023
+2023-09-07 20:03:33.226 [Test worker] INFO  c.r.s.company.event.EventService - setMainPhoto: 1
+2023-09-07 20:03:33.237 [Test worker] INFO  c.r.s.company.event.EventService - updateEvent: 1694106213232, AbstractEntityDto(id=1694106213237)
+2023-09-07 20:03:33.260 [Test worker] INFO  c.r.s.company.event.EventService - removePhotoFromEvent: 1694106213243, 1694106213246
+2023-09-07 20:03:33.277 [Test worker] INFO  c.r.s.company.event.EventService - removePhotoFromEvent: 1694106213267, 1694106213270
+2023-09-07 20:03:33.291 [Test worker] INFO  c.r.s.company.event.EventService - removeRegistrationForm: 1694106213282
+2023-09-07 20:03:33.306 [Test worker] INFO  c.r.s.company.event.EventService - removePhotoFromEvent: 1694106213296, 1694106213298
+2023-09-07 20:03:33.313 [Test worker] INFO  c.r.s.company.event.EventService - removeRegistrationForm: 1694106213310
+2023-09-07 20:03:33.313 [Test worker] INFO  c.r.s.company.event.EventService - setRegistrationForm: 1694106213310, null
+2023-09-07 20:03:33.323 [Test worker] INFO  c.r.s.company.event.EventService - removeRegistrationForm: 1694106213320
+2023-09-07 20:03:33.330 [Test worker] INFO  c.r.s.company.event.EventService - setRegistrationForm: 1694106213327, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@3ef58394, com.ringo.model.form.MultipleChoiceQuestion@7ca3038f, com.ringo.model.form.CheckboxQuestion@2abfd895])
+2023-09-07 20:03:33.340 [Test worker] INFO  c.r.s.company.event.EventService - setRegistrationForm: 1694106213337, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@dd218790, com.ringo.model.form.MultipleChoiceQuestion@89a3b202, com.ringo.model.form.CheckboxQuestion@14aa2ed6])
+2023-09-07 20:03:33.348 [Test worker] INFO  c.r.s.company.event.EventService - setActive: 1694106213345
+2023-09-07 20:03:33.378 [Test worker] INFO  c.r.s.company.event.EventService - setPhotoOrder: 1694106213354
+2023-09-07 20:03:33.390 [Test worker] INFO  c.r.s.company.event.EventService - deleteEvent: 1694106213388
+2023-09-07 20:03:33.398 [Test worker] INFO  c.r.s.company.event.EventService - setRegistrationForm: 1694106213395, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@39b3bdec, com.ringo.model.form.MultipleChoiceQuestion@3fc46d95, com.ringo.model.form.CheckboxQuestion@6d293dfb])
+2023-09-07 20:03:33.407 [Test worker] INFO  c.r.s.company.event.EventService - setInactive: 1694106213404
+2023-09-07 20:03:33.455 [Test worker] INFO  c.r.s.company.event.EventService - setPhotoOrder: 1694106213412
+2023-09-07 20:03:33.463 [Test worker] INFO  c.r.s.company.event.EventService - setRegistrationForm: 1694106213460, RegistrationForm(title=Test, description=Test, questions=[com.ringo.model.form.InputFieldQuestion@3955407c, com.ringo.model.form.MultipleChoiceQuestion@1666b87e, com.ringo.model.form.CheckboxQuestion@41c649c9])
+2023-09-07 20:03:33.473 [Test worker] INFO  c.r.s.company.event.EventService - removeMainPhoto: 1694106213469
+2023-09-07 20:03:33.482 [Test worker] INFO  c.r.s.company.event.EventService - setActive: 1694106213478
+2023-09-07 20:03:33.493 [Test worker] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1694106213488)
+2023-09-07 20:03:33.502 [Test worker] INFO  c.r.s.company.event.EventService - removeMainPhoto: 1694106213499
+2023-09-07 20:03:33.518 [Test worker] INFO  c.r.s.company.event.EventService - updateEvent: 1694106213508, AbstractEntityDto(id=null)
+2023-09-07 20:03:33.561 [Test worker] INFO  c.r.s.company.event.EventService - setPhotoOrder: 1694106213537
+2023-09-07 20:03:33.576 [Test worker] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1694106213575)
+2023-09-07 20:03:33.653 [Test worker] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 1694106213584, hello.txt
+2023-09-07 20:03:33.653 [Test worker] INFO  c.r.s.company.event.EventService - photo type: image/png
+2023-09-07 20:03:33.661 [Test worker] INFO  c.r.s.company.event.EventService - updateEvent: 1694106213658, AbstractEntityDto(id=null)
+2023-09-07 20:03:33.687 [Test worker] INFO  c.r.s.company.event.EventService - removePhotoFromEvent: 1694106213665, 1
+2023-09-07 20:03:33.694 [Test worker] INFO  c.r.s.company.event.EventService - addPhotoToEvent: 1694106213691, hello.txt
+2023-09-07 20:03:33.694 [Test worker] INFO  c.r.s.company.event.EventService - photo type: image/png
+2023-09-07 20:03:33.701 [Test worker] INFO  c.r.s.company.event.EventService - setInactive: 1694106213698
+2023-09-07 20:03:33.710 [Test worker] INFO  c.r.s.company.event.EventService - updateEvent: 1694106213705, AbstractEntityDto(id=1694106213710)
+2023-09-07 20:03:33.718 [Test worker] INFO  c.r.s.company.event.EventService - deleteEvent: 1694106213714
+2023-09-07 20:03:33.725 [Test worker] INFO  c.r.s.company.event.EventService - saveEvent: AbstractEntityDto(id=1694106213723)
+2023-09-07 20:03:33.733 [Test worker] INFO  c.r.s.company.event.EventService - deleteEvent: 1694106213729
+2023-09-07 20:03:33.954 [Test worker] INFO  c.r.s.common.AbstractUserService - email: test@test.com, setPhoto: hello.txt
+2023-09-07 20:03:33.964 [Test worker] INFO  c.r.s.company.OrganisationService - findOrganisationById: 1
+2023-09-07 20:03:33.984 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:33.995 [Test worker] INFO  c.r.s.common.AbstractUserService - save: test@test.com, role: ROLE_ORGANISATION
+2023-09-07 20:03:34.139 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:34.155 [Test worker] INFO  c.r.s.company.OrganisationService - findCurrentOrganisation
+2023-09-07 20:03:34.173 [Test worker] INFO  c.r.s.company.OrganisationService - findOrganisationById: 1
+2023-09-07 20:03:34.178 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:34.183 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:34.234 [Test worker] INFO  c.r.s.common.AbstractUserService - email: test@test.com, setPhoto: hello.txt
+2023-09-07 20:03:34.245 [Test worker] INFO  c.r.s.company.ParticipantService - findParticipantById: 1
+2023-09-07 20:03:34.265 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:34.277 [Test worker] INFO  c.r.s.common.AbstractUserService - save: test@test.com, role: ROLE_PARTICIPANT
+2023-09-07 20:03:34.388 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:34.398 [Test worker] INFO  c.r.s.company.ParticipantService - findCurrentParticipant
+2023-09-07 20:03:34.422 [Test worker] INFO  c.r.s.company.ParticipantService - findParticipantById: 1
+2023-09-07 20:03:34.428 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:34.435 [Test worker] INFO  c.r.s.common.AbstractUserService - activateParticipant: test@test.com
+2023-09-07 20:03:34.514 [Test worker] INFO  c.r.service.company.ReviewService - deleteReview: 1694106214513
+2023-09-07 20:03:34.523 [Test worker] INFO  c.r.service.company.ReviewService - updateReview(organisaitonId): 1694106214522
+2023-09-07 20:03:34.532 [Test worker] INFO  c.r.service.company.ReviewService - updateReview(organisaitonId): 1694106214531
+2023-09-07 20:03:34.539 [Test worker] INFO  c.r.service.company.ReviewService - deleteReview: 1694106214536
+2023-09-07 20:03:34.546 [Test worker] INFO  c.r.service.company.ReviewService - rateOrganisation: 1694106214544
+2023-09-07 20:03:34.555 [Test worker] INFO  c.r.service.company.ReviewService - rateOrganisation: 1694106214553
+2023-09-07 20:03:34.563 [Test worker] INFO  c.r.service.company.ReviewService - updateReview(organisaitonId): 1694106214562
