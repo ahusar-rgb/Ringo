@@ -211,9 +211,13 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
 
         EventResponseDto setPhotoOrderResponseDto = eventTemplate.setPhotoOrder(organisationToken.getAccessToken(), event.getId(), photos, ItTestConsts.HTTP_SUCCESS);
         assertThat(setPhotoOrderResponseDto.getPhotos().size()).isEqualTo(3);
-        assertThat(setPhotoOrderResponseDto.getPhotos().get(0)).isEqualTo(withPhotos.getPhotos().get(2));
-        assertThat(setPhotoOrderResponseDto.getPhotos().get(1)).isEqualTo(withPhotos.getPhotos().get(0));
-        assertThat(setPhotoOrderResponseDto.getPhotos().get(2)).isEqualTo(withPhotos.getPhotos().get(1));
+        assertThat(setPhotoOrderResponseDto.getPhotos().get(0).getId()).isEqualTo(withPhotos.getPhotos().get(2).getId());
+        assertThat(setPhotoOrderResponseDto.getPhotos().get(0).getOrdinal()).isEqualTo(0);
+        assertThat(setPhotoOrderResponseDto.getPhotos().get(1).getId()).isEqualTo(withPhotos.getPhotos().get(0).getId());
+        assertThat(setPhotoOrderResponseDto.getPhotos().get(1).getOrdinal()).isEqualTo(1);
+        assertThat(setPhotoOrderResponseDto.getPhotos().get(2).getId()).isEqualTo(withPhotos.getPhotos().get(1).getId());
+        assertThat(setPhotoOrderResponseDto.getPhotos().get(2).getOrdinal()).isEqualTo(2);
+
 
         EventResponseDto found = eventTemplate.findById(event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(found).isEqualTo(setPhotoOrderResponseDto);

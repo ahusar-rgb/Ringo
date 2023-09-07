@@ -33,7 +33,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TicketDto scanned = ticketTemplate.scanTicket(organisationToken.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_SUCCESS);
 
-        assertThat(scanned).usingRecursiveComparison().ignoringFields("ticketCode", "category").isEqualTo(ticket);
+        assertThat(scanned).usingRecursiveComparison().ignoringFields("ticketCode", "categories").isEqualTo(ticket);
         assertThat(Set.of(scanned.getEvent().getCategories())).isEqualTo(Set.of(event.getCategories()));
 
         participantTemplate.delete(participantToken.getAccessToken());
