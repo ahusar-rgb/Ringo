@@ -885,6 +885,44 @@ public class EventServiceTest {
     }
 
     @Test
+    void setRegistrationFormHasParticipants() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        event.setPeopleCount(1);
+        event.setRegistrationForm(RegistrationFormMock.getRegistrationFormMock());
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        assertThatThrownBy(() -> eventService.setRegistrationForm(event.getId(), RegistrationFormMock.getRegistrationFormMock()))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Cannot change registration form of event with participants");
+    }
+
+    @Test
+    void removeRegistrationFormHasParticipants() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        event.setPeopleCount(1);
+        event.setRegistrationForm(RegistrationFormMock.getRegistrationFormMock());
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        assertThatThrownBy(() -> eventService.removeRegistrationForm(event.getId()))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Cannot remove registration form of event with participants");
+    }
+
+    @Test
     void removeRegistrationFormNotHost() {
         //given
         Event event = EventMock.getEventMock();
