@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tickets")
 @RequiredArgsConstructor
+@Validated
 public class TicketController {
     private final TicketService ticketService;
 
@@ -34,7 +37,7 @@ public class TicketController {
             }
     )
     @PostMapping(value = "/scan", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<TicketDto> scanTicket(@RequestBody TicketCode ticketCode) {
+    public ResponseEntity<TicketDto> scanTicket(@Valid @RequestBody TicketCode ticketCode) {
         return ResponseEntity.ok()
                 .body(ticketService.scanTicket(ticketCode));
     }
@@ -69,7 +72,7 @@ public class TicketController {
             }
     )
     @PostMapping(value = "/validate", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<Void> validateTicket(@RequestBody TicketCode ticketCode) {
+    public ResponseEntity<Void> validateTicket(@Valid @RequestBody TicketCode ticketCode) {
         ticketService.validateTicket(ticketCode);
         return ResponseEntity.ok().build();
     }

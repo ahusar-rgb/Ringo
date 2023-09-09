@@ -1,6 +1,7 @@
 package com.ringo.dto.company;
 
 import com.ringo.dto.common.AbstractEntityDto;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 public class CategoryDto extends AbstractEntityDto {
+    @NotBlank(message = "Name is required")
     private String name;
 }
