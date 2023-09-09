@@ -2,6 +2,7 @@ package com.ringo.controller;
 
 import com.ringo.dto.company.*;
 import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.form.RegistrationSubmission;
@@ -155,9 +156,10 @@ public class EventController {
     @PostMapping(value = "/{id}/photos", produces = {"application/json"}, consumes = {"multipart/form-data"})
     public ResponseEntity<EventResponseDto> addPhotoToEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
+            @Parameter(description = "Photo dimenstions") PhotoDimensions dimensions,
             @Parameter(description = "Photo") @RequestPart("file") MultipartFile photo) {
 
-        return ResponseEntity.ok(eventService.addPhoto(id, photo));
+        return ResponseEntity.ok(eventService.addPhoto(id, photo, dimensions));
     }
 
     @Operation(summary = "Remove photo from event")

@@ -1,5 +1,6 @@
 package com.ringo.service.common;
 
+import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.exception.InternalException;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +20,27 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 @Component
-public class PhotoCompressor {
+public class PhotoUtil {
 
     private static final float BLUR_QUALITY = 0.1f;
     private static final int BLUR_RADIUS = 20;
+
+    public byte[] cropImage(byte[] photo, String contentType, PhotoDimensions dimensions) throws IOException {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(photo);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        BufferedImage image = ImageIO.read(inputStream);
+        BufferedImage resized = image.getSubimage(
+                dimensions.getX(),
+                dimensions.getY(),
+                dimensions.getD(),
+                dimensions.getD()
+        );
+
+        ImageIO.write(resized, contentType, outputStream);
+
+        return outputStream.toByteArray();
+    }
 
     public byte[] compressImage(byte[] photo, String contentType, float quality) throws IOException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(photo);
@@ -43,17 +61,12 @@ public class PhotoCompressor {
         return outputStream.toByteArray();
     }
 
-    public byte[] createLazyPhoto(byte[] photo, String contentType) {
-        try {
-            byte[] compressed = compressImage(photo, contentType, BLUR_QUALITY);
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(compressed));
+    public byte[] createLazyPhoto(byte[] photo, String contentType) throws IOException {
+        byte[] compressed = compressImage(photo, contentType, BLUR_QUALITY);
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(compressed));
 
-            BufferedImage blurred = blurImage(image, BLUR_RADIUS);
-            return imageToBytes(blurred, contentType);
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Error while creating lazy photo");
-        }
+        BufferedImage blurred = blurImage(image, BLUR_RADIUS);
+        return imageToBytes(blurred, contentType);
     }
 
     private BufferedImage blurImage(BufferedImage image, int radius) {
