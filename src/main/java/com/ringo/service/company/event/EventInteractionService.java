@@ -105,7 +105,7 @@ public class EventInteractionService {
 
     public List<EventSmallDto> getSavedEvents() {
         Participant participant = participantService.getFullActiveUser();
-        return mapper.toDtoSmallList(participant.getSavedEvents().stream().toList());
+        return mapper.toDtoSmallList(participant.getSavedEvents().stream().filter(Event::getIsActive).toList());
     }
 
     public TicketDto getTicketForEvent(Long id) {
