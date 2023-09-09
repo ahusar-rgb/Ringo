@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
+@Validated
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -47,7 +50,7 @@ public class CategoryController {
     )
     @PutMapping(value = "{id}", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<CategoryDto> updateCategory(@Parameter(description = "Category id") @PathVariable("id") Long id,
-                                                      @Parameter(description = "Category to update") @RequestBody CategoryDto dto) {
+                                                      @Valid @Parameter(description = "Category to update") @RequestBody CategoryDto dto) {
         return ResponseEntity
                 .ok()
                 .body(categoryService.updateCategory(id, dto));
@@ -78,7 +81,7 @@ public class CategoryController {
             }
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<CategoryDto> createCategory(@Parameter(description = "Category to create") @RequestBody CategoryDto dto) {
+    public ResponseEntity<CategoryDto> createCategory(@Valid @Parameter(description = "Category to create") @RequestBody CategoryDto dto) {
         return ResponseEntity
                 .ok()
                 .body(categoryService.saveCategory(dto));

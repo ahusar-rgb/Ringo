@@ -16,8 +16,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/events")
+@Validated
 public class EventController {
     private final EventService eventService;
     private final EventSearchService eventSearchService;
@@ -73,7 +76,7 @@ public class EventController {
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<EventResponseDto> createEvent(
-            @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
+            @Valid @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
     ) {
         return ResponseEntity.ok(eventService.create(eventDto));
     }
@@ -105,7 +108,7 @@ public class EventController {
     @PutMapping(value = "/{id}", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<EventResponseDto> updateEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
-            @Parameter(description = "Event to update") @RequestBody EventRequestDto eventDto
+            @Valid @Parameter(description = "Event to update") @RequestBody EventRequestDto eventDto
     ) {
         return ResponseEntity.ok(eventService.update(id, eventDto));
     }

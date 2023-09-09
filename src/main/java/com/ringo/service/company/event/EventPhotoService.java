@@ -46,7 +46,10 @@ public class EventPhotoService {
 
         byte[] photoBytes;
         try {
-             photoBytes = photoUtil.cropImage(file.getBytes(), contentType, dimensions);
+            if(dimensions == null)
+                photoBytes = file.getBytes();
+            else
+                photoBytes = photoUtil.cropImage(file.getBytes(), contentType, dimensions);
         } catch (IOException e) {
             throw new InternalException("Error while cutting photo");
         }

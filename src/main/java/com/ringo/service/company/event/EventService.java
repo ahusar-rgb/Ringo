@@ -130,6 +130,10 @@ public class EventService {
         repository.deleteById(id);
     }
 
+    public EventResponseDto addPhoto(Long eventId, MultipartFile photo) {
+        return addPhoto(eventId, photo, null);
+    }
+
     public EventResponseDto addPhoto(Long eventId, MultipartFile photo, PhotoDimensions dimensions) {
         log.info("addPhotoToEvent: {}, {}", eventId, photo.getOriginalFilename());
         log.info("photo type: {}", photo.getContentType());

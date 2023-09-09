@@ -6,6 +6,7 @@ import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
@@ -370,9 +371,13 @@ public class EventServiceTest {
         when(config.getMaxPhotoCount()).thenReturn(10);
 
         //then
-        eventService.addPhoto(event.getId(), photo);
+        PhotoDimensions dimensions = new PhotoDimensions();
+        dimensions.setX(100);
+        dimensions.setY(100);
+        dimensions.setD(100);
+        eventService.addPhoto(event.getId(), photo, dimensions);
 
-        verify(eventPhotoService, times(1)).save(event, photo);
+        verify(eventPhotoService, times(1)).save(event, photo, dimensions);
         verify(eventRepository, times(1)).save(eventCaptor.capture());
 
         Event saved = eventCaptor.getValue();
@@ -419,7 +424,7 @@ public class EventServiceTest {
         eventService.setPhotoOrder(event.getId(), setPhotoOrderDto);
 
         verify(eventRepository, times(1)).save(eventCaptor.capture());
-        verify(eventPhotoService, never()).save(any(), any());
+        verify(eventPhotoService, never()).save(any(), any(), any());
 
         Event saved = eventCaptor.getValue();
         assertThat(saved.getPhotos().size()).isEqualTo(3);
@@ -536,7 +541,7 @@ public class EventServiceTest {
                 .isInstanceOf(UserException.class)
                 .hasMessage("No more photos for this event is allowed");
 
-        verify(eventPhotoService, never()).save(any(), any());
+        verify(eventPhotoService, never()).save(any(), any(), any());
         verify(eventRepository, never()).save(any());
     }
 
