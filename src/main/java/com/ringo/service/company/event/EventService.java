@@ -4,6 +4,7 @@ import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.company.EventRequestDto;
 import com.ringo.dto.company.EventResponseDto;
 import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
@@ -129,7 +130,7 @@ public class EventService {
         repository.deleteById(id);
     }
 
-    public EventResponseDto addPhoto(Long eventId, MultipartFile photo) {
+    public EventResponseDto addPhoto(Long eventId, MultipartFile photo, PhotoDimensions dimensions) {
         log.info("addPhotoToEvent: {}, {}", eventId, photo.getOriginalFilename());
         log.info("photo type: {}", photo.getContentType());
 
@@ -141,7 +142,7 @@ public class EventService {
         if(event.getPhotos().size() >= config.getMaxPhotoCount())
             throw new UserException("No more photos for this event is allowed");
 
-        eventPhotoService.save(event, photo);
+        eventPhotoService.save(event, photo, dimensions);
         event.setPhotoCount(event.getPhotoCount() + 1);
         repository.save(event);
 
