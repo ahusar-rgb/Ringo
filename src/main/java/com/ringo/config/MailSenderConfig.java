@@ -1,5 +1,6 @@
 package com.ringo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,14 +10,18 @@ import java.util.Properties;
 
 @Configuration
 public class MailSenderConfig {
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
+        mailSender.setHost("mail.privateemail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("ringooevents@gmail.com");
-        mailSender.setPassword("skblrxqxyovduglp");
+        mailSender.setUsername("noreply@ringo-events.com");
+        mailSender.setPassword(applicationProperties.getNoReplyPassword());
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

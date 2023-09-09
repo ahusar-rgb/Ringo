@@ -17,4 +17,5 @@ public class ApplicationProperties {
     private String adminLogin;
     private String adminPassword;
     private String domainName;
+    private String noReplyPassword;
 }
