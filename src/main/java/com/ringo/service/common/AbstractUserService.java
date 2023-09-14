@@ -2,8 +2,8 @@ package com.ringo.service.common;
 
 import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.IdProvider;
-import com.ringo.dto.company.UserRequestDto;
-import com.ringo.dto.company.UserResponseDto;
+import com.ringo.dto.company.request.UserRequestDto;
+import com.ringo.dto.company.response.UserResponseDto;
 import com.ringo.exception.InternalException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
@@ -11,8 +11,8 @@ import com.ringo.mapper.common.AbstractUserMapper;
 import com.ringo.model.photo.Photo;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
-import com.ringo.repository.UserRepository;
 import com.ringo.repository.common.AbstractUserRepository;
+import com.ringo.repository.company.UserRepository;
 import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +68,11 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         R savedDto = abstractUserMapper.toDto(repository.save(user));
         savedDto.setEmail(_user.getEmail());
 
-        authenticationService.sendVerificationEmail(_user);
+        try {
+            authenticationService.sendVerificationEmail(_user);
+        } catch (InternalException e) {
+            log.error("Failed to send verification email to {}", _user.getEmail());
+        }
 
         return savedDto;
     }

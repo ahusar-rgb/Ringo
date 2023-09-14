@@ -1,4 +1,4 @@
-package com.ringo.dto.company;
+package com.ringo.dto.company.response;
 
 import com.ringo.dto.common.AbstractEntityDto;
 import lombok.AllArgsConstructor;

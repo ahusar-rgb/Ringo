@@ -49,21 +49,15 @@ public class Event extends AbstractActiveEntity {
     @Column(name = "ticket_needed", nullable = false)
     private Boolean isTicketNeeded;
 
-    @Column(name = "price", nullable = false)
-    private Float price;
-
-    @OneToOne
-    @JoinColumn(name = "currency_id")
-    private Currency currency;
+    @OrderBy("ordinal ASC")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<TicketType> ticketTypes;
 
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
     @Column(name = "finish_time")
     private LocalDateTime endTime;
-
-    @Column(name = "capacity")
-    private Integer capacity;
 
     @ManyToOne
     @JoinColumn(name = "host_id", nullable = false)

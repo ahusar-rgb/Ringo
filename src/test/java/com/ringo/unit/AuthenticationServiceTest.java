@@ -7,7 +7,7 @@ import com.ringo.dto.auth.ForgotPasswordForm;
 import com.ringo.exception.AuthException;
 import com.ringo.mock.model.UserMock;
 import com.ringo.model.security.User;
-import com.ringo.repository.UserRepository;
+import com.ringo.repository.company.UserRepository;
 import com.ringo.service.common.EmailSender;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -7,7 +7,7 @@ import com.ringo.exception.UserException;
 import com.ringo.mapper.company.CategoryMapper;
 import com.ringo.model.company.Category;
 import com.ringo.model.security.Role;
-import com.ringo.repository.CategoryRepository;
+import com.ringo.repository.company.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

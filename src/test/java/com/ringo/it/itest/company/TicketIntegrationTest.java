@@ -1,7 +1,7 @@
 package com.ringo.it.itest.company;
 
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.TicketDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.itest.common.AbstractEventIntegrationTest;
 import com.ringo.it.template.company.TicketTemplate;
@@ -29,7 +29,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         TicketDto scanned = ticketTemplate.scanTicket(organisationToken.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_SUCCESS);
 
@@ -49,7 +49,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         TokenDto organisationToken2 = createOrganisationActivated();
         ticketTemplate.scanTicket(organisationToken2.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_BAD_REQUEST);
@@ -78,7 +78,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         ticketTemplate.validateTicket(organisationToken.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_SUCCESS);
 
@@ -95,7 +95,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         TokenDto organisationToken2 = createOrganisationActivated();
         ticketTemplate.validateTicket(organisationToken2.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_BAD_REQUEST);

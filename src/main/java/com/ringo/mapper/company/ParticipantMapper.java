@@ -1,7 +1,7 @@
 package com.ringo.mapper.company;
 
-import com.ringo.dto.company.ParticipantRequestDto;
-import com.ringo.dto.company.ParticipantResponseDto;
+import com.ringo.dto.company.request.ParticipantRequestDto;
+import com.ringo.dto.company.response.ParticipantResponseDto;
 import com.ringo.mapper.common.AbstractUserMapper;
 import com.ringo.model.company.Participant;
 import org.mapstruct.Mapper;

@@ -2,7 +2,7 @@ package com.ringo.it.template.security;
 
 import com.ringo.auth.JwtService;
 import com.ringo.dto.auth.ChangePasswordForm;
-import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.company.request.UserRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.config.EnvVars;
 import com.ringo.it.template.common.EndpointTemplate;

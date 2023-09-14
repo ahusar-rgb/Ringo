@@ -5,6 +5,7 @@ import com.ringo.exception.UserException;
 import com.ringo.model.company.Category;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.ExchangeRate;
+import com.ringo.model.company.TicketType;
 import jakarta.persistence.criteria.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -195,8 +196,20 @@ public class EventSearchDto extends GenericSearchDto<Event>{
                         criteriaBuilder.equal(exchangeRateRoot.get("id").get("to").get("id"), currency)
                 );
 
+        Subquery<Number> ticketTypeSubquery = query.subquery(Number.class);
+        Root<TicketType> ticketTypeRoot = ticketTypeSubquery.from(TicketType.class);
+
+        ticketTypeSubquery.select(criteriaBuilder.min(ticketTypeRoot.get("price")))
+                .where(
+                        criteriaBuilder.equal(ticketTypeRoot.get("event"), root)
+                );
+
+        Expression<Number> ticketMinPriceExpression = ticketTypeSubquery.getSelection();
+
         return criteriaBuilder.selectCase()
-                .when(criteriaBuilder.isNotNull(exchangeRateSubquery.getSelection()), criteriaBuilder.prod(exchangeRateSubquery.getSelection(), root.get("price")))
-                .otherwise(root.get("price")).as(Float.class);
+                .when(criteriaBuilder.isNull(ticketMinPriceExpression), 0)
+                .when(criteriaBuilder.isNotNull(exchangeRateSubquery.getSelection()),
+                        criteriaBuilder.prod(exchangeRateSubquery.getSelection(), ticketMinPriceExpression))
+                .otherwise(ticketMinPriceExpression).as(Float.class);
     }
 }

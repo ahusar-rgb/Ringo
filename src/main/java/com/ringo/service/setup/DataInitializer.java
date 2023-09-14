@@ -3,7 +3,7 @@ package com.ringo.service.setup;
 import com.ringo.config.ApplicationProperties;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
-import com.ringo.repository.UserRepository;
+import com.ringo.repository.company.UserRepository;
 import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

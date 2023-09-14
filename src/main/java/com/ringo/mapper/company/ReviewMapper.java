@@ -1,7 +1,7 @@
 package com.ringo.mapper.company;
 
-import com.ringo.dto.company.ReviewRequestDto;
-import com.ringo.dto.company.ReviewResponseDto;
+import com.ringo.dto.company.request.ReviewRequestDto;
+import com.ringo.dto.company.response.ReviewResponseDto;
 import com.ringo.mapper.common.EntityMapper;
 import com.ringo.model.company.Review;
 import org.mapstruct.Mapper;

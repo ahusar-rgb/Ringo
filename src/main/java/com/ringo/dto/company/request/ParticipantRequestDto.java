@@ -1,4 +1,4 @@
-package com.ringo.dto.company;
+package com.ringo.dto.company.request;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;

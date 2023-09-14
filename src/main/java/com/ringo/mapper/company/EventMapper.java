@@ -2,12 +2,13 @@ package com.ringo.mapper.company;
 
 import com.ringo.config.Constants;
 import com.ringo.dto.common.Coordinates;
-import com.ringo.dto.company.EventRequestDto;
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.mapper.common.EntityMapper;
 import com.ringo.model.company.Event;
+import com.ringo.model.company.TicketType;
 import com.ringo.model.photo.EventPhoto;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import java.util.List;
                 CategoryMapper.class,
                 CurrencyMapper.class,
                 OrganisationMapper.class,
+                TicketTypeMapper.class
         },
         imports = {Coordinates.class})
 public abstract class EventMapper implements EntityMapper<EventRequestDto, EventResponseDto, Event> {
@@ -40,6 +42,8 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "hostId", source = "host.id")
     @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
     @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "capacity", source = "ticketTypes", qualifiedByName = "getCapacity")
+    @Mapping(target = "price", source = "ticketTypes", qualifiedByName = "getPrice")
     public abstract EventSmallDto toDtoSmall(Event entity);
 
     @Named("toDtoSmallList")
@@ -53,6 +57,24 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
             list.add(toDtoSmall(event));
         }
         return list;
+    }
+
+    @Named("getCapacity")
+    public Integer getCapacity(List<TicketType> ticketTypes) {
+        if (ticketTypes == null ||
+                ticketTypes.stream().anyMatch(ticket -> ticket.getMaxTickets() == null)) {
+            return null;
+        }
+
+        return ticketTypes.stream().mapToInt(TicketType::getMaxTickets).sum();
+    }
+
+    @Named("getPrice")
+    public Float getPrice(List<TicketType> ticketTypes) {
+        if(ticketTypes == null)
+            return null;
+
+        return (float)ticketTypes.stream().mapToDouble(TicketType::getPrice).min().orElse(0.0);
     }
 
     @Override
@@ -83,6 +105,8 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "categories", ignore = true)
     @Mapping(target = "mainPhoto", ignore = true)
     @Mapping(target = "photos", ignore = true)
+    @Mapping(target = "savedBy", ignore = true)
+    @Mapping(target = "ticketTypes", ignore = true)
     @Mapping(target = "peopleCount", expression = "java(0)")
     @Mapping(target = "peopleSaved", expression = "java(0)")
     @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
@@ -96,9 +120,9 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "photos", ignore = true)
     @Mapping(target = "peopleCount", ignore = true)
     @Mapping(target = "peopleSaved", ignore = true)
+    @Mapping(target = "ticketTypes", ignore = true)
     @Mapping(target = "registrationForm", ignore = true)
     @Mapping(target = "isActive", ignore = true)
-    @Mapping(target = "currency", ignore = true)
     @Mapping(target = "latitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLatitude() : eventSmallDto.getCoordinates().latitude())")
     @Mapping(target = "longitude", expression = "java(eventSmallDto.getCoordinates() == null ? event.getLongitude() : eventSmallDto.getCoordinates().longitude())")
     @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)

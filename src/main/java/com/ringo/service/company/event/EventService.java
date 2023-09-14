@@ -1,23 +1,25 @@
 package com.ringo.service.company.event;
 
 import com.ringo.config.ApplicationProperties;
-import com.ringo.dto.company.EventRequestDto;
-import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.request.TicketTypeRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
+import com.ringo.mapper.company.TicketTypeMapper;
 import com.ringo.model.company.Category;
-import com.ringo.model.company.Currency;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Organisation;
+import com.ringo.model.company.TicketType;
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
-import com.ringo.repository.CategoryRepository;
-import com.ringo.repository.CurrencyRepository;
-import com.ringo.repository.EventRepository;
+import com.ringo.repository.company.CategoryRepository;
+import com.ringo.repository.company.CurrencyRepository;
+import com.ringo.repository.company.EventRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
 import com.ringo.service.company.OrganisationService;
 import com.ringo.service.company.RegistrationValidator;
@@ -46,15 +48,13 @@ public class EventService {
     private final CategoryRepository categoryRepository;
     private final RegistrationValidator registrationValidator;
     private final EventCleanUpService eventCleanUpService;
+    private final TicketTypeMapper ticketTypeMapper;
 
     public EventResponseDto create(EventRequestDto eventDto) {
         log.info("saveEvent: {}", eventDto);
 
         Organisation organisation = organisationService.getFullActiveUser();
 
-        Currency currency = currencyRepository.findById(eventDto.getCurrencyId()).orElseThrow(
-                () -> new NotFoundException("Currency [id: %d] not found".formatted(eventDto.getCurrencyId()))
-        );
         Set<Category> categories = eventDto.getCategoryIds().stream()
                 .map(id -> categoryRepository.findById(id).orElseThrow(
                         () -> new NotFoundException("Category [id: %d] not found".formatted(id))
@@ -64,7 +64,8 @@ public class EventService {
 
         Event event = mapper.toEntity(eventDto);
         event.setHost(organisation);
-        event.setCurrency(currency);
+
+        setUpTicketTypes(event, eventDto);
 
         event.setCategories(categories);
         for (Category category : categories) {
@@ -90,12 +91,7 @@ public class EventService {
         mapper.partialUpdate(event, dto);
         event.setUpdatedAt(Time.getLocalUTC());
 
-        if(dto.getCurrencyId() != null) {
-            Currency currency = currencyRepository.findById(dto.getCurrencyId()).orElseThrow(
-                    () -> new NotFoundException("Currency [id: %d] not found".formatted(dto.getCurrencyId()))
-            );
-            event.setCurrency(currency);
-        }
+        setUpTicketTypes(event, dto);
 
         if(dto.getCategoryIds() != null) {
             Set<Category> categories = new HashSet<>();
@@ -314,5 +310,23 @@ public class EventService {
     private void throwIfNotHost(Event event) {
         if(!event.getHost().getId().equals(organisationService.getFullActiveUser().getId()))
             throw new UserException("Event [id: %d] is not owned by the organisation".formatted(event.getId()));
+    }
+
+    private void setUpTicketTypes(Event event, EventRequestDto eventDto) {
+        if(eventDto.getTicketTypes() != null) {
+            if(event.getTicketTypes() != null)
+                event.getTicketTypes().clear();
+            else
+                event.setTicketTypes(new ArrayList<>());
+            for (TicketTypeRequestDto ticketTypeDto : eventDto.getTicketTypes()) {
+                TicketType ticketType = ticketTypeMapper.toEntity(ticketTypeDto);
+                ticketType.setCurrency(currencyRepository.findById(ticketTypeDto.getCurrencyId()).orElseThrow(
+                        () -> new NotFoundException("Currency [id: %d] not found".formatted(ticketTypeDto.getCurrencyId()))
+                ));
+                ticketType.setEvent(event);
+                ticketType.setPeopleCount(0);
+                event.getTicketTypes().add(ticketType);
+            }
+        }
     }
 }

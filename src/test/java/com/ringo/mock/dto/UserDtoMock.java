@@ -1,6 +1,6 @@
 package com.ringo.mock.dto;
 
-import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.company.request.UserRequestDto;
 import com.ringo.it.util.IdGenerator;
 
 public class UserDtoMock {

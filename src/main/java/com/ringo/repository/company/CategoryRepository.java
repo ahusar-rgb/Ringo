@@ -1,4 +1,4 @@
-package com.ringo.repository;
+package com.ringo.repository.company;
 
 import com.ringo.model.company.Category;
 import org.springframework.data.jpa.repository.JpaRepository;

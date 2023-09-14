@@ -3,7 +3,7 @@ package com.ringo.controller;
 import com.ringo.auth.AuthenticationService;
 import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.auth.ForgotPasswordForm;
-import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.auth.LoginForm;
 import com.ringo.dto.security.IdTokenDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.model.security.User;
@@ -38,7 +38,7 @@ public class AuthController {
             }
     )
     @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<TokenDto> login(@Valid  @RequestBody UserRequestDto login) {
+    public ResponseEntity<TokenDto> login(@Valid  @RequestBody LoginForm login) {
         return ResponseEntity
                 .ok()
                 .body(authenticationService.login(login));

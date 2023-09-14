@@ -1,7 +1,7 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.OrganisationRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.dto.company.request.OrganisationRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
 import com.ringo.dto.security.IdTokenDto;
 import com.ringo.service.company.OrganisationService;
 import io.swagger.v3.oas.annotations.Operation;

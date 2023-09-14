@@ -1,7 +1,7 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.ParticipantRequestDto;
-import com.ringo.dto.company.ParticipantResponseDto;
+import com.ringo.dto.company.request.ParticipantRequestDto;
+import com.ringo.dto.company.response.ParticipantResponseDto;
 import com.ringo.dto.security.IdTokenDto;
 import com.ringo.service.company.ParticipantService;
 import jakarta.validation.Valid;

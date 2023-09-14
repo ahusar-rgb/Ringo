@@ -1,7 +1,7 @@
 package com.ringo.mapper.company;
 
-import com.ringo.dto.company.OrganisationRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.dto.company.request.OrganisationRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
 import com.ringo.mapper.common.AbstractUserMapper;
 import com.ringo.model.company.Organisation;
 import com.ringo.service.time.Time;

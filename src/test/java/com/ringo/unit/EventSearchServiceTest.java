@@ -1,6 +1,6 @@
 package com.ringo.unit;
 
-import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.mapper.company.*;
 import com.ringo.mock.model.EventMock;
@@ -9,7 +9,7 @@ import com.ringo.mock.model.ParticipantMock;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.company.Participant;
-import com.ringo.repository.EventRepository;
+import com.ringo.repository.company.EventRepository;
 import com.ringo.service.company.OrganisationService;
 import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.TicketService;
@@ -48,10 +48,13 @@ public class EventSearchServiceTest {
     @BeforeEach
     void init() {
         eventMapper = new EventMapperImpl();
+        TicketTypeMapper ticketTypeMapper = new TicketTypeMapperImpl();
+        ReflectionTestUtils.setField(ticketTypeMapper, "currencyMapper", new CurrencyMapperImpl());
+
 
         ReflectionTestUtils.setField(eventMapper, "eventMainPhotoMapper", new EventMainPhotoMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "categoryMapper", new CategoryMapperImpl());
-        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
+        ReflectionTestUtils.setField(eventMapper, "ticketTypeMapper", ticketTypeMapper);
 
         OrganisationMapper organisationMapper = new OrganisationMapperImpl();
         ReflectionTestUtils.setField(organisationMapper, "labelMapper", new LabelMapperImpl());
