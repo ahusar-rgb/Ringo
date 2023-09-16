@@ -83,6 +83,16 @@ public class Event extends AbstractActiveEntity {
     @Builder.Default
     private Integer peopleSaved = 0;
 
+    @Column(name = "capacity")
+    private Integer capacity;
+
+    @Column(name = "price")
+    private Float price;
+
+    @OneToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+
     @ManyToMany(mappedBy = "savedEvents")
     private Set<Participant> savedBy;
 

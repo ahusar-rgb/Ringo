@@ -3,6 +3,7 @@ package com.ringo.dto.company.response;
 import com.ringo.dto.common.AbstractEntityDto;
 import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.CategoryDto;
+import com.ringo.dto.company.CurrencyDto;
 import com.ringo.dto.photo.EventMainPhotoDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.model.form.RegistrationForm;
@@ -33,6 +34,9 @@ public class EventResponseDto extends AbstractEntityDto {
     private String endTime;
     private List<CategoryDto> categories;
     private OrganisationResponseDto host;
+    private Float price;
+    private CurrencyDto currency;
+    private Integer capacity;
     private Integer peopleCount;
     private Boolean isSaved;
     private Integer peopleSaved;

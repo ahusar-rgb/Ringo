@@ -93,6 +93,8 @@ public class EventServiceTest {
         OrganisationMapper organisationMapper = new OrganisationMapperImpl();
         ReflectionTestUtils.setField(organisationMapper, "labelMapper", new LabelMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "organisationMapper", organisationMapper);
+        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
+
 
         ReflectionTestUtils.setField(eventService, "mapper", eventMapper);
         ReflectionTestUtils.setField(eventService, "ticketTypeMapper", ticketTypeMapper);

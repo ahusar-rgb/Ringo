@@ -55,6 +55,7 @@ public class EventSearchServiceTest {
         ReflectionTestUtils.setField(eventMapper, "eventMainPhotoMapper", new EventMainPhotoMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "categoryMapper", new CategoryMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "ticketTypeMapper", ticketTypeMapper);
+        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
 
         OrganisationMapper organisationMapper = new OrganisationMapperImpl();
         ReflectionTestUtils.setField(organisationMapper, "labelMapper", new LabelMapperImpl());

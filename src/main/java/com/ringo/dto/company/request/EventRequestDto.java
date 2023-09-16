@@ -32,5 +32,8 @@ public class EventRequestDto extends AbstractEntityDto {
     private String startTime;
     @Pattern(regexp = "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$", message = "End time must be in format yyyy-MM-ddTHH:mm:ss")
     private String endTime;
+    private Float price;
+    private Long currencyId;
+    private Integer capacity;
     private List<Long> categoryIds;
 }

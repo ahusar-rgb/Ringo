@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 @Mapper(componentModel = "spring",
         uses = {
@@ -47,9 +48,9 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "hostId", source = "host.id")
     @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
     @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
-    @Mapping(target = "capacity", source = "ticketTypes", qualifiedByName = "getCapacity")
-    @Mapping(target = "price", source = "ticketTypes", qualifiedByName = "getPrice")
-    @Mapping(target = "currency", source = "ticketTypes", qualifiedByName = "getCurrency")
+    @Mapping(target = "capacity", source = ".", qualifiedByName = "getCapacity")
+    @Mapping(target = "price", source = ".", qualifiedByName = "getPrice")
+    @Mapping(target = "currency", source = ".", qualifiedByName = "getCurrency")
     public abstract EventSmallDto toDtoSmall(Event entity);
 
     @Named("toDtoSmallList")
@@ -66,33 +67,38 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     }
 
     @Named("getCapacity")
-    public Integer getCapacity(List<TicketType> ticketTypes) {
+    public Integer getCapacity(Event event) {
+        List<TicketType> ticketTypes = event.getTicketTypes();
         if (ticketTypes == null ||
                 ticketTypes.stream().anyMatch(ticket -> ticket.getMaxTickets() == null)) {
-            return null;
+            return event.getCapacity();
         }
 
         return ticketTypes.stream().mapToInt(TicketType::getMaxTickets).sum();
     }
 
     @Named("getPrice")
-    public Float getPrice(List<TicketType> ticketTypes) {
+    public Float getPrice(Event event) {
+        List<TicketType> ticketTypes = event.getTicketTypes();
         if(ticketTypes == null)
             return null;
 
-        return (float)ticketTypes.stream().mapToDouble(TicketType::getPrice).min().orElse(0.0);
+        OptionalDouble price = ticketTypes.stream().mapToDouble(TicketType::getPrice).min();
+        if(price.isPresent())
+            return (float) price.getAsDouble();
+
+        return event.getPrice() == null ? 0.0f : event.getPrice();
     }
 
     @Named("getCurrency")
-    public CurrencyDto getCurrency(List<TicketType> ticketTypes) {
+    public CurrencyDto getCurrency(Event event) {
+        List<TicketType> ticketTypes = event.getTicketTypes();
         if(ticketTypes == null)
             return null;
 
         Optional<TicketType> ticketTypeOptional = ticketTypes.stream().min((t1, t2) -> (int) (t1.getPrice() - t2.getPrice()));
-        if(ticketTypeOptional.isEmpty())
-            return null;
-        if(ticketTypeOptional.get().getCurrency() == null)
-            return null;
+        if(ticketTypeOptional.isEmpty() || ticketTypeOptional.get().getCurrency() == null)
+            return event.getCurrency() == null ? null : currencyMapper.toDto(event.getCurrency());
 
         return currencyMapper.toDto(ticketTypeOptional.get().getCurrency());
     }
@@ -103,6 +109,9 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "photos", expression = "java(getPhotosWithoutMain(entity))")
     @Mapping(target = "startTime", source = "startTime", dateFormat = Constants.DATE_TIME_FORMAT)
     @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
+    @Mapping(target = "capacity", source = ".", qualifiedByName = "getCapacity")
+    @Mapping(target = "price", source = ".", qualifiedByName = "getPrice")
+    @Mapping(target = "currency", source = ".", qualifiedByName = "getCurrency")
     public abstract EventResponseDto toDtoDetails(Event entity);
 
     @Named("getPhotosWithoutMain")
