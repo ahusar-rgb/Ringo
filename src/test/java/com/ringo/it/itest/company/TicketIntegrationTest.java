@@ -1,7 +1,8 @@
 package com.ringo.it.itest.company;
 
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.TicketDto;
+import com.ringo.dto.company.CategoryDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.itest.common.AbstractEventIntegrationTest;
 import com.ringo.it.template.company.TicketTemplate;
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -29,12 +32,15 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         TicketDto scanned = ticketTemplate.scanTicket(organisationToken.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_SUCCESS);
 
         assertThat(scanned).usingRecursiveComparison().ignoringFields("ticketCode", "categories").isEqualTo(ticket);
-        assertThat(Set.of(scanned.getEvent().getCategories())).isEqualTo(Set.of(event.getCategories()));
+        assertThat(scanned.getEvent().getCategories().stream().sorted(Comparator.comparing(CategoryDto::getId))
+                    .collect(Collectors.toList()))
+                .isEqualTo(event.getCategories().stream().sorted(Comparator.comparing(CategoryDto::getId))
+                        .collect(Collectors.toList()));
 
         participantTemplate.delete(participantToken.getAccessToken());
         cleanUpEvent(adminToken, organisationToken.getAccessToken(), event);
@@ -49,7 +55,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         TokenDto organisationToken2 = createOrganisationActivated();
         ticketTemplate.scanTicket(organisationToken2.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_BAD_REQUEST);
@@ -78,7 +84,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         ticketTemplate.validateTicket(organisationToken.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_SUCCESS);
 
@@ -95,7 +101,7 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
 
         TokenDto participantToken = createParticipantActivated();
 
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         TokenDto organisationToken2 = createOrganisationActivated();
         ticketTemplate.validateTicket(organisationToken2.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_BAD_REQUEST);

@@ -1,9 +1,10 @@
-package com.ringo.dto.company;
+package com.ringo.dto.company.request;
 
 import com.ringo.dto.common.AbstractEntityDto;
 import com.ringo.dto.common.Coordinates;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,14 +26,14 @@ public class EventRequestDto extends AbstractEntityDto {
     private String address;
     private Coordinates coordinates;
     private Boolean isTicketNeeded;
-    @Min(value = 1, message = "Price must be greater than 0")
-    private Float price;
-    private Long currencyId;
+    @Size(max = 5, message = "Number of contacts must be between 0 and 5")
+    private List<@Valid TicketTypeRequestDto> ticketTypes;
     @Pattern(regexp = "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$", message = "Start time must be in format yyyy-MM-ddTHH:mm:ss")
     private String startTime;
     @Pattern(regexp = "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$", message = "End time must be in format yyyy-MM-ddTHH:mm:ss")
     private String endTime;
-    private List<Long> categoryIds;
-    @Min(value = 1, message = "Capacity must be greater than 0")
+    private Float price;
+    private Long currencyId;
     private Integer capacity;
+    private List<Long> categoryIds;
 }

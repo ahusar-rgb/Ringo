@@ -1,6 +1,6 @@
 package com.ringo.mapper.company;
 
-import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.model.company.Event;

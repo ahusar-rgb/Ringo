@@ -4,12 +4,12 @@ import com.ringo.config.ApplicationProperties;
 import com.ringo.config.Constants;
 import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.auth.ForgotPasswordForm;
-import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.auth.LoginForm;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.exception.AuthException;
 import com.ringo.exception.UserException;
 import com.ringo.model.security.User;
-import com.ringo.repository.UserRepository;
+import com.ringo.repository.company.UserRepository;
 import com.ringo.service.common.EmailSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public TokenDto login(UserRequestDto login) {
+    public TokenDto login(LoginForm login) {
         Authentication authentication;
         try {
             authentication = authenticationManager

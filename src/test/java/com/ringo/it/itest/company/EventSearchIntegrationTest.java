@@ -2,8 +2,9 @@ package com.ringo.it.itest.company;
 
 import com.ringo.dto.company.CategoryDto;
 import com.ringo.dto.company.CurrencyDto;
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
 import com.ringo.it.itest.common.AbstractIntegrationTest;
 import com.ringo.it.template.company.CategoryTemplate;
 import com.ringo.it.template.company.CurrencyTemplate;
@@ -18,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -45,20 +45,20 @@ public class EventSearchIntegrationTest extends AbstractIntegrationTest {
         String organisationToken = createOrganisationActivated().getAccessToken();
 
         //creating events
-        List<EventResponseDto> events = Stream.of(
+        List<EventRequestDto> eventRequests = List.of(
                 EventDtoMock.getEventDtoMock().toBuilder()
-                        .currencyId(currency.getId())
                         .categoryIds(List.of(categories.get(0).getId()))
                 .build(),
                 EventDtoMock.getEventDtoMock().toBuilder()
-                        .currencyId(currency.getId())
                         .categoryIds(List.of(categories.get(0).getId(), categories.get(1).getId()))
                 .build(),
                 EventDtoMock.getEventDtoMock().toBuilder()
-                        .currencyId(currency.getId())
                         .categoryIds(List.of(categories.get(0).getId(), categories.get(1).getId(), categories.get(2).getId()))
                 .build()
-        ).map(event -> eventTemplate.create(organisationToken, event)).toList();
+        );
+
+        eventRequests.stream().flatMap(event -> event.getTicketTypes().stream()).forEach(ticketTypeRequestDto -> ticketTypeRequestDto.setCurrencyId(currency.getId()));
+        List<EventResponseDto> events = eventRequests.stream().map(event -> eventTemplate.create(organisationToken, event)).toList();
         events.forEach(event -> addPhotoAndActivate(organisationToken, event.getId()));
         //events created
 
@@ -98,21 +98,23 @@ public class EventSearchIntegrationTest extends AbstractIntegrationTest {
 
         String organisationToken = createOrganisationActivated().getAccessToken();
 
+
         //creating events
-        List<EventResponseDto> events = Stream.of(
+        List<EventRequestDto> eventRequests = List.of(
                 EventDtoMock.getEventDtoMock().toBuilder()
-                        .currencyId(currency.getId())
                         .categoryIds(List.of(categories.get(0).getId()))
                         .build(),
                 EventDtoMock.getEventDtoMock().toBuilder()
-                        .currencyId(currency.getId())
                         .categoryIds(List.of(categories.get(0).getId(), categories.get(1).getId()))
                         .build(),
                 EventDtoMock.getEventDtoMock().toBuilder()
-                        .currencyId(currency.getId())
                         .categoryIds(List.of(categories.get(0).getId(), categories.get(1).getId(), categories.get(2).getId()))
                         .build()
-        ).map(event -> eventTemplate.create(organisationToken, event)).toList();
+        );
+
+        eventRequests.stream().flatMap(event -> event.getTicketTypes().stream()).forEach(ticketTypeRequestDto -> ticketTypeRequestDto.setCurrencyId(currency.getId()));
+        List<EventResponseDto> events = eventRequests.stream().map(event -> eventTemplate.create(organisationToken, event)).toList();
+
         addPhotoAndActivate(organisationToken, events.get(0).getId());
         addPhotoAndActivate(organisationToken, events.get(1).getId());
         //events created

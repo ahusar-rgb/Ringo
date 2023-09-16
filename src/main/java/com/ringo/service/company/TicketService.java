@@ -4,17 +4,16 @@ package com.ringo.service.company;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.auth.JwtService;
 import com.ringo.dto.common.TicketCode;
-import com.ringo.dto.company.TicketDto;
-import com.ringo.exception.InternalException;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
 import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
 import com.ringo.model.form.RegistrationSubmission;
-import com.ringo.repository.EventRepository;
-import com.ringo.repository.ParticipantRepository;
-import com.ringo.repository.TicketRepository;
+import com.ringo.repository.company.EventRepository;
+import com.ringo.repository.company.ParticipantRepository;
+import com.ringo.repository.company.TicketRepository;
 import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.QrCodeGenerator;
 import com.ringo.service.time.Time;
@@ -23,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -45,17 +45,17 @@ public class TicketService {
     private final EmailSender emailSender;
     private final QrCodeGenerator qrCodeGenerator;
 
-    public TicketDto issueTicket(Event event, Participant participant, RegistrationSubmission submission) {
-
+    public TicketDto issueTicket(Event event, @Nullable TicketType ticketType, Participant participant, RegistrationSubmission submission) {
         throwIfTicketExists(event, participant);
 
         Ticket ticket = Ticket.builder()
                 .id(new TicketId(participant, event))
                 .timeOfSubmission(Time.getLocalUTC())
-                .expiryDate(event.getEndTime())
+                .expiryDate(event.getEndTime().plusDays(3))
                 .isValidated(false)
-                .isPaid(event.getPrice() != null && compare(event.getPrice(), 0f) != 0)
+                .isPaid(ticketType == null || (ticketType.getPrice() != null && compare(ticketType.getPrice(), 0f) != 0))
                 .registrationSubmission(submission)
+                .ticketType(ticketType)
                 .build();
 
         TicketDto ticketDto = mapper.toDto(repository.save(ticket));
@@ -66,7 +66,7 @@ public class TicketService {
         try {
             emailSender.sendTicket(ticket, qrCode);
         } catch (Exception e) {
-            throw new InternalException("Failed to send the ticket by email");
+            log.error("Failed to send ticket to user", e);
         }
 
         return ticketDto;
@@ -145,7 +145,7 @@ public class TicketService {
         }).toList();
     }
 
-    public void cancelTicket(Event event, Participant participant) {
+    public Ticket cancelTicket(Event event, Participant participant) {
         Ticket ticket = repository.findById(new TicketId(participant, event))
                 .orElseThrow(() -> new UserException("The user is not registered for this event"));
 
@@ -155,6 +155,7 @@ public class TicketService {
         }
 
         repository.delete(ticket);
+        return ticket;
     }
 
     public TicketDto getTicketWithCode(Event event, Participant participant) {
@@ -166,7 +167,7 @@ public class TicketService {
         return ticketDto;
     }
 
-    public void issueToUserByEmail(Long eventId, String email) {
+    public void issueToUserByEmail(Long eventId, Long ticketTypeId, String email) {
         Participant participant = participantRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Participant not found"));
 
@@ -178,6 +179,11 @@ public class TicketService {
         if(notHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
-        issueTicket(event, participant, null);
+        TicketType ticketType = event.getTicketTypes().stream()
+                .filter(type -> type.getId().equals(ticketTypeId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Ticket type not found"));
+
+        issueTicket(event, ticketType, participant, null);
     }
 }

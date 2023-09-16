@@ -1,4 +1,4 @@
-package com.ringo.repository;
+package com.ringo.repository.company;
 
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.ExchangeRate;

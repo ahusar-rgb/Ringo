@@ -1,10 +1,7 @@
 package com.ringo.model.company;
 
 import com.ringo.model.form.RegistrationSubmission;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +32,10 @@ public class Ticket {
 
     @Column(name = "is_paid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isPaid;
+
+    @OneToOne
+    @JoinColumn(name = "ticket_type_id", nullable = false)
+    private TicketType ticketType;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "registration_submission", columnDefinition = "JSONB")

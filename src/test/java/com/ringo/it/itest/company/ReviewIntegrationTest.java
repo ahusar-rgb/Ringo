@@ -1,7 +1,7 @@
 package com.ringo.it.itest.company;
 
-import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.dto.company.ReviewRequestDto;
+import com.ringo.dto.company.request.ReviewRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.itest.common.AbstractIntegrationTest;
 import com.ringo.it.template.company.ReviewTemplate;

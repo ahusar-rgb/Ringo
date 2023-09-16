@@ -66,6 +66,8 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+
+        log.warn(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

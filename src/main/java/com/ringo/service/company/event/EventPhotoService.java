@@ -46,7 +46,7 @@ public class EventPhotoService {
 
         byte[] photoBytes;
         try {
-            if(dimensions == null)
+            if(dimensions == null || dimensions.getX() == 0 || dimensions.getY() == 0 || dimensions.getD() == 0)
                 photoBytes = file.getBytes();
             else
                 photoBytes = photoUtil.cropImage(file.getBytes(), contentType, dimensions);

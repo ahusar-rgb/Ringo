@@ -1,7 +1,7 @@
 package com.ringo.controller;
 
 import com.ringo.dto.common.TicketCode;
-import com.ringo.dto.company.TicketDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.service.company.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -93,11 +93,12 @@ public class TicketController {
                 .body(ticketService.getMyTickets());
     }
 
-    @PostMapping(value = "/issue/{event_id}/{email}", produces = {"application/json"})
+    @PostMapping(value = "/issue/{event_id}/ticket-type/{ticket_type_id}/{email}", produces = {"application/json"})
     public ResponseEntity<String> issueTicketByEmail(
             @PathVariable("event_id") Long eventId,
+            @PathVariable("ticket_type_id") Long ticketTypeId,
             @PathVariable("email") String email) {
-        ticketService.issueToUserByEmail(eventId, email);
+        ticketService.issueToUserByEmail(eventId, ticketTypeId, email);
         return ResponseEntity.ok("Ticket issued successfully");
     }
 }

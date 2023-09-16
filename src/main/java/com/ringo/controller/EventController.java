@@ -1,6 +1,10 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.*;
+import com.ringo.dto.company.EventGroupDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.dto.search.EventSearchDto;
@@ -273,11 +277,12 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content)
             }
     )
-    @PostMapping(value = "/{id}/join", produces = {"application/json"})
+    @PostMapping(value = "/{id}/join/ticket-types/{ticket_type_id}", produces = {"application/json"})
     public ResponseEntity<TicketDto> joinEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
+            @Parameter(description = "Ticket type id") @PathVariable("ticket_type_id") Long ticketTypeId,
             @Parameter(description = "Registration submission") @RequestBody(required = false) RegistrationSubmission submission) {
-        return ResponseEntity.ok(eventInteractionService.joinEvent(id, submission));
+        return ResponseEntity.ok(eventInteractionService.joinEvent(id, ticketTypeId, submission));
     }
 
     @Operation(summary = "Leave event")

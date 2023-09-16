@@ -1,9 +1,9 @@
 package com.ringo.unit;
 
 import com.ringo.dto.ReviewPageRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.dto.company.ReviewRequestDto;
-import com.ringo.dto.company.ReviewResponseDto;
+import com.ringo.dto.company.request.ReviewRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
+import com.ringo.dto.company.response.ReviewResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
@@ -14,8 +14,8 @@ import com.ringo.mock.model.ReviewMock;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.company.Participant;
 import com.ringo.model.company.Review;
-import com.ringo.repository.OrganisationRepository;
-import com.ringo.repository.ReviewRepository;
+import com.ringo.repository.company.OrganisationRepository;
+import com.ringo.repository.company.ReviewRepository;
 import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.ReviewService;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package com.ringo.service.security;
 
 import com.ringo.exception.NotFoundException;
-import com.ringo.repository.UserRepository;
+import com.ringo.repository.company.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
