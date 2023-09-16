@@ -74,6 +74,7 @@ public class EventInteractionServiceTest {
         OrganisationMapper organisationMapper = new OrganisationMapperImpl();
         ReflectionTestUtils.setField(organisationMapper, "labelMapper", new LabelMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "organisationMapper", organisationMapper);
+        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
 
         ReflectionTestUtils.setField(eventInteractionService, "mapper", eventMapper);
 
@@ -347,7 +348,11 @@ public class EventInteractionServiceTest {
         //then
         EventSmallDto responseDto = eventInteractionService.leaveEvent(event.getId());
         assertThat(responseDto.getPeopleCount()).isEqualTo(4);
-        assertThat(responseDto).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(eventMapper.toDtoSmall(event));
+        EventSmallDto expectedDto = eventMapper.toDtoSmall(event);
+        assertThat(responseDto).usingRecursiveComparison().ignoringFields("peopleCount", "currency").isEqualTo(expectedDto);
+        assertThat(responseDto.getCurrency()).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedDto.getCurrency());
+
+
 
         Event savedEvent = eventCaptor.getValue();
         verify(repository, times(1)).save(savedEvent);

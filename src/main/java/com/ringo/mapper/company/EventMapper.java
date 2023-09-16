@@ -2,6 +2,7 @@ package com.ringo.mapper.company;
 
 import com.ringo.config.Constants;
 import com.ringo.dto.common.Coordinates;
+import com.ringo.dto.company.CurrencyDto;
 import com.ringo.dto.company.request.EventRequestDto;
 import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.company.response.EventSmallDto;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring",
         uses = {
@@ -31,6 +33,9 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Autowired
     private EventPhotoMapper eventPhotoMapper;
 
+    @Autowired
+    private CurrencyMapper currencyMapper;
+
     @Override
     public EventResponseDto toDto(Event entity) {
         throw new UnsupportedOperationException("Use toDtoSmall or toDtoDetails instead");
@@ -44,6 +49,7 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
     @Mapping(target = "endTime", source = "endTime", dateFormat = Constants.DATE_TIME_FORMAT)
     @Mapping(target = "capacity", source = "ticketTypes", qualifiedByName = "getCapacity")
     @Mapping(target = "price", source = "ticketTypes", qualifiedByName = "getPrice")
+    @Mapping(target = "currency", source = "ticketTypes", qualifiedByName = "getCurrency")
     public abstract EventSmallDto toDtoSmall(Event entity);
 
     @Named("toDtoSmallList")
@@ -75,6 +81,20 @@ public abstract class EventMapper implements EntityMapper<EventRequestDto, Event
             return null;
 
         return (float)ticketTypes.stream().mapToDouble(TicketType::getPrice).min().orElse(0.0);
+    }
+
+    @Named("getCurrency")
+    public CurrencyDto getCurrency(List<TicketType> ticketTypes) {
+        if(ticketTypes == null)
+            return null;
+
+        Optional<TicketType> ticketTypeOptional = ticketTypes.stream().min((t1, t2) -> (int) (t1.getPrice() - t2.getPrice()));
+        if(ticketTypeOptional.isEmpty())
+            return null;
+        if(ticketTypeOptional.get().getCurrency() == null)
+            return null;
+
+        return currencyMapper.toDto(ticketTypeOptional.get().getCurrency());
     }
 
     @Override

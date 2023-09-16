@@ -71,6 +71,7 @@ public class TicketServiceTest {
         OrganisationMapper organisationMapper = new OrganisationMapperImpl();
         ReflectionTestUtils.setField(organisationMapper, "labelMapper", new LabelMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "organisationMapper", organisationMapper);
+        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
 
         ReflectionTestUtils.setField(ticketService, "eventMapper", eventMapper);
 
