@@ -1,5 +1,6 @@
 package com.ringo.it.itest.company;
 
+import com.ringo.dto.company.CategoryDto;
 import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.security.TokenDto;
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -34,7 +37,10 @@ public class TicketIntegrationTest extends AbstractEventIntegrationTest {
         TicketDto scanned = ticketTemplate.scanTicket(organisationToken.getAccessToken(), ticket.getTicketCode(), ItTestConsts.HTTP_SUCCESS);
 
         assertThat(scanned).usingRecursiveComparison().ignoringFields("ticketCode", "categories").isEqualTo(ticket);
-        assertThat(Set.of(scanned.getEvent().getCategories())).isEqualTo(Set.of(event.getCategories()));
+        assertThat(scanned.getEvent().getCategories().stream().sorted(Comparator.comparing(CategoryDto::getId))
+                    .collect(Collectors.toList()))
+                .isEqualTo(event.getCategories().stream().sorted(Comparator.comparing(CategoryDto::getId))
+                        .collect(Collectors.toList()));
 
         participantTemplate.delete(participantToken.getAccessToken());
         cleanUpEvent(adminToken, organisationToken.getAccessToken(), event);
