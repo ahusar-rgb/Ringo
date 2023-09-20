@@ -7,9 +7,11 @@ import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EventCleanUpService {
 
     private final EventPhotoService eventPhotoService;

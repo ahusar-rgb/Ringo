@@ -18,9 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 @Slf4j
 public class ParticipantService extends AbstractUserService<ParticipantRequestDto, Participant, ParticipantResponseDto> {
@@ -50,6 +52,7 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
         this.mapper = mapper;
     }
 
+    @Transactional(readOnly = true)
     public ParticipantResponseDto findById(Long id) {
         log.info("findParticipantById: {}", id);
         return mapper.toDto(repository.findByIdActive(id).orElseThrow(
@@ -61,6 +64,7 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
         return save(dto, Role.ROLE_PARTICIPANT);
     }
 
+    @Transactional(readOnly = true)
     public ParticipantResponseDto findCurrentParticipant() {
         log.info("findCurrentParticipant");
         Participant participant = getFullUser();

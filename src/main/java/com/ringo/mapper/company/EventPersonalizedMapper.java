@@ -1,17 +1,19 @@
 package com.ringo.mapper.company;
 
 import com.ringo.dto.company.response.EventResponseDto;
-import com.ringo.exception.NotFoundException;
-import com.ringo.exception.UserException;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
 import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EventPersonalizedMapper {
 
     private final EventMapper eventMapper;
@@ -21,15 +23,14 @@ public class EventPersonalizedMapper {
     public EventResponseDto toPersonalizedDto(Event event) {
         EventResponseDto dto = eventMapper.toDtoDetails(event);
 
-        try {
-            Participant participant = participantService.getFullActiveUser();
+        Optional<Participant> participantOptional = participantService.getFullActiveUserOptional();
 
-            dto.setIsRegistered(ticketService.ticketExists(event, participant));
-            dto.setIsSaved(participant.getSavedEvents().contains(event));
-        } catch (NotFoundException | UserException e) {
+        if(participantOptional.isEmpty())
             return dto;
-        }
 
+        Participant participant = participantOptional.get();
+        dto.setIsRegistered(ticketService.ticketExists(event, participant));
+        dto.setIsSaved(participant.getSavedEvents().contains(event));
         return dto;
     }
 }

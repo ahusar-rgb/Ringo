@@ -21,11 +21,13 @@ import com.ringo.service.company.TicketService;
 import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EventInteractionService {
 
     private final ParticipantService participantService;
@@ -51,7 +53,7 @@ public class EventInteractionService {
         TicketDto ticketDto;
         if(event.getTicketTypes().isEmpty()) {
             //free event
-            ticketDto = ticketService.issueTicket(event, null, participantService.getFullActiveUser(), submission);
+            ticketDto = ticketService.issueTicket(event, null, participant, submission);
         } else {
             TicketType ticketType = event.getTicketTypes().stream()
                     .filter(t -> t.getId().equals(ticketTypeId))

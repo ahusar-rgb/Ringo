@@ -25,6 +25,7 @@ public class CategoryService {
     private final CategoryMapper mapper;
     private final AuthenticationService authenticationService;
 
+    @Transactional(readOnly = true)
     public CategoryDto findCategoryById(Long id) {
         log.info("findCategoryById: {}", id);
 
@@ -34,6 +35,7 @@ public class CategoryService {
         return mapper.toDto(category);
     }
 
+    @Transactional(readOnly = true)
     public List<CategoryDto> findAll() {
         log.info("findAll categories");
         return mapper.toDtoList(repository.findAll());

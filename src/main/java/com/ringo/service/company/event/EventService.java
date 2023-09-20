@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
+@Transactional
 public class EventService {
     private final ApplicationProperties config;
     private final EventRepository repository;

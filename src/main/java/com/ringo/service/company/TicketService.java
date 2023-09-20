@@ -3,6 +3,7 @@ package com.ringo.service.company;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.auth.JwtService;
+import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.TicketCode;
 import com.ringo.dto.company.response.TicketDto;
 import com.ringo.exception.NotFoundException;
@@ -43,6 +44,7 @@ public class TicketService {
     private final OrganisationService organisationService;
     private final JwtService jwtService;
     private final EmailSender emailSender;
+    private final ApplicationProperties config;
     private final QrCodeGenerator qrCodeGenerator;
 
     public TicketDto issueTicket(Event event, @Nullable TicketType ticketType, Participant participant, RegistrationSubmission submission) {
@@ -51,7 +53,7 @@ public class TicketService {
         Ticket ticket = Ticket.builder()
                 .id(new TicketId(participant, event))
                 .timeOfSubmission(Time.getLocalUTC())
-                .expiryDate(event.getEndTime().plusDays(3))
+                .expiryDate(event.getEndTime().plusDays(Integer.parseInt(config.getTicketLifetime())))
                 .isValidated(false)
                 .isPaid(ticketType == null || (ticketType.getPrice() != null && compare(ticketType.getPrice(), 0f) != 0))
                 .registrationSubmission(submission)
@@ -72,11 +74,13 @@ public class TicketService {
         return ticketDto;
     }
 
+    @Transactional(readOnly = true)
     public void throwIfTicketExists(Event event, Participant participant) {
         if(repository.existsById(new TicketId(participant, event)))
             throw new UserException("The user is already registered for this event");
     }
 
+    @Transactional(readOnly = true)
     public boolean ticketExists(Event event, Participant participant) {
         return repository.existsById(new TicketId(participant, event));
     }
@@ -86,6 +90,7 @@ public class TicketService {
         return mapper.toDto(ticket);
     }
 
+    @Transactional(readOnly = true)
     public Ticket getTicketFromCode(TicketCode ticketCode) {
         DecodedJWT jwt = jwtService.verifyTicketCode(ticketCode.getTicketCode());
 
@@ -114,6 +119,7 @@ public class TicketService {
         repository.save(ticket);
     }
 
+    @Transactional(readOnly = true)
     public List<TicketDto> findByEventId(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found"));
@@ -129,6 +135,7 @@ public class TicketService {
         return !event.getHost().getId().equals(organisation.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<TicketDto> getMyTickets() {
         Participant participant = participantService.getFullActiveUser();
 
@@ -158,6 +165,7 @@ public class TicketService {
         return ticket;
     }
 
+    @Transactional(readOnly = true)
     public TicketDto getTicketWithCode(Event event, Participant participant) {
         Ticket ticket = repository.findById(new TicketId(participant, event))
                 .orElseThrow(() -> new UserException("The user is not registered for this event"));

@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ import static com.ringo.utils.Geography.getDistance;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class EventSearchService {
 
     private final EventRepository repository;
@@ -47,7 +49,7 @@ public class EventSearchService {
     private final ApplicationProperties config;
     private final EventGroupMapper groupMapper;
 
-
+    @Transactional(readOnly = true)
     public EventResponseDto findById(Long id) {
         log.info("findEventById: {}", id);
 
@@ -68,10 +70,11 @@ public class EventSearchService {
                 throw new NotFoundException("Event [id: %d] not found".formatted(id));
         }
 
-        return personalizedMapper.toPersonalizedDto(event);
+        EventResponseDto dto = personalizedMapper.toPersonalizedDto(event);
+        return dto;
     }
 
-
+    @Transactional(readOnly = true)
     public List<EventGroupDto> findEventsInArea(double latMin, double latMax, double lonMin, double lonMax) {
 
         log.info("findEventsInArea: {}, {}, {}, {}", latMin, latMax, lonMin, lonMax);
@@ -119,7 +122,7 @@ public class EventSearchService {
         return result;
     }
 
-
+    @Transactional(readOnly = true)
     public List<EventSmallDto> search(EventSearchDto searchDto) {
         log.info("searchEvents: {}", searchDto);
 

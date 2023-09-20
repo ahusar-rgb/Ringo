@@ -18,4 +18,5 @@ public class ApplicationProperties {
     private String adminPassword;
     private String domainName;
     private String noReplyPassword;
+    private String ticketLifetime;
 }

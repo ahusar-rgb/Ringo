@@ -50,6 +50,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     }
 
 
+    @Transactional(readOnly = true)
     public OrganisationResponseDto findById(Long id) {
         log.info("findOrganisationById: {}", id);
         Organisation organisation = organisationRepository.findByIdActiveWithEvents(id).orElseThrow(
@@ -82,6 +83,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         }
     }
 
+    @Transactional(readOnly = true)
     public OrganisationResponseDto findCurrentOrganisation() {
         log.info("findCurrentOrganisation");
         Organisation organisation = getFullUser();

@@ -47,14 +47,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         String error = e.getMessage();
-        log.error(e.toString());
+        log.error(error);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<String> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         String error = "Maximum upload size exceeded";
-        log.error(e.toString());
+        log.error(error);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 

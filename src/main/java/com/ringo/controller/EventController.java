@@ -48,9 +48,10 @@ public class EventController {
     )
     @GetMapping(value = "/{id}", produces = {"application/json"})
     public ResponseEntity<EventResponseDto> findEventById(@Parameter(description = "Event id") @PathVariable Long id) {
+        EventResponseDto dto = eventSearchService.findById(id);
         return ResponseEntity
                 .ok()
-                .body(eventSearchService.findById(id));
+                .body(dto);
     }
 
     @Operation(summary = "Find all events in the given area")

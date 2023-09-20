@@ -132,6 +132,14 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         return result.get();
     }
 
+    public Optional<T> getFullActiveUserOptional() {
+        User user = authenticationService.getCurrentUser();
+        if(user == null)
+            return Optional.empty();
+
+        return repository.findFullActiveById(user.getId());
+    }
+
     private User buildFromDto(S dto) {
         User user = abstractUserMapper.toEntity(dto);
         user.setId(null);

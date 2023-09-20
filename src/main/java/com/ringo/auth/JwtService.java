@@ -112,8 +112,12 @@ public class JwtService {
     }
 
     public String getEmailFromToken(String token) {
-        DecodedJWT jwt = JWT.decode(token);
-        return jwt.getSubject();
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getSubject();
+        } catch (Exception e) {
+            throw new UserException("Token is not valid");
+        }
     }
 
     public String getUsernameFromToken(String token) {
