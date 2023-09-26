@@ -96,10 +96,9 @@ public class EventSearchService {
     private List<EventGroup> groupEvents(List<EventGroup> groups, int mergeDistance) {
         List<EventGroup> result = new ArrayList<>(groups);
         for(int i = 0; i < result.size(); i++) {
-            for(int j = i; j < result.size(); j++) {
+            for(int j = i + 1; j < result.size(); j++) {
                 EventGroup group = result.get(i);
                 EventGroup other = result.get(j);
-                if (group == other) continue;
                 int distance = getDistance(group.getCoordinates(), other.getCoordinates());
                 if (distance <= mergeDistance) {
                     result.remove(group);
