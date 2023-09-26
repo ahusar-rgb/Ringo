@@ -277,8 +277,9 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content)
             }
     )
+
     @PostMapping(value = "/{id}/join/ticket-types/{ticket_type_id}", produces = {"application/json"})
-    public ResponseEntity<TicketDto> joinEvent(
+    public ResponseEntity<JoinEventResult> joinEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
             @Parameter(description = "Ticket type id") @PathVariable("ticket_type_id") Long ticketTypeId,
             @Parameter(description = "Registration submission") @RequestBody(required = false) RegistrationSubmission submission) {

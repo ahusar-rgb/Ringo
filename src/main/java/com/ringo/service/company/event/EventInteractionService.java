@@ -1,5 +1,7 @@
 package com.ringo.service.company.event;
 
+
+import com.ringo.dto.company.JoinEventResult;
 import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.company.response.EventSmallDto;
 import com.ringo.dto.company.response.TicketDto;
@@ -13,6 +15,7 @@ import com.ringo.model.company.Ticket;
 import com.ringo.model.company.TicketType;
 import com.ringo.model.form.RegistrationSubmission;
 import com.ringo.repository.company.EventRepository;
+import com.ringo.service.company.JoiningIntentService;
 import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketTypeRepository;
 import com.ringo.service.company.ParticipantService;
@@ -35,6 +38,7 @@ public class EventInteractionService {
     private final EventPersonalizedMapper personalizedMapper;
     private final RegistrationValidator validator;
     private final ParticipantRepository participantRepository;
+    private final JoiningIntentService joiningIntentService;
     private final TicketTypeRepository ticketTypeRepository;
 
     public TicketDto joinEvent(Long id, Long ticketTypeId, RegistrationSubmission submission) {
@@ -58,6 +62,10 @@ public class EventInteractionService {
                     .findFirst()
                     .orElseThrow(() -> new NotFoundException("Ticket type [id: %d] not found".formatted(ticketTypeId)));
 
+// <<<<<<< payment
+//         if(event.getPrice() == null || event.getPrice() == 0) {
+//             TicketDto ticketDto = ticketService.issueTicket(joiningIntentService.createNoPayment(participant, event));
+// =======
 
             if(ticketType.getMaxTickets() != null && ticketType.getPeopleCount() >= ticketType.getMaxTickets())
                 throw new UserException("This ticket type is sold out");
@@ -70,12 +78,20 @@ public class EventInteractionService {
             if(ticketDto.getTicketType() != null)
                 ticketDto.getTicketType().setPeopleCount(ticketType.getPeopleCount());
         }
+// >>>>>>> new_payment
 
-        event.setPeopleCount(event.getPeopleCount() + 1);
-        repository.save(event);
+            event.setPeopleCount(event.getPeopleCount() + 1);
+            repository.save(event);
 
-        ticketDto.setEvent(mapper.toDtoSmall(event));
-        return ticketDto;
+            ticketDto.setEvent(mapper.toDtoSmall(event));
+            return JoinEventResult.builder()
+                    .ticket(ticketDto)
+                    .build();
+        }
+
+        return JoinEventResult.builder()
+                .paymentIntentClientSecret(joiningIntentService.create(participant, event).getPaymentIntentClientSecret())
+                .build();
     }
 
     public EventSmallDto leaveEvent(Long id) {

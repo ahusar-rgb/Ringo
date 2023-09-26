@@ -11,6 +11,7 @@ import com.ringo.mapper.company.EventMapper;
 import com.ringo.mapper.company.TicketMapper;
 import com.ringo.model.company.*;
 import com.ringo.model.form.RegistrationSubmission;
+import com.ringo.model.payment.JoiningIntent;
 import com.ringo.repository.company.EventRepository;
 import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketRepository;
@@ -44,8 +45,17 @@ public class TicketService {
     private final JwtService jwtService;
     private final EmailSender emailSender;
     private final QrCodeGenerator qrCodeGenerator;
+    private final JoiningIntentService joinIntentService;
 
-    public TicketDto issueTicket(Event event, @Nullable TicketType ticketType, Participant participant, RegistrationSubmission submission) {
+// <<<<<<< payment
+//     public TicketDto issueTicket(JoiningIntent joiningIntent) {
+//         Event event = joiningIntent.getEvent();
+//         Participant participant = joiningIntent.getParticipant();
+//         RegistrationSubmission submission = joiningIntent.getRegistrationSubmission();
+
+// =======
+//     public TicketDto issueTicket(Event event, @Nullable TicketType ticketType, Participant participant, RegistrationSubmission submission) {
+// >>>>>>> new_payment
         throwIfTicketExists(event, participant);
 
         Ticket ticket = Ticket.builder()
@@ -179,11 +189,15 @@ public class TicketService {
         if(notHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
-        TicketType ticketType = event.getTicketTypes().stream()
-                .filter(type -> type.getId().equals(ticketTypeId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Ticket type not found"));
+// <<<<<<< payment
+//         issueTicket(joinIntentService.createNoPayment(participant, event));
+// =======
+//         TicketType ticketType = event.getTicketTypes().stream()
+//                 .filter(type -> type.getId().equals(ticketTypeId))
+//                 .findFirst()
+//                 .orElseThrow(() -> new NotFoundException("Ticket type not found"));
 
-        issueTicket(event, ticketType, participant, null);
+//         issueTicket(event, ticketType, participant, null);
+// >>>>>>> new_payment
     }
 }

@@ -17,5 +17,11 @@ public class ApplicationProperties {
     private String adminLogin;
     private String adminPassword;
     private String domainName;
+    private String stripePublicKey;
+    private String stripeSecretKey;
+    private String stripeWebhookSecret;
+    private Double applicationFeeInPercent;
+    private String stripeReturnUrl;
+    private String stripeReauthUrl;
     private String noReplyPassword;
 }
