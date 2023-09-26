@@ -1,9 +1,7 @@
-package com.ringo.dto.company;
+package com.ringo.dto.company.response;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDateTime;
 
 @Data
 @SuperBuilder
@@ -12,5 +10,5 @@ public class ReviewResponseDto {
     private ParticipantResponseDto participant;
     private String comment;
     private Integer rate;
-    private LocalDateTime createdAt;
+    private String createdAt;
 }

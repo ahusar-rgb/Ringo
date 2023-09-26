@@ -4,19 +4,18 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.auth.JwtService;
 import com.ringo.dto.common.TicketCode;
-import com.ringo.dto.company.TicketDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
 import com.ringo.mock.model.*;
 import com.ringo.model.company.*;
 import com.ringo.model.form.RegistrationSubmission;
-import com.ringo.repository.EventRepository;
-import com.ringo.repository.ParticipantRepository;
-import com.ringo.repository.TicketRepository;
+import com.ringo.repository.company.EventRepository;
+import com.ringo.repository.company.ParticipantRepository;
+import com.ringo.repository.company.TicketRepository;
 import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.QrCodeGenerator;
 import com.ringo.service.company.OrganisationService;
-import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.TicketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +37,12 @@ public class TicketServiceTest {
     private TicketRepository repository;
     @Spy
     private TicketMapper ticketMapper;
+    @Spy
+    private TicketTypeMapper ticketTypeMapper;
     @Mock
     private EventRepository eventRepository;
     @Spy
     private EventMapper eventMapper;
-    @Mock
-    private ParticipantService participantService;
     @Mock
     private ParticipantRepository participantRepository;
     @Mock
@@ -62,21 +61,25 @@ public class TicketServiceTest {
     @BeforeEach
     void init() {
         eventMapper = new EventMapperImpl();
+        ticketTypeMapper = new TicketTypeMapperImpl();
+        ReflectionTestUtils.setField(ticketTypeMapper, "currencyMapper", new CurrencyMapperImpl());
 
         ReflectionTestUtils.setField(eventMapper, "eventMainPhotoMapper", new EventMainPhotoMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "categoryMapper", new CategoryMapperImpl());
-        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
+        ReflectionTestUtils.setField(eventMapper, "ticketTypeMapper", ticketTypeMapper);
 
         OrganisationMapper organisationMapper = new OrganisationMapperImpl();
         ReflectionTestUtils.setField(organisationMapper, "labelMapper", new LabelMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "organisationMapper", organisationMapper);
+        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
 
         ReflectionTestUtils.setField(ticketService, "eventMapper", eventMapper);
 
         ticketMapper = new TicketMapperImpl();
         ReflectionTestUtils.setField(ticketMapper, "participantMapper", new ParticipantMapperImpl());
+        ReflectionTestUtils.setField(ticketMapper, "eventMapper", eventMapper);
         ReflectionTestUtils.setField(ticketService, "mapper", ticketMapper);
-        ReflectionTestUtils.setField(ticketService, "mapper", ticketMapper);
+        ReflectionTestUtils.setField(ticketMapper, "ticketTypeMapper", ticketTypeMapper);
     }
 
     @Test
@@ -96,7 +99,7 @@ public class TicketServiceTest {
 
 
         //then
-        TicketDto ticketDto = ticketService.issueTicket(event, participant, submission);
+        TicketDto ticketDto = ticketService.issueTicket(event, event.getTicketTypes().get(0), participant, submission);
 
         assertThat(ticketCaptor.getAllValues().get(1)).isEqualTo(ticketCaptor.getAllValues().get(0));
 
@@ -104,7 +107,7 @@ public class TicketServiceTest {
         assertThat(ticket.getId().getEvent()).isEqualTo(event);
         assertThat(ticket.getId().getParticipant()).isEqualTo(participant);
         assertThat(ticket.getTimeOfSubmission()).isNotNull();
-        assertThat(ticket.getExpiryDate()).isEqualTo(event.getEndTime());
+        assertThat(ticket.getExpiryDate()).isEqualTo(event.getEndTime().plusDays(3));
         assertThat(ticket.getIsValidated()).isFalse();
         assertThat(ticket.getRegistrationSubmission()).isEqualTo(submission);
 
@@ -125,7 +128,7 @@ public class TicketServiceTest {
         when(repository.existsById(new TicketId(participant, event))).thenReturn(true);
 
         //then
-        assertThatThrownBy(() -> ticketService.issueTicket(event, participant, submission))
+        assertThatThrownBy(() -> ticketService.issueTicket(event, event.getTicketTypes().get(0), participant, submission))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("The user is already registered for this event");
     }

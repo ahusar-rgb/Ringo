@@ -2,8 +2,8 @@ package com.ringo.unit;
 
 import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.IdProvider;
-import com.ringo.dto.company.ParticipantRequestDto;
-import com.ringo.dto.company.ParticipantResponseDto;
+import com.ringo.dto.company.request.ParticipantRequestDto;
+import com.ringo.dto.company.response.ParticipantResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
@@ -15,9 +15,9 @@ import com.ringo.model.company.Organisation;
 import com.ringo.model.company.Participant;
 import com.ringo.model.photo.Photo;
 import com.ringo.model.security.Role;
-import com.ringo.repository.ParticipantRepository;
-import com.ringo.repository.TicketRepository;
-import com.ringo.repository.UserRepository;
+import com.ringo.repository.company.ParticipantRepository;
+import com.ringo.repository.company.TicketRepository;
+import com.ringo.repository.company.UserRepository;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.ParticipantService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -138,8 +139,8 @@ public class ParticipantServiceTest {
         assertThat(saved).usingRecursiveComparison().ignoringFields("createdAt", "id", "password").isEqualTo(participant);
         assertThat(saved.getPassword()).isNotNull();
         assertThat(saved.getPassword()).isNotEqualTo(participant.getPassword());
-        assertThat(saved.getCreatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
-        assertThat(saved.getCreatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
+        assertThat(saved.getCreatedAt().atZone(ZoneId.systemDefault()).getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
+        assertThat(saved.getCreatedAt().atZone(ZoneId.systemDefault()).getYear()).isEqualTo(LocalDate.now().getYear());
         assertThat(saved.getUpdatedAt()).isNull();
         assertThat(saved.getWithIdProvider()).isFalse();
 
@@ -213,8 +214,8 @@ public class ParticipantServiceTest {
         Participant saved = participantCaptor.getValue();
         assertThat(saved).isNotNull();
         assertThat(saved).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(participant);
-        assertThat(saved.getUpdatedAt().getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
-        assertThat(saved.getUpdatedAt().getYear()).isEqualTo(LocalDate.now().getYear());
+        assertThat(saved.getUpdatedAt().atZone(ZoneId.systemDefault()).getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
+        assertThat(saved.getUpdatedAt().atZone(ZoneId.systemDefault()).getYear()).isEqualTo(LocalDate.now().getYear());
 
         assertThat(responseDto).isNotNull();
         ParticipantResponseDto expectedDto = mapper.toDto(participant);

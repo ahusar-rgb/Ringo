@@ -1,5 +1,6 @@
-package com.ringo.dto.company;
+package com.ringo.dto.company.response;
 
+import com.ringo.dto.company.LabelDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,12 +9,15 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @SuperBuilder
-public class OrganisationRequestDto extends UserRequestDto {
+public class OrganisationResponseDto extends UserResponseDto {
     private String description;
+    private Float rating;
     private List<LabelDto> contacts;
+    private Integer pastEventsCount;
+    private Integer upcomingEventsCount;
 }

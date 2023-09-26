@@ -3,8 +3,8 @@ package com.ringo.service.company;
 import com.ringo.auth.AppleIdService;
 import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.GoogleIdService;
-import com.ringo.dto.company.OrganisationRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.dto.company.request.OrganisationRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
@@ -12,8 +12,8 @@ import com.ringo.model.company.Event;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
-import com.ringo.repository.OrganisationRepository;
-import com.ringo.repository.UserRepository;
+import com.ringo.repository.company.OrganisationRepository;
+import com.ringo.repository.company.UserRepository;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.event.EventCleanUpService;
@@ -68,11 +68,19 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     @Override
     protected void prepareForSave(Organisation user) {
-        if(user.getContacts() != null)
-            user.getContacts().forEach(contact -> contact.setOrganisation(user));
+//         if(user.getContacts() != null)
+// <<<<<<< payment
+//             user.getContacts().forEach(contact -> contact.setOrganisation(user));
 
-        String customerId = paymentService.createAccount(user);
-        user.setStripeAccountId(customerId);
+//         String customerId = paymentService.createAccount(user);
+//         user.setStripeAccountId(customerId);
+// =======
+//             user.getContacts().forEach(contact -> {
+//                 if(contact.getOrdinal() == null)
+//                     throw new UserException("Contact ordinal is not set");
+//                 contact.setOrganisation(user);
+//             });
+// >>>>>>> new_payment
     }
 
     @Override

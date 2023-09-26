@@ -36,6 +36,7 @@ public class EmailSender {
     public void send(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
+        message.setFrom("noreply@ringo-events.com");
         message.setSubject(subject);
         message.setText(text);
         try {

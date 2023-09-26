@@ -1,6 +1,11 @@
 package com.ringo.it.itest.company;
 
-import com.ringo.dto.company.*;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.request.TicketTypeRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
+import com.ringo.dto.company.response.ParticipantResponseDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.itest.common.AbstractEventIntegrationTest;
 import com.ringo.it.util.ItTestConsts;
@@ -10,6 +15,8 @@ import com.ringo.model.form.RegistrationSubmission;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -85,7 +92,7 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
 
         TokenDto participantToken = createParticipantActivated();
         ParticipantResponseDto participant = participantTemplate.getCurrentParticipant(participantToken.getAccessToken());
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         assertThat(ticket).isNotNull();
 
@@ -97,8 +104,9 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
         assertThat(ticket.getIsValidated()).isFalse();
         assertThat(ticket.getRegistrationSubmission()).isNull();
         assertThat(ticket.getTimeOfSubmission()).isNotNull();
-        assertThat(ticket.getExpiryDate()).isEqualTo(event.getEndTime());
+        assertThat(ticket.getExpiryDate()).isNotNull();
         assertThat(ticket.getTicketCode()).isNotNull();
+        assertThat(ticket.getTicketType().getTitle()).isEqualTo(event.getTicketTypes().get(0).getTitle());
 
         EventResponseDto found = eventTemplate.findById(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(found.getPeopleCount()).isEqualTo(1);
@@ -123,7 +131,7 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
         TokenDto participantToken = createParticipantActivated();
         RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
         ParticipantResponseDto participant = participantTemplate.getCurrentParticipant(participantToken.getAccessToken());
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), submission, ItTestConsts.HTTP_SUCCESS);
+        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), submission, ItTestConsts.HTTP_SUCCESS);
 
         assertThat(ticket).isNotNull();
 
@@ -135,7 +143,7 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
         assertThat(ticket.getIsValidated()).isFalse();
         assertThat(ticket.getRegistrationSubmission()).usingRecursiveComparison().isEqualTo(submission);
         assertThat(ticket.getTimeOfSubmission()).isNotNull();
-        assertThat(ticket.getExpiryDate()).isEqualTo(event.getEndTime());
+        assertThat(ticket.getExpiryDate()).isNotNull();
         assertThat(ticket.getTicketCode()).isNotNull();
 
         EventResponseDto found = eventTemplate.findById(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
@@ -157,9 +165,9 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
         EventResponseDto event = createEventActivated(loginTemplate.getAdminToken(), organisationToken.getAccessToken());
 
         TokenDto participantToken = createParticipantActivated();
-        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
-        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_BAD_REQUEST);
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_BAD_REQUEST);
 
         EventResponseDto found = eventTemplate.findById(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(found.getPeopleCount()).isEqualTo(1);
@@ -175,18 +183,35 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
     }
 
     @Test
-    void joinEventFull() {
+    void joinEventTicketTypeSoldOut() {
         TokenDto organisationToken = createOrganisationActivated();
         EventResponseDto event = createEventActivated(loginTemplate.getAdminToken(), organisationToken.getAccessToken());
         EventRequestDto requestDto = new EventRequestDto();
-        requestDto.setCapacity(1);
-        eventTemplate.update(organisationToken.getAccessToken(), event.getId(), requestDto);
+        requestDto.setTicketTypes(List.of(
+                TicketTypeRequestDto.builder()
+                        .title("Test")
+                        .description("Test description")
+                        .ordinal(0)
+                        .price(0.0f)
+                        .currencyId(event.getTicketTypes().get(0).getCurrency().getId())
+                        .maxTickets(1)
+                        .build(),
+                TicketTypeRequestDto.builder()
+                        .title("Test 2")
+                        .description("Test description 2")
+                        .price(35.0f)
+                        .ordinal(1)
+                        .currencyId(event.getTicketTypes().get(0).getCurrency().getId())
+                        .salesStopTime("2029-02-01T01:01:00")
+                        .build()
+        ));
+        event = eventTemplate.update(organisationToken.getAccessToken(), event.getId(), requestDto);
 
         TokenDto participantToken = createParticipantActivated();
-        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
         TokenDto participantToken2 = createParticipantActivated();
-        eventTemplate.joinEvent(participantToken2.getAccessToken(), event.getId(), ItTestConsts.HTTP_BAD_REQUEST);
+        eventTemplate.joinEvent(participantToken2.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_BAD_REQUEST);
 
         EventResponseDto found = eventTemplate.findById(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(found.getPeopleCount()).isEqualTo(1);
@@ -205,7 +230,7 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
     @Test
     void joinEventNotFound() {
         TokenDto participantToken = createParticipantActivated();
-        eventTemplate.joinEvent(participantToken.getAccessToken(), System.currentTimeMillis(), ItTestConsts.HTTP_NOT_FOUND);
+        eventTemplate.joinEvent(participantToken.getAccessToken(), System.currentTimeMillis(), System.currentTimeMillis(), ItTestConsts.HTTP_NOT_FOUND);
 
         participantTemplate.delete(participantToken.getAccessToken());
     }
@@ -219,7 +244,7 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
         TokenDto participantToken = createParticipantActivated();
         RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
         submission.getAnswers().get(1).setOptionIds(null);
-        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), submission, ItTestConsts.HTTP_BAD_REQUEST);
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), submission, ItTestConsts.HTTP_BAD_REQUEST);
 
         EventResponseDto found = eventTemplate.findById(participantToken.getAccessToken(), event.getId(), ItTestConsts.HTTP_SUCCESS);
         assertThat(found.getPeopleCount()).isEqualTo(0);

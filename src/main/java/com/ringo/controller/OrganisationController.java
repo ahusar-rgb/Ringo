@@ -1,20 +1,23 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.OrganisationRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.dto.company.request.OrganisationRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
 import com.ringo.dto.security.IdTokenDto;
 import com.ringo.service.company.OrganisationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/organisations")
 @RequiredArgsConstructor
+@Validated
 public class OrganisationController {
 
     private final OrganisationService organisationService;
@@ -51,7 +54,7 @@ public class OrganisationController {
             }
     )
     @PostMapping(value = "/sign-up", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> createOrganisation(@RequestBody OrganisationRequestDto dto) {
+    public ResponseEntity<OrganisationResponseDto> createOrganisation(@Valid @RequestBody OrganisationRequestDto dto) {
         return ResponseEntity.ok(organisationService.save(dto));
     }
 
@@ -63,7 +66,7 @@ public class OrganisationController {
             }
     )
     @PutMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> updateOrganisation(@RequestBody OrganisationRequestDto dto) {
+    public ResponseEntity<OrganisationResponseDto> updateOrganisation(@Valid @RequestBody OrganisationRequestDto dto) {
         return ResponseEntity.ok(organisationService.partialUpdate(dto));
     }
 
@@ -83,12 +86,12 @@ public class OrganisationController {
     }
 
     @PostMapping(value = "sign-up/google", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> signUpGoogle(@RequestBody IdTokenDto token) {
+    public ResponseEntity<OrganisationResponseDto> signUpGoogle(@Valid @RequestBody IdTokenDto token) {
         return ResponseEntity.ok(organisationService.signUpGoogle(token.getIdToken()));
     }
 
     @PostMapping(value = "sign-up/apple", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> signInApple(@RequestBody IdTokenDto token) {
+    public ResponseEntity<OrganisationResponseDto> signInApple(@Valid @RequestBody IdTokenDto token) {
         return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
     }
 

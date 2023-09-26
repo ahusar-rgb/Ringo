@@ -1,7 +1,7 @@
 package com.ringo.it.itest.common;
 
-import com.ringo.dto.company.OrganisationRequestDto;
-import com.ringo.dto.company.ParticipantRequestDto;
+import com.ringo.dto.company.request.OrganisationRequestDto;
+import com.ringo.dto.company.request.ParticipantRequestDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.it.config.TestConfiguration;
 import com.ringo.it.template.company.OrganisationTemplate;

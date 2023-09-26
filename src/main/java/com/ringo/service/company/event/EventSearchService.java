@@ -4,8 +4,8 @@ import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.Coordinates;
 import com.ringo.dto.company.EventGroup;
 import com.ringo.dto.company.EventGroupDto;
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.EventSmallDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
@@ -16,8 +16,9 @@ import com.ringo.mapper.company.EventPersonalizedMapper;
 import com.ringo.model.company.Currency;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Organisation;
-import com.ringo.repository.CurrencyRepository;
-import com.ringo.repository.EventRepository;
+import com.ringo.model.company.TicketType;
+import com.ringo.repository.company.CurrencyRepository;
+import com.ringo.repository.company.EventRepository;
 import com.ringo.service.common.CurrencyExchanger;
 import com.ringo.service.company.OrganisationService;
 import lombok.RequiredArgsConstructor;
@@ -95,10 +96,9 @@ public class EventSearchService {
     private List<EventGroup> groupEvents(List<EventGroup> groups, int mergeDistance) {
         List<EventGroup> result = new ArrayList<>(groups);
         for(int i = 0; i < result.size(); i++) {
-            for(int j = i; j < result.size(); j++) {
+            for(int j = i + 1; j < result.size(); j++) {
                 EventGroup group = result.get(i);
                 EventGroup other = result.get(j);
-                if (group == other) continue;
                 int distance = getDistance(group.getCoordinates(), other.getCoordinates());
                 if (distance <= mergeDistance) {
                     result.remove(group);
@@ -165,13 +165,16 @@ public class EventSearchService {
                     getDistance(new Coordinates(searchDto.getLatitude(), searchDto.getLongitude()),
                             dto.getCoordinates())
             );
-        if(searchDto.getCurrencyId() != null) {
+        if(searchDto.getCurrencyId() != null && event.getTicketTypes() != null) {
+            TicketType ticketType = event.getTicketTypes().stream()
+                    .min((o1, o2) -> (int) (o1.getPrice() - o2.getPrice()))
+                    .orElseThrow(() -> new NotFoundException("Ticket type not found"));
             dto.setPrice(
                     currencyExchanger.exchange(
-                            event.getCurrency(),
+                            ticketType.getCurrency(),
                             currencyRepository.findById(searchDto.getCurrencyId()).orElseThrow(
                                     () -> new NotFoundException("Currency [id: %d] not found".formatted(searchDto.getCurrencyId()))),
-                            event.getPrice()
+                            ticketType.getPrice()
                     )
             );
             Currency currency = currencyRepository.findById(searchDto.getCurrencyId()).orElseThrow(

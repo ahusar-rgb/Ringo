@@ -1,7 +1,9 @@
-package com.ringo.dto.company;
+package com.ringo.dto.company.response;
 
 import com.ringo.dto.common.AbstractEntityDto;
 import com.ringo.dto.common.Coordinates;
+import com.ringo.dto.company.CategoryDto;
+import com.ringo.dto.company.CurrencyDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;

@@ -1,7 +1,7 @@
 package com.ringo.it.template.company;
 
-import com.ringo.dto.company.OrganisationRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
+import com.ringo.dto.company.request.OrganisationRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
 import io.restassured.RestAssured;

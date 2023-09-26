@@ -1,15 +1,17 @@
 package com.ringo.controller;
 
 import com.ringo.dto.ReviewPageRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.dto.company.ReviewRequestDto;
-import com.ringo.dto.company.ReviewResponseDto;
+import com.ringo.dto.company.request.ReviewRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
+import com.ringo.dto.company.response.ReviewResponseDto;
 import com.ringo.service.company.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/organisations")
 @RequiredArgsConstructor
+@Validated
 public class ReviewController {
     private final ReviewService reviewService;
 
@@ -31,7 +34,7 @@ public class ReviewController {
     @PostMapping(value = "{id}/reviews", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<OrganisationResponseDto> createReview(
             @PathVariable("id") Long id,
-            @RequestBody ReviewRequestDto dto) {
+            @Valid @RequestBody ReviewRequestDto dto) {
         return ResponseEntity.ok(reviewService.createReview(id, dto));
     }
 
@@ -56,7 +59,7 @@ public class ReviewController {
             }
     )
     @PutMapping(value = "{org_id}/reviews", produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<OrganisationResponseDto> updateReview(@RequestBody ReviewRequestDto dto,
+    public ResponseEntity<OrganisationResponseDto> updateReview(@Valid @RequestBody ReviewRequestDto dto,
                                                                 @PathVariable("org_id") Long organisationId) {
         return ResponseEntity.ok(reviewService.updateReview(organisationId, dto));
     }

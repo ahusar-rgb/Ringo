@@ -1,7 +1,7 @@
 package com.ringo.it.template.company;
 
 import com.ringo.dto.common.TicketCode;
-import com.ringo.dto.company.TicketDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
 import io.restassured.response.Response;

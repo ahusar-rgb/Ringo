@@ -1,4 +1,4 @@
-package com.ringo.repository;
+package com.ringo.repository.company;
 
 import com.ringo.model.security.User;
 import org.springframework.data.jpa.repository.JpaRepository;

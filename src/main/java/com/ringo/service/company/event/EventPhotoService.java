@@ -1,5 +1,6 @@
 package com.ringo.service.company.event;
 
+import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.exception.InternalException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
@@ -9,8 +10,8 @@ import com.ringo.model.photo.EventPhoto;
 import com.ringo.model.photo.Photo;
 import com.ringo.repository.photo.EventMainPhotoRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
-import com.ringo.service.common.PhotoCompressor;
 import com.ringo.service.common.PhotoService;
+import com.ringo.service.common.PhotoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,24 +29,36 @@ public class EventPhotoService {
     private static final float LOW_QUALITY = 0.25f;
 
     private final PhotoService photoService;
-    private final PhotoCompressor photoCompressor;
+    private final PhotoUtil photoUtil;
     private final EventPhotoRepository eventPhotoRepository;
     private final EventMainPhotoRepository eventMainPhotoRepository;
 
-    public EventPhoto save(Event event, MultipartFile file) {
+    public EventPhoto save(Event event, MultipartFile file, PhotoDimensions dimensions) {
         EventPhoto eventPhoto = EventPhoto.builder()
                 .event(event)
                 .ordinal(event.getPhotoCount() + 1)
                 .build();
 
+        if(file.getContentType() == null)
+            throw new UserException("Null content type");
         String contentType = file.getContentType().split("/")[1];
         int ordinal = event.getPhotos() == null ? 0 : event.getPhotos().size();
+
+        byte[] photoBytes;
+        try {
+            if(dimensions == null || dimensions.getX() == 0 || dimensions.getY() == 0 || dimensions.getD() == 0)
+                photoBytes = file.getBytes();
+            else
+                photoBytes = photoUtil.cropImage(file.getBytes(), contentType, dimensions);
+        } catch (IOException e) {
+            throw new InternalException("Error while cutting photo");
+        }
 
         try {
             Photo highQualityPhoto = photoService.save(
                     "event#" + event.getId() +"/" + ordinal + "/normal." + contentType,
                     contentType,
-                    photoCompressor.compressImage(file.getBytes(), contentType, HIGH_QUALITY)
+                    photoUtil.compressImage(photoBytes, contentType, HIGH_QUALITY)
             );
             eventPhoto.setPhoto(highQualityPhoto);
         } catch (IOException e) {
@@ -56,7 +69,7 @@ public class EventPhotoService {
             Photo lazyPhoto = photoService.save(
                     "event#" + event.getId() +"/" + ordinal + "/lazy." + contentType,
                     contentType,
-                    photoCompressor.createLazyPhoto(file.getBytes(), contentType)
+                    photoUtil.createLazyPhoto(photoBytes, contentType)
             );
             eventPhoto.setLazyPhoto(lazyPhoto);
         }  catch (IOException e) {
@@ -127,7 +140,7 @@ public class EventPhotoService {
             return photoService.save(
                     path,
                     contentType,
-                    photoCompressor.compressImage(bytes, contentType, quality)
+                    photoUtil.compressImage(bytes, contentType, quality)
             );
         } catch (IOException e) {
             throw new InternalException("Error while compressing photo");

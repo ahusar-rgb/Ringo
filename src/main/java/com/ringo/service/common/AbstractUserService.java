@@ -2,8 +2,8 @@ package com.ringo.service.common;
 
 import com.ringo.auth.AuthenticationService;
 import com.ringo.auth.IdProvider;
-import com.ringo.dto.company.UserRequestDto;
-import com.ringo.dto.company.UserResponseDto;
+import com.ringo.dto.company.request.UserRequestDto;
+import com.ringo.dto.company.response.UserResponseDto;
 import com.ringo.exception.InternalException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
@@ -11,8 +11,9 @@ import com.ringo.mapper.common.AbstractUserMapper;
 import com.ringo.model.photo.Photo;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
-import com.ringo.repository.UserRepository;
 import com.ringo.repository.common.AbstractUserRepository;
+import com.ringo.repository.company.UserRepository;
+import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -51,7 +51,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
     public R save(S dto, Role role) {
         log.info("save: {}, role: {}", dto.getEmail(), role);
         User _user = buildFromDto(dto);
-        _user.setCreatedAt(LocalDateTime.now());
+        _user.setCreatedAt(Time.getLocalUTC());
         _user.setIsActive(true);
 
         T user = abstractUserMapper.fromUser(_user);
@@ -61,7 +61,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfRequiredFieldsNotFilled(user);
 
         user.setRole(role);
-        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedAt(Time.getLocalUTC());
         user.setIsActive(false);
         user.setEmailVerified(false);
         user.setWithIdProvider(false);
@@ -70,7 +70,11 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         R savedDto = abstractUserMapper.toDto(repository.save(user));
         savedDto.setEmail(_user.getEmail());
 
-        authenticationService.sendVerificationEmail(_user);
+        try {
+            authenticationService.sendVerificationEmail(_user);
+        } catch (InternalException e) {
+            log.error("Failed to send verification email to {}", _user.getEmail());
+        }
 
         return savedDto;
     }
@@ -80,7 +84,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfUniqueConstraintsViolated(user);
 
         user.setRole(role);
-        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedAt(Time.getLocalUTC());
         user.setUsername("user" + System.currentTimeMillis());
         user.setIsActive(false);
         user.setWithIdProvider(true);
@@ -169,7 +173,7 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         throwIfUniqueConstraintsViolated(user);
         throwIfRequiredFieldsNotFilled(user);
 
-        user.setUpdatedAt(LocalDateTime.now());
+        user.setUpdatedAt(Time.getLocalUTC());
         prepareForSave(user);
 
         R responseDto = abstractUserMapper.toDto(repository.save(user));

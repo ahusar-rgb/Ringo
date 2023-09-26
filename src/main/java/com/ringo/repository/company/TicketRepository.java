@@ -1,4 +1,4 @@
-package com.ringo.repository;
+package com.ringo.repository.company;
 
 import com.ringo.model.company.Ticket;
 import com.ringo.model.company.TicketId;

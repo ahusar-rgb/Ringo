@@ -18,5 +18,5 @@ public class Constants {
             "/api/organisations/**/reviews",
             "/api/stripe/webhook"
     };
-    public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm[:ss][.SSS]";
+    public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm[:ss]";
 }

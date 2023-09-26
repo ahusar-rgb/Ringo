@@ -1,9 +1,9 @@
 package com.ringo.service.company;
 
 import com.ringo.dto.ReviewPageRequestDto;
-import com.ringo.dto.company.OrganisationResponseDto;
-import com.ringo.dto.company.ReviewRequestDto;
-import com.ringo.dto.company.ReviewResponseDto;
+import com.ringo.dto.company.request.ReviewRequestDto;
+import com.ringo.dto.company.response.OrganisationResponseDto;
+import com.ringo.dto.company.response.ReviewResponseDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.OrganisationMapper;
@@ -11,14 +11,14 @@ import com.ringo.mapper.company.ReviewMapper;
 import com.ringo.model.company.Organisation;
 import com.ringo.model.company.Participant;
 import com.ringo.model.company.Review;
-import com.ringo.repository.OrganisationRepository;
-import com.ringo.repository.ReviewRepository;
+import com.ringo.repository.company.OrganisationRepository;
+import com.ringo.repository.company.ReviewRepository;
+import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -47,7 +47,7 @@ public class ReviewService {
         Review review = reviewMapper.toEntity(dto);
         review.setParticipant(participant);
         review.setOrganisation(organisation);
-        review.setCreatedAt(LocalDateTime.now());
+        review.setCreatedAt(Time.getLocalUTC());
 
         repository.save(review);
         organisation = updateRating(organisation);
@@ -73,7 +73,7 @@ public class ReviewService {
         if(dto.getComment() != null)
             review.setComment(dto.getComment());
 
-        review.setUpdatedAt(LocalDateTime.now());
+        review.setUpdatedAt(Time.getLocalUTC());
         repository.save(review);
 
         organisation = updateRating(organisation);

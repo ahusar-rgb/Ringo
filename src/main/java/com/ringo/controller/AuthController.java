@@ -3,7 +3,7 @@ package com.ringo.controller;
 import com.ringo.auth.AuthenticationService;
 import com.ringo.dto.auth.ChangePasswordForm;
 import com.ringo.dto.auth.ForgotPasswordForm;
-import com.ringo.dto.company.UserRequestDto;
+import com.ringo.dto.auth.LoginForm;
 import com.ringo.dto.security.IdTokenDto;
 import com.ringo.dto.security.TokenDto;
 import com.ringo.model.security.User;
@@ -12,10 +12,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("api/auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
     private final AuthenticationService authenticationService;
 
@@ -35,7 +38,7 @@ public class AuthController {
             }
     )
     @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<TokenDto> login(@RequestBody UserRequestDto login) {
+    public ResponseEntity<TokenDto> login(@Valid  @RequestBody LoginForm login) {
         return ResponseEntity
                 .ok()
                 .body(authenticationService.login(login));
@@ -57,7 +60,7 @@ public class AuthController {
             }
     )
     @PostMapping(value = "forgot-password", produces = {"text/html"}, consumes = {"application/json"})
-    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordForm form) {
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordForm form) {
         authenticationService.forgotPassword(form);
         return ResponseEntity.ok("<h1>Password reset link was sent to %s<h1>".formatted(form.getEmail()));
     }
@@ -102,21 +105,21 @@ public class AuthController {
             }
     )
     @PostMapping (value = "change-password", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<TokenDto> changePassword(@RequestBody ChangePasswordForm changePasswordForm) {
+    public ResponseEntity<TokenDto> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm) {
         return ResponseEntity
                 .ok()
                 .body(authenticationService.changePassword(changePasswordForm));
     }
 
     @PostMapping(value = "login/google", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<TokenDto> loginWithGoogle(@RequestBody IdTokenDto token) {
+    public ResponseEntity<TokenDto> loginWithGoogle(@Valid @RequestBody IdTokenDto token) {
         return ResponseEntity
                 .ok()
                 .body(authenticationService.loginWithGoogle(token.getIdToken()));
     }
 
     @PostMapping(value = "login/apple", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<TokenDto> loginWithApple(@RequestBody IdTokenDto token) {
+    public ResponseEntity<TokenDto> loginWithApple(@Valid @RequestBody IdTokenDto token) {
         return ResponseEntity
                 .ok()
                 .body(authenticationService.loginWithApple(token.getIdToken()));

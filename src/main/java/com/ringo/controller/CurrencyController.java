@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/currencies")
 @RequiredArgsConstructor
+@Validated
 public class CurrencyController {
     private final CurrencyService currencyService;
 
@@ -45,7 +48,7 @@ public class CurrencyController {
             }
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    public ResponseEntity<CurrencyDto> createCurrency(@Parameter(description = "Currency to create") @RequestBody CurrencyDto dto) {
+    public ResponseEntity<CurrencyDto> createCurrency(@Valid @Parameter(description = "Currency to create") @RequestBody CurrencyDto dto) {
         return ResponseEntity
                 .ok()
                 .body(currencyService.saveCurrency(dto));
@@ -61,7 +64,7 @@ public class CurrencyController {
     )
     @PutMapping(value = "{id}", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<CurrencyDto> updateCurrency(@Parameter(description = "Currency id") @PathVariable("id") Long id,
-                                                      @Parameter(description = "Currency to update") @RequestBody CurrencyDto dto) {
+                                                      @Valid @Parameter(description = "Currency to update") @RequestBody CurrencyDto dto) {
         return ResponseEntity
                 .ok()
                 .body(currencyService.updateCurrency(id, dto));

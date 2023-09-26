@@ -2,9 +2,7 @@ package com.ringo.dto.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ringo.exception.UserException;
-import com.ringo.model.company.Category;
-import com.ringo.model.company.Event;
-import com.ringo.model.company.ExchangeRate;
+import com.ringo.model.company.*;
 import jakarta.persistence.criteria.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +18,7 @@ import java.util.Objects;
 @Data
 public class EventSearchDto extends GenericSearchDto<Event>{
 
+    private static final long DEFAULT_CURRENCY_ID = 2L; //EUR
     private String search;
     private Long[] categoryIds;
     private Long hostId;
@@ -81,13 +80,14 @@ public class EventSearchDto extends GenericSearchDto<Event>{
 
         if(currencyId != null) {
 
-            Expression<Float> price = getPriceExpression(root, query, criteriaBuilder, currencyId);
+            Expression<Float> minPrice = getMinPriceExpression(root, query, criteriaBuilder);
+            Expression<Float> maxPrice = getMaxPriceExpression(root, query, criteriaBuilder);
 
             if (priceMin != null) {
-                filters.add(criteriaBuilder.greaterThanOrEqualTo(price, priceMin));
+                filters.add(criteriaBuilder.greaterThanOrEqualTo(maxPrice, priceMin));
             }
             if (priceMax != null) {
-                filters.add(criteriaBuilder.lessThanOrEqualTo(price, priceMax));
+                filters.add(criteriaBuilder.lessThanOrEqualTo(minPrice, priceMax));
             }
         }
 
@@ -176,7 +176,10 @@ public class EventSearchDto extends GenericSearchDto<Event>{
     private void addOrderByPrice(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         if (Objects.equals(sort, "price")) {
 
-            Expression<Float> price = getPriceExpression(root, query, criteriaBuilder, 2L); //EUR
+            Expression<Float> price = criteriaBuilder.selectCase()
+                            .when( getMinPriceExpression(root, query, criteriaBuilder).isNull(), root.get("price"))
+                            .otherwise(getMinPriceExpression(root, query, criteriaBuilder))
+                            .as(Float.class);
 
             if (dir == Sort.Direction.ASC)
                 query.orderBy(criteriaBuilder.asc(price));
@@ -185,18 +188,73 @@ public class EventSearchDto extends GenericSearchDto<Event>{
         }
     }
 
-    private Expression<Float> getPriceExpression(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Long currency) {
+    private Expression<Float> getMinPriceExpression(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        Subquery<Float> ticketMinPriceSubquery = getMinPriceSubquery(root, query, criteriaBuilder);
+        Subquery<Currency> ticketCurrencySubquery = getCurrencySubquery(root, query, criteriaBuilder, ticketMinPriceSubquery);
+
+        return getPriceExpression(root, ticketCurrencySubquery, ticketMinPriceSubquery, query, criteriaBuilder);
+    }
+
+    private Expression<Float> getMaxPriceExpression(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        Subquery<Float> ticketMaxPriceSubquery = getMaxPriceSubquery(root, query, criteriaBuilder);
+        Subquery<Currency> ticketCurrencySubquery = getCurrencySubquery(root, query, criteriaBuilder, ticketMaxPriceSubquery);
+
+        return getPriceExpression(root, ticketCurrencySubquery, ticketMaxPriceSubquery, query, criteriaBuilder);
+    }
+
+    private Expression<Float> getPriceExpression(Root<Event> root, Expression<Currency> ticketCurrencyExpression, Subquery<Float> ticketTypeSubquery, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        Subquery<Float> exchangeRateSubquery = getExchangeRateSubquery(query, criteriaBuilder, ticketCurrencyExpression);
+
+        Expression<Float> ticketPriceExpression = ticketTypeSubquery.getSelection();
+
+        return criteriaBuilder.selectCase()
+                .when(criteriaBuilder.isNull(ticketPriceExpression), root.get("price"))
+                .when(criteriaBuilder.isNotNull(exchangeRateSubquery.getSelection()),
+                        criteriaBuilder.prod(exchangeRateSubquery.getSelection(), ticketPriceExpression))
+                .otherwise(ticketPriceExpression).as(Float.class);
+    }
+
+    private Subquery<Float> getMinPriceSubquery(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        Subquery<Float> ticketMinPriceSubquery = query.subquery(Float.class);
+        Root<TicketType> ticketMinPriceRoot = ticketMinPriceSubquery.from(TicketType.class);
+        ticketMinPriceSubquery.select(criteriaBuilder.min(ticketMinPriceRoot.get("price")))
+                .distinct(true)
+                .where(criteriaBuilder.equal(ticketMinPriceRoot.get("event"), root));
+
+        return ticketMinPriceSubquery;
+    }
+
+    private Subquery<Float> getMaxPriceSubquery(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        Subquery<Float> ticketMaxPriceSubquery = query.subquery(Float.class);
+        Root<TicketType> ticketMinPriceRoot = ticketMaxPriceSubquery.from(TicketType.class);
+        ticketMaxPriceSubquery.select(criteriaBuilder.max(ticketMinPriceRoot.get("price")))
+                .distinct(true)
+                .where(criteriaBuilder.equal(ticketMinPriceRoot.get("event"), root));
+
+        return ticketMaxPriceSubquery;
+    }
+
+    private Subquery<Currency> getCurrencySubquery(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Subquery<Float> ticketMinPriceSubquery) {
+        Subquery<Currency> ticketCurrencySubquery = query.subquery(Currency.class);
+        Root<TicketType> ticketCurrencyRoot = ticketCurrencySubquery.from(TicketType.class);
+        ticketCurrencySubquery.select(ticketCurrencyRoot.get("currency"))
+                .distinct(true)
+                .where(criteriaBuilder.equal(ticketCurrencyRoot.get("price"), ticketMinPriceSubquery.getSelection()),
+                        criteriaBuilder.equal(ticketCurrencyRoot.get("event"), root));
+
+        return ticketCurrencySubquery;
+    }
+
+    private Subquery<Float> getExchangeRateSubquery(CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Expression<Currency> originalCurrencyExpression) {
         Subquery<Float> exchangeRateSubquery = query.subquery(Float.class);
         Root<ExchangeRate> exchangeRateRoot = exchangeRateSubquery.from(ExchangeRate.class);
 
         exchangeRateSubquery.select(exchangeRateRoot.get("rate"))
                 .where(
-                        criteriaBuilder.equal(exchangeRateRoot.get("id").get("from"), root.get("currency")),
-                        criteriaBuilder.equal(exchangeRateRoot.get("id").get("to").get("id"), currency)
+                        criteriaBuilder.equal(exchangeRateRoot.get("id").get("from"), originalCurrencyExpression),
+                        criteriaBuilder.equal(exchangeRateRoot.get("id").get("to").get("id"), currencyId == null ? DEFAULT_CURRENCY_ID : currencyId)
                 );
 
-        return criteriaBuilder.selectCase()
-                .when(criteriaBuilder.isNotNull(exchangeRateSubquery.getSelection()), criteriaBuilder.prod(exchangeRateSubquery.getSelection(), root.get("price")))
-                .otherwise(root.get("price")).as(Float.class);
+        return exchangeRateSubquery;
     }
 }

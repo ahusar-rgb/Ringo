@@ -1,7 +1,12 @@
 package com.ringo.controller;
 
-import com.ringo.dto.company.*;
+import com.ringo.dto.company.EventGroupDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.dto.search.EventSearchDto;
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.form.RegistrationSubmission;
@@ -15,8 +20,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/events")
+@Validated
 public class EventController {
     private final EventService eventService;
     private final EventSearchService eventSearchService;
@@ -72,7 +80,7 @@ public class EventController {
     )
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<EventResponseDto> createEvent(
-            @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
+            @Valid @Parameter(description = "Event to save") @RequestBody EventRequestDto eventDto
     ) {
         return ResponseEntity.ok(eventService.create(eventDto));
     }
@@ -104,7 +112,7 @@ public class EventController {
     @PutMapping(value = "/{id}", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<EventResponseDto> updateEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
-            @Parameter(description = "Event to update") @RequestBody EventRequestDto eventDto
+            @Valid @Parameter(description = "Event to update") @RequestBody EventRequestDto eventDto
     ) {
         return ResponseEntity.ok(eventService.update(id, eventDto));
     }
@@ -155,9 +163,10 @@ public class EventController {
     @PostMapping(value = "/{id}/photos", produces = {"application/json"}, consumes = {"multipart/form-data"})
     public ResponseEntity<EventResponseDto> addPhotoToEvent(
             @Parameter(description = "Id of the event") @PathVariable("id") Long id,
+            @Parameter(description = "Photo dimenstions") PhotoDimensions dimensions,
             @Parameter(description = "Photo") @RequestPart("file") MultipartFile photo) {
 
-        return ResponseEntity.ok(eventService.addPhoto(id, photo));
+        return ResponseEntity.ok(eventService.addPhoto(id, photo, dimensions));
     }
 
     @Operation(summary = "Remove photo from event")
@@ -268,11 +277,13 @@ public class EventController {
                     @ApiResponse(responseCode = "400", description = "User is not a participant", content = @Content)
             }
     )
-    @PostMapping(value = "/{id}/join", produces = {"application/json"})
+
+    @PostMapping(value = "/{id}/join/ticket-types/{ticket_type_id}", produces = {"application/json"})
     public ResponseEntity<JoinEventResult> joinEvent(
             @Parameter(description = "Event id") @PathVariable("id") Long id,
+            @Parameter(description = "Ticket type id") @PathVariable("ticket_type_id") Long ticketTypeId,
             @Parameter(description = "Registration submission") @RequestBody(required = false) RegistrationSubmission submission) {
-        return ResponseEntity.ok(eventInteractionService.joinEvent(id, submission));
+        return ResponseEntity.ok(eventInteractionService.joinEvent(id, ticketTypeId, submission));
     }
 
     @Operation(summary = "Leave event")

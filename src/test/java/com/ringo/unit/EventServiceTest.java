@@ -3,9 +3,11 @@ package com.ringo.unit;
 import com.ringo.config.ApplicationProperties;
 import com.ringo.config.Constants;
 import com.ringo.dto.common.Coordinates;
-import com.ringo.dto.company.EventRequestDto;
-import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.request.TicketTypeRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.photo.EventPhotoDto;
+import com.ringo.dto.photo.PhotoDimensions;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.*;
@@ -19,9 +21,9 @@ import com.ringo.model.company.Organisation;
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.photo.EventMainPhoto;
 import com.ringo.model.photo.EventPhoto;
-import com.ringo.repository.CategoryRepository;
-import com.ringo.repository.CurrencyRepository;
-import com.ringo.repository.EventRepository;
+import com.ringo.repository.company.CategoryRepository;
+import com.ringo.repository.company.CurrencyRepository;
+import com.ringo.repository.company.EventRepository;
 import com.ringo.repository.photo.EventPhotoRepository;
 import com.ringo.service.company.OrganisationService;
 import com.ringo.service.company.RegistrationValidator;
@@ -36,6 +38,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +58,8 @@ public class EventServiceTest {
     private EventPhotoService eventPhotoService;
     @Spy
     private EventMapper eventMapper;
+    @Spy
+    private TicketTypeMapper ticketTypeMapper;
     @Mock
     private ApplicationProperties config;
     @Mock
@@ -77,16 +83,21 @@ public class EventServiceTest {
     @BeforeEach
     void init() {
         eventMapper = new EventMapperImpl();
+        ticketTypeMapper = new TicketTypeMapperImpl();
+        ReflectionTestUtils.setField(ticketTypeMapper, "currencyMapper", new CurrencyMapperImpl());
 
         ReflectionTestUtils.setField(eventMapper, "eventMainPhotoMapper", new EventMainPhotoMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "categoryMapper", new CategoryMapperImpl());
-        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
+        ReflectionTestUtils.setField(eventMapper, "ticketTypeMapper", ticketTypeMapper);
 
         OrganisationMapper organisationMapper = new OrganisationMapperImpl();
         ReflectionTestUtils.setField(organisationMapper, "labelMapper", new LabelMapperImpl());
         ReflectionTestUtils.setField(eventMapper, "organisationMapper", organisationMapper);
+        ReflectionTestUtils.setField(eventMapper, "currencyMapper", new CurrencyMapperImpl());
+
 
         ReflectionTestUtils.setField(eventService, "mapper", eventMapper);
+        ReflectionTestUtils.setField(eventService, "ticketTypeMapper", ticketTypeMapper);
     }
 
     @Test
@@ -104,11 +115,11 @@ public class EventServiceTest {
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
         eventRequestDto.setCategoryIds(List.of(categories.get(0).getId(), categories.get(1).getId(), categories.get(2).getId()));
-        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
 
         //when
         when(organisationService.getFullActiveUser()).thenReturn(organisation);
-        when(currencyRepository.findById(eventRequestDto.getCurrencyId())).thenReturn(Optional.of(currency));
+        eventRequestDto.getTicketTypes().forEach(ticket -> when(currencyRepository.findById(ticket.getCurrencyId())).thenReturn(Optional.of(currency)));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(0))).thenReturn(Optional.of(categories.get(0)));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(1))).thenReturn(Optional.of(categories.get(1)));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(2))).thenReturn(Optional.of(categories.get(2)));
@@ -126,19 +137,26 @@ public class EventServiceTest {
                 "endTime",
                 "categories",
                 "host",
-                "isActive"
+                "isActive",
+                "ticketTypes"
         ).isEqualTo(event);
 
-        assertThat(saved.getCurrency()).usingRecursiveComparison().ignoringFields("id").isEqualTo(currency);
+        saved.getTicketTypes().forEach(ticket -> assertThat(ticket.getCurrency())
+                .usingRecursiveComparison().ignoringFields("id").isEqualTo(currency));
         assertThat(saved.getCategories().size()).isEqualTo(3);
         assertThat(saved.getCategories().contains(categories.get(0))).isTrue();
         assertThat(saved.getCategories().contains(categories.get(1))).isTrue();
         assertThat(saved.getCategories().contains(categories.get(2))).isTrue();
         assertThat(saved.getHost()).usingRecursiveComparison().ignoringFields("id").isEqualTo(organisation);
-        assertThat(saved.getStartTime().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getStartTime());
-        assertThat(saved.getEndTime().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
+        assertThat(saved.getStartTime().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getStartTime());
+        assertThat(saved.getEndTime().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
         assertThat(saved.getCreatedAt()).isNotNull();
         assertThat(saved.getIsActive()).isFalse();
+        assertThat(saved.getTicketTypes()).usingRecursiveComparison().ignoringFields("currency", "event", "peopleCount")
+                .isEqualTo(ticketTypeMapper.toEntityList(eventRequestDto.getTicketTypes()));
+        assertThat(saved.getTicketTypes().stream().allMatch(ticket -> ticket.getPeopleCount() == 0)).isTrue();
+        assertThat(saved.getTicketTypes().stream().allMatch(ticket -> ticket.getEvent().getId().equals(saved.getId()))).isTrue();
+        saved.getTicketTypes().forEach(ticket -> assertThat(ticket.getCurrency()).usingRecursiveComparison().ignoringFields("id").isEqualTo(currency));
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.getCoordinates().longitude()).isEqualTo(saved.getLongitude());
@@ -150,15 +168,16 @@ public class EventServiceTest {
     void createEventCurrencyNotFound() {
         //given
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        Long currencyId = eventRequestDto.getTicketTypes().get(0).getCurrencyId();
 
         //when
         when(organisationService.getFullActiveUser()).thenReturn(OrganisationMock.getOrganisationMock());
-        when(currencyRepository.findById(eventRequestDto.getCurrencyId())).thenReturn(Optional.empty());
+        when(currencyRepository.findById(currencyId)).thenReturn(Optional.empty());
 
         //then
         assertThatThrownBy(() -> eventService.create(eventRequestDto))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("Currency [id: %d] not found".formatted(eventRequestDto.getCurrencyId()));
+                .hasMessage("Currency [id: %d] not found".formatted(currencyId));
     }
 
     @Test
@@ -169,7 +188,6 @@ public class EventServiceTest {
 
         //when
         when(organisationService.getFullActiveUser()).thenReturn(OrganisationMock.getOrganisationMock());
-        when(currencyRepository.findById(eventRequestDto.getCurrencyId())).thenReturn(Optional.of(CurrencyMock.getCurrencyMock()));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(0))).thenReturn(Optional.empty());
 
         //then
@@ -182,6 +200,7 @@ public class EventServiceTest {
     void updateEventChangeAllFieldsSuccess() {
         //given
         Event event = EventMock.getEventMock();
+        event.setTicketTypes(new ArrayList<>(event.getTicketTypes()));
 
         Category category1 = CategoryMock.getCategoryMock();
         Category category2 = CategoryMock.getCategoryMock();
@@ -195,18 +214,33 @@ public class EventServiceTest {
         eventRequestDto.setName("New name");
         eventRequestDto.setDescription("New description");
         eventRequestDto.setAddress("New address");
-        eventRequestDto.setPrice(2.0f);
-        eventRequestDto.setCapacity(200);
         eventRequestDto.setCoordinates(new Coordinates(60.0, 65.0));
         eventRequestDto.setIsTicketNeeded(false);
         eventRequestDto.setStartTime("1990-01-01T01:01:00");
-        eventRequestDto.setEndTime("2090-01-01T02:01:00.100");
-        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.setEndTime("2090-01-01T02:01:00");
+        eventRequestDto.setTicketTypes(List.of(
+                TicketTypeRequestDto.builder()
+                        .title("Test")
+                        .description("Test description")
+                        .ordinal(0)
+                        .price(250.0f)
+                        .currencyId(currency.getId())
+                        .maxTickets(15)
+                        .build(),
+                TicketTypeRequestDto.builder()
+                        .title("Test 2")
+                        .description("Test description 2")
+                        .price(35.0f)
+                        .ordinal(1)
+                        .currencyId(currency.getId())
+                        .salesStopTime("2029-02-01T01:01:00")
+                        .build()
+        ));
         eventRequestDto.setCategoryIds(List.of(category1.getId(), category2.getId(), category3.getId()));
 
         //when
         when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
-        when(currencyRepository.findById(eventRequestDto.getCurrencyId())).thenReturn(Optional.of(currency));
+        eventRequestDto.getTicketTypes().forEach(ticket -> when(currencyRepository.findById(ticket.getCurrencyId())).thenReturn(Optional.of(CurrencyMock.getCurrencyMock())));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(0))).thenReturn(Optional.of(category1));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(1))).thenReturn(Optional.of(category2));
         when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(2))).thenReturn(Optional.of(category3));
@@ -220,19 +254,21 @@ public class EventServiceTest {
         assertThat(saved.getName()).isEqualTo(eventRequestDto.getName());
         assertThat(saved.getDescription()).isEqualTo(eventRequestDto.getDescription());
         assertThat(saved.getAddress()).isEqualTo(eventRequestDto.getAddress());
-        assertThat(saved.getPrice()).isEqualTo(eventRequestDto.getPrice());
-        assertThat(saved.getCapacity()).isEqualTo(eventRequestDto.getCapacity());
         assertThat(saved.getLatitude()).isEqualTo(eventRequestDto.getCoordinates().latitude());
         assertThat(saved.getLongitude()).isEqualTo(eventRequestDto.getCoordinates().longitude());
         assertThat(saved.getIsTicketNeeded()).isEqualTo(eventRequestDto.getIsTicketNeeded());
-        assertThat(saved.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))).isEqualTo(eventRequestDto.getStartTime());
-        assertThat(saved.getEndTime().format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
-        assertThat(saved.getCurrency()).usingRecursiveComparison().ignoringFields("id").isEqualTo(currency);
+        assertThat(saved.getStartTime().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))).isEqualTo(eventRequestDto.getStartTime());
+        assertThat(saved.getEndTime().atZone(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT))).isEqualTo(eventRequestDto.getEndTime());
         assertThat(saved.getCategories().size()).isEqualTo(3);
         assertThat(saved.getCategories().contains(category1)).isTrue();
         assertThat(saved.getCategories().contains(category2)).isTrue();
         assertThat(saved.getCategories().contains(category3)).isTrue();
         assertThat(saved.getUpdatedAt()).isNotNull();
+        assertThat(saved.getTicketTypes()).usingRecursiveComparison().ignoringFields("currency", "event", "peopleCount")
+                .isEqualTo(ticketTypeMapper.toEntityList(eventRequestDto.getTicketTypes()));
+        assertThat(saved.getTicketTypes().stream().allMatch(ticket -> ticket.getPeopleCount() == 0)).isTrue();
+        assertThat(saved.getTicketTypes().stream().allMatch(ticket -> ticket.getEvent().getId().equals(saved.getId()))).isTrue();
+        saved.getTicketTypes().forEach(ticket -> assertThat(ticket.getCurrency()).usingRecursiveComparison().ignoringFields("id").isEqualTo(currency));
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.getHost().getId()).isEqualTo(organisation.getId());
@@ -368,9 +404,13 @@ public class EventServiceTest {
         when(config.getMaxPhotoCount()).thenReturn(10);
 
         //then
-        eventService.addPhoto(event.getId(), photo);
+        PhotoDimensions dimensions = new PhotoDimensions();
+        dimensions.setX(100);
+        dimensions.setY(100);
+        dimensions.setD(100);
+        eventService.addPhoto(event.getId(), photo, dimensions);
 
-        verify(eventPhotoService, times(1)).save(event, photo);
+        verify(eventPhotoService, times(1)).save(event, photo, dimensions);
         verify(eventRepository, times(1)).save(eventCaptor.capture());
 
         Event saved = eventCaptor.getValue();
@@ -417,7 +457,7 @@ public class EventServiceTest {
         eventService.setPhotoOrder(event.getId(), setPhotoOrderDto);
 
         verify(eventRepository, times(1)).save(eventCaptor.capture());
-        verify(eventPhotoService, never()).save(any(), any());
+        verify(eventPhotoService, never()).save(any(), any(), any());
 
         Event saved = eventCaptor.getValue();
         assertThat(saved.getPhotos().size()).isEqualTo(3);
@@ -534,7 +574,7 @@ public class EventServiceTest {
                 .isInstanceOf(UserException.class)
                 .hasMessage("No more photos for this event is allowed");
 
-        verify(eventPhotoService, never()).save(any(), any());
+        verify(eventPhotoService, never()).save(any(), any(), any());
         verify(eventRepository, never()).save(any());
     }
 
@@ -880,6 +920,44 @@ public class EventServiceTest {
         Event saved = eventCaptor.getValue();
         assertThat(saved).usingRecursiveComparison().ignoringFields("registrationForm").isEqualTo(event);
         assertThat(saved.getRegistrationForm()).isNull();
+    }
+
+    @Test
+    void setRegistrationFormHasParticipants() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        event.setPeopleCount(1);
+        event.setRegistrationForm(RegistrationFormMock.getRegistrationFormMock());
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        assertThatThrownBy(() -> eventService.setRegistrationForm(event.getId(), RegistrationFormMock.getRegistrationFormMock()))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Cannot change registration form of event with participants");
+    }
+
+    @Test
+    void removeRegistrationFormHasParticipants() {
+        //given
+        Event event = EventMock.getEventMock();
+        event.setIsActive(true);
+        event.setPeopleCount(1);
+        event.setRegistrationForm(RegistrationFormMock.getRegistrationFormMock());
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setId(event.getHost().getId());
+
+        //when
+        when(eventRepository.findFullById(event.getId())).thenReturn(Optional.of(event));
+
+        //then
+        assertThatThrownBy(() -> eventService.removeRegistrationForm(event.getId()))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Cannot remove registration form of event with participants");
     }
 
     @Test

@@ -2,8 +2,8 @@ package com.ringo.it.itest.common;
 
 import com.ringo.dto.company.CategoryDto;
 import com.ringo.dto.company.CurrencyDto;
-import com.ringo.dto.company.EventRequestDto;
-import com.ringo.dto.company.EventResponseDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.it.template.company.CategoryTemplate;
 import com.ringo.it.template.company.CurrencyTemplate;
 import com.ringo.it.template.company.EventTemplate;
@@ -13,7 +13,9 @@ import com.ringo.mock.dto.EventDtoMock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AbstractEventIntegrationTest extends AbstractIntegrationTest {
 
@@ -34,7 +36,8 @@ public class AbstractEventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-        eventRequestDto.setCurrencyId(currency.getId());
+        eventRequestDto.getTicketTypes().forEach(ticketTypeRequestDto -> ticketTypeRequestDto.setCurrencyId(currency.getId()));
+        eventRequestDto.getTicketTypes().get(0).setPrice(0f);
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         EventResponseDto created = eventTemplate.create(organisationToken, eventRequestDto);
@@ -49,6 +52,14 @@ public class AbstractEventIntegrationTest extends AbstractIntegrationTest {
     protected void cleanUpEvent(String adminToken, String organisationToken, EventResponseDto eventResponseDto) {
         eventTemplate.delete(organisationToken, eventResponseDto.getId());
         eventResponseDto.getCategories().forEach(category -> categoryTemplate.delete(adminToken, category.getId()));
-        currencyTemplate.delete(adminToken, eventResponseDto.getCurrency().getId());
+
+        Set<Long> deletedCurrencies = new HashSet<>();
+        eventResponseDto.getTicketTypes().forEach(ticketType -> {
+            if(deletedCurrencies.contains(ticketType.getCurrency().getId()))
+                return;
+
+            currencyTemplate.delete(adminToken, ticketType.getCurrency().getId());
+            deletedCurrencies.add(ticketType.getCurrency().getId());
+        });
     }
 }

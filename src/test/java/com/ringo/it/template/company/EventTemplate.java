@@ -1,9 +1,9 @@
 package com.ringo.it.template.company;
 
-import com.ringo.dto.company.EventRequestDto;
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.EventSmallDto;
-import com.ringo.dto.company.TicketDto;
+import com.ringo.dto.company.request.EventRequestDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
@@ -156,8 +156,13 @@ public class EventTemplate extends EndpointTemplate {
         return actual;
     }
 
-    public TicketDto joinEvent(String accessToken, Long id, RegistrationSubmission submission, int httpSuccess) {
-        Response response = httpPostWithParams(accessToken, submission, id.toString() + "/join", httpSuccess);
+    public TicketDto joinEvent(String accessToken, Long id, Long ticketTypeId, RegistrationSubmission submission, int httpSuccess) {
+        Response response = httpPostWithParams(
+                accessToken,
+                submission,
+                id.toString() + "/join/ticket-types/" + ticketTypeId.toString(),
+                httpSuccess
+        );
         if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
             return null;
         TicketDto actual = response.getBody().as(TicketDto.class);
@@ -165,8 +170,8 @@ public class EventTemplate extends EndpointTemplate {
         return actual;
     }
 
-    public TicketDto joinEvent(String accessToken, Long id, int httpSuccess) {
-        return joinEvent(accessToken, id, null, httpSuccess);
+    public TicketDto joinEvent(String accessToken, Long id, Long ticketTypeId, int httpSuccess) {
+        return joinEvent(accessToken, id, ticketTypeId,null, httpSuccess);
     }
 
     public EventSmallDto leaveEvent(String accessToken, Long id, int httpSuccess) {

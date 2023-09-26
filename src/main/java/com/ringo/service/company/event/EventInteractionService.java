@@ -1,22 +1,27 @@
 package com.ringo.service.company.event;
 
-import com.ringo.dto.company.EventResponseDto;
-import com.ringo.dto.company.EventSmallDto;
+
 import com.ringo.dto.company.JoinEventResult;
-import com.ringo.dto.company.TicketDto;
+import com.ringo.dto.company.response.EventResponseDto;
+import com.ringo.dto.company.response.EventSmallDto;
+import com.ringo.dto.company.response.TicketDto;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
 import com.ringo.mapper.company.EventPersonalizedMapper;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
+import com.ringo.model.company.Ticket;
+import com.ringo.model.company.TicketType;
 import com.ringo.model.form.RegistrationSubmission;
-import com.ringo.repository.EventRepository;
-import com.ringo.repository.ParticipantRepository;
+import com.ringo.repository.company.EventRepository;
 import com.ringo.service.company.JoiningIntentService;
+import com.ringo.repository.company.ParticipantRepository;
+import com.ringo.repository.company.TicketTypeRepository;
 import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.RegistrationValidator;
 import com.ringo.service.company.TicketService;
+import com.ringo.service.time.Time;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +39,46 @@ public class EventInteractionService {
     private final RegistrationValidator validator;
     private final ParticipantRepository participantRepository;
     private final JoiningIntentService joiningIntentService;
+    private final TicketTypeRepository ticketTypeRepository;
 
-    public JoinEventResult joinEvent(Long id, RegistrationSubmission submission) {
+    public TicketDto joinEvent(Long id, Long ticketTypeId, RegistrationSubmission submission) {
         Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        if(event.getCapacity() != null && event.getPeopleCount() >= event.getCapacity())
-            throw new UserException("Event is already full");
-
-        validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
         Participant participant = participantService.getFullActiveUser();
+        validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
 
-        if(event.getPrice() == null || event.getPrice() == 0) {
-            TicketDto ticketDto = ticketService.issueTicket(joiningIntentService.createNoPayment(participant, event));
+        if(ticketTypeId != null && event.getTicketTypes().isEmpty())
+            throw new UserException("This event does not have tickets");
+
+        TicketDto ticketDto;
+        if(event.getTicketTypes().isEmpty()) {
+            //free event
+            ticketDto = ticketService.issueTicket(event, null, participantService.getFullActiveUser(), submission);
+        } else {
+            TicketType ticketType = event.getTicketTypes().stream()
+                    .filter(t -> t.getId().equals(ticketTypeId))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("Ticket type [id: %d] not found".formatted(ticketTypeId)));
+
+// <<<<<<< payment
+//         if(event.getPrice() == null || event.getPrice() == 0) {
+//             TicketDto ticketDto = ticketService.issueTicket(joiningIntentService.createNoPayment(participant, event));
+// =======
+
+            if(ticketType.getMaxTickets() != null && ticketType.getPeopleCount() >= ticketType.getMaxTickets())
+                throw new UserException("This ticket type is sold out");
+
+            if(ticketType.getSalesStopTime() != null && ticketType.getSalesStopTime().isBefore(Time.getLocalUTC()))
+                throw new UserException("This ticket type is no longer available");
+
+            ticketType.setPeopleCount(ticketType.getPeopleCount() + 1);
+            ticketDto = ticketService.issueTicket(event, ticketType, participant, submission);
+            if(ticketDto.getTicketType() != null)
+                ticketDto.getTicketType().setPeopleCount(ticketType.getPeopleCount());
+        }
+// >>>>>>> new_payment
 
             event.setPeopleCount(event.getPeopleCount() + 1);
             repository.save(event);
@@ -69,9 +100,16 @@ public class EventInteractionService {
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
 
-        ticketService.cancelTicket(event, participant);
+        Ticket ticket = ticketService.cancelTicket(event, participant);
+
         event.setPeopleCount(event.getPeopleCount() - 1);
         event = repository.save(event);
+
+        TicketType ticketType = ticket.getTicketType();
+        if(ticketType != null) {
+            ticketType.setPeopleCount(ticketType.getPeopleCount() - 1);
+            ticketTypeRepository.save(ticketType);
+        }
 
         return mapper.toDtoSmall(event);
     }
@@ -112,7 +150,7 @@ public class EventInteractionService {
 
     public List<EventSmallDto> getSavedEvents() {
         Participant participant = participantService.getFullActiveUser();
-        return mapper.toDtoSmallList(participant.getSavedEvents().stream().toList());
+        return mapper.toDtoSmallList(participant.getSavedEvents().stream().filter(Event::getIsActive).toList());
     }
 
     public TicketDto getTicketForEvent(Long id) {

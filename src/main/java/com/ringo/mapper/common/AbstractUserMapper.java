@@ -1,7 +1,7 @@
 package com.ringo.mapper.common;
 
-import com.ringo.dto.company.UserRequestDto;
-import com.ringo.dto.company.UserResponseDto;
+import com.ringo.dto.company.request.UserRequestDto;
+import com.ringo.dto.company.response.UserResponseDto;
 import com.ringo.model.security.User;
 import org.mapstruct.*;
 
