@@ -77,7 +77,7 @@ public class EmailSender {
 
     public void sendVerificationEmail(String email, String username, String verificationToken) {
         String subject = "Email verification";
-        String text = "Username: %s\nPlease verify your email by clicking on the link below:\nhttp://%s/api/auth/verify-email?token=%s"
+        String text = "Username: %s\nPlease verify your email by clicking on the link below:\nhttps://%s/api/auth/verify-email?token=%s"
                 .formatted(username, config.getDomainName(), verificationToken);
         send(email, subject, text);
     }

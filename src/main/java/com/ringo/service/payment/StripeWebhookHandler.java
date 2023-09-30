@@ -28,34 +28,25 @@ public class StripeWebhookHandler {
     private final TicketService ticketService;
     private final JoiningIntentService joiningIntentService;
 
-    private final String PAYMENT_SUCCESSFUL = "payment_intent.succeeded";
-    private final String PAYMENT_FAILED = "payment_intent.payment_failed";
+    private static final String PAYMENT_SUCCESSFUL = "payment_intent.succeeded";
+    private static final String PAYMENT_FAILED = "payment_intent.payment_failed";
 
     public void processWebhook(Map<String, String> headers, String payload) {
         log.info("Webhook from stripe received: {}", payload);
 
-        //validate webhook
-        String sigHeader = headers.get("Stripe-Signature");
-        Event event;
-        try {
-            event = Webhook.constructEvent(payload, sigHeader, config.getStripeWebhookSecret());
-        } catch (JsonSyntaxException e) {
-            throw new UserException("Invalid payload");
-        } catch (SignatureVerificationException e) {
-            throw new UserException("Invalid signature");
-        }
+        Event event = getEvent(headers, payload);
 
         if (event.getType().equals(PAYMENT_SUCCESSFUL)) {
-            log.info("Payment successful");
             PaymentIntent paymentIntent = getPaymentIntent(event);
+            log.info("Payment {} was successful", paymentIntent.getId());
+
             JoiningIntent joiningIntent = joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_SUCCEEDED);
             ticketService.issueTicket(joiningIntent);
-            //sse notification
         } else if(event.getType().equals(PAYMENT_FAILED)) {
-            log.info("Payment failed");
             PaymentIntent paymentIntent = getPaymentIntent(event);
+            log.info("Payment {} failed", paymentIntent.getId());
+
             joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_FAILED);
-            //sse notification
         }
     }
 
@@ -65,6 +56,20 @@ public class StripeWebhookHandler {
             return (PaymentIntent) object.get();
         } else {
             throw new UserException("Invalid payload");
+        }
+    }
+
+    private Event getEvent(Map<String, String> headers, String payload) {
+        log.info("Webhook headers: {}", headers);
+        String sigHeader = headers.get("stripe-signature");
+        if(sigHeader == null)
+            throw new UserException("No signature header");
+        try {
+            return Webhook.constructEvent(payload, sigHeader, config.getStripeWebhookSecret());
+        } catch (JsonSyntaxException e) {
+            throw new UserException("Invalid payload");
+        } catch (SignatureVerificationException e) {
+            throw new UserException("Invalid signature");
         }
     }
 }

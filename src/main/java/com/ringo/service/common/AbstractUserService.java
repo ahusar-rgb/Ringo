@@ -52,7 +52,6 @@ public abstract class AbstractUserService<S extends UserRequestDto, T extends Us
         log.info("save: {}, role: {}", dto.getEmail(), role);
         User _user = buildFromDto(dto);
         _user.setCreatedAt(Time.getLocalUTC());
-        _user.setIsActive(true);
 
         T user = abstractUserMapper.fromUser(_user);
         abstractUserMapper.partialUpdate(user, dto);

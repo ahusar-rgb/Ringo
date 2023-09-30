@@ -3,6 +3,7 @@ package com.ringo.model.payment;
 import com.ringo.model.common.AbstractEntity;
 import com.ringo.model.company.Event;
 import com.ringo.model.company.Participant;
+import com.ringo.model.company.TicketType;
 import com.ringo.model.form.RegistrationSubmission;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class JoiningIntent extends AbstractEntity {
 
     @OneToOne
     private Event event;
+
+    @OneToOne
+    private TicketType ticketType;
 
     @Column(name = "payment_intent_id", unique = true)
     private String paymentIntentId;

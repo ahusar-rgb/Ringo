@@ -57,6 +57,7 @@ public class StripeService implements PaymentService {
             log.info("Account created: {}", account.getId());
             return account.getId();
         } catch (StripeException e) {
+            log.error(e.getMessage());
             throw new InternalException("Failed to create payment account for user " + organisation.getEmail());
         }
     }

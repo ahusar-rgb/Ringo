@@ -9,8 +9,10 @@ import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.ParticipantMapper;
 import com.ringo.model.company.*;
+import com.ringo.model.payment.JoiningIntent;
 import com.ringo.model.security.Role;
 import com.ringo.model.security.User;
+import com.ringo.repository.JoiningIntentRepository;
 import com.ringo.repository.company.*;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
@@ -35,6 +37,8 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
     private ReviewRepository reviewRepository;
     @Autowired
     private OrganisationRepository organisationRepository;
+    @Autowired
+    private JoiningIntentRepository joiningIntentRepository;
 
     private final ParticipantRepository repository;
     private final ParticipantMapper mapper;
@@ -44,8 +48,10 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
                               PasswordEncoder passwordEncoder,
                               ParticipantMapper mapper,
                               PhotoService photoService,
-                              AuthenticationService authenticationService) {
+                              AuthenticationService authenticationService,
+                              JoiningIntentRepository joiningIntentRepository) {
         super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService);
+        this.joiningIntentRepository = joiningIntentRepository;
         this.repository = repository;
         this.mapper = mapper;
     }
@@ -99,6 +105,9 @@ public class ParticipantService extends AbstractUserService<ParticipantRequestDt
                 organisationRepository.save(organisation);
             }
         }
+
+        List<JoiningIntent> joiningIntents = joiningIntentRepository.findAllByParticipantId(user.getId());
+        joiningIntentRepository.deleteAll(joiningIntents);
 
         ticketRepository.deleteAll(tickets);
     }

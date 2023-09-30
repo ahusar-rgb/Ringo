@@ -14,9 +14,11 @@ import com.ringo.model.company.Participant;
 import com.ringo.model.company.Ticket;
 import com.ringo.model.company.TicketType;
 import com.ringo.model.form.RegistrationSubmission;
+import com.ringo.model.payment.JoiningIntent;
 import com.ringo.repository.company.EventRepository;
 import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketTypeRepository;
+import com.ringo.service.company.JoiningIntentService;
 import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.RegistrationValidator;
 import com.ringo.service.company.TicketService;
@@ -44,6 +46,8 @@ public class EventInteractionServiceTest {
     private EventRepository repository;
     @Mock
     private TicketService ticketService;
+    @Mock
+    private JoiningIntentService joiningIntentService;
     @Spy
     private EventMapper eventMapper;
     @Mock
@@ -201,10 +205,11 @@ public class EventInteractionServiceTest {
     }
 
     @Test
-    void joinEventSuccess() {
+    void joinFreeEventSuccess() {
         //given
         Event event = EventMock.getEventMock();
         Participant participant = ParticipantMock.getParticipantMock();
+        JoiningIntent joiningIntent = joi.cre
 
         //when
         when(ticketService.issueTicket(event, event.getTicketTypes().get(0), participant, null)).thenReturn(new TicketDto());
@@ -221,6 +226,11 @@ public class EventInteractionServiceTest {
         assertThat(savedEvent.getPeopleCount()).isEqualTo(1);
         assertThat(savedEvent).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(event);
         assertThat(savedEvent.getTicketTypes().get(0).getPeopleCount()).isEqualTo(1);
+    }
+
+    @Test
+    void joinPaidEventSuccess() {
+
     }
 
     @Test

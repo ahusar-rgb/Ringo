@@ -15,6 +15,7 @@ import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketRepository;
 import com.ringo.service.common.EmailSender;
 import com.ringo.service.common.QrCodeGenerator;
+import com.ringo.service.company.JoiningIntentService;
 import com.ringo.service.company.OrganisationService;
 import com.ringo.service.company.TicketService;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,8 @@ public class TicketServiceTest {
     private QrCodeGenerator qrCodeGenerator;
     @InjectMocks
     private TicketService ticketService;
+    @InjectMocks
+    private JoiningIntentService joinIntentService;
     @Captor
     private ArgumentCaptor<Ticket> ticketCaptor;
 
@@ -99,7 +102,7 @@ public class TicketServiceTest {
 
 
         //then
-        TicketDto ticketDto = ticketService.issueTicket(event, event.getTicketTypes().get(0), participant, submission);
+        TicketDto ticketDto = ticketService.issueTicket(joinIntentService.createNoPayment(participant, event, event.getTicketTypes().get(0), submission));
 
         assertThat(ticketCaptor.getAllValues().get(1)).isEqualTo(ticketCaptor.getAllValues().get(0));
 
@@ -109,6 +112,7 @@ public class TicketServiceTest {
         assertThat(ticket.getTimeOfSubmission()).isNotNull();
         assertThat(ticket.getExpiryDate()).isEqualTo(event.getEndTime().plusDays(3));
         assertThat(ticket.getIsValidated()).isFalse();
+        assertThat(ticket.getIsPaid()).isFalse();
         assertThat(ticket.getRegistrationSubmission()).isEqualTo(submission);
 
         verify(emailSender, times(1)).sendTicket(ticket, qrCode);
@@ -128,7 +132,7 @@ public class TicketServiceTest {
         when(repository.existsById(new TicketId(participant, event))).thenReturn(true);
 
         //then
-        assertThatThrownBy(() -> ticketService.issueTicket(event, event.getTicketTypes().get(0), participant, submission))
+        assertThatThrownBy(() -> ticketService.issueTicket(joinIntentService.createNoPayment(participant, event, event.getTicketTypes().get(0), submission)))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("The user is already registered for this event");
     }

@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -47,15 +46,12 @@ public class TicketService {
     private final QrCodeGenerator qrCodeGenerator;
     private final JoiningIntentService joinIntentService;
 
-// <<<<<<< payment
-//     public TicketDto issueTicket(JoiningIntent joiningIntent) {
-//         Event event = joiningIntent.getEvent();
-//         Participant participant = joiningIntent.getParticipant();
-//         RegistrationSubmission submission = joiningIntent.getRegistrationSubmission();
+     public TicketDto issueTicket(JoiningIntent joiningIntent) {
+         Event event = joiningIntent.getEvent();
+         Participant participant = joiningIntent.getParticipant();
+         RegistrationSubmission submission = joiningIntent.getRegistrationSubmission();
+         TicketType ticketType = joiningIntent.getTicketType();
 
-// =======
-//     public TicketDto issueTicket(Event event, @Nullable TicketType ticketType, Participant participant, RegistrationSubmission submission) {
-// >>>>>>> new_payment
         throwIfTicketExists(event, participant);
 
         Ticket ticket = Ticket.builder()
@@ -63,7 +59,7 @@ public class TicketService {
                 .timeOfSubmission(Time.getLocalUTC())
                 .expiryDate(event.getEndTime().plusDays(3))
                 .isValidated(false)
-                .isPaid(ticketType == null || (ticketType.getPrice() != null && compare(ticketType.getPrice(), 0f) != 0))
+                .isPaid(ticketType != null && (ticketType.getPrice() != null && compare(ticketType.getPrice(), 0f) != 0))
                 .registrationSubmission(submission)
                 .ticketType(ticketType)
                 .build();
@@ -189,15 +185,11 @@ public class TicketService {
         if(notHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");
 
-// <<<<<<< payment
-//         issueTicket(joinIntentService.createNoPayment(participant, event));
-// =======
-//         TicketType ticketType = event.getTicketTypes().stream()
-//                 .filter(type -> type.getId().equals(ticketTypeId))
-//                 .findFirst()
-//                 .orElseThrow(() -> new NotFoundException("Ticket type not found"));
+        TicketType ticketType = event.getTicketTypes().stream()
+                .filter(type -> type.getId().equals(ticketTypeId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Ticket type not found"));
 
-//         issueTicket(event, ticketType, participant, null);
-// >>>>>>> new_payment
+        issueTicket(joinIntentService.createNoPayment(participant, event, ticketType, null));
     }
 }

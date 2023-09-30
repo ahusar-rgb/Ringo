@@ -34,7 +34,8 @@ dependencies {
     implementation 'com.google.http-client:google-http-client-jackson2:1.43.2'
     implementation 'com.google.api-client:google-api-client:1.32.1'
 
-    implementation "com.stripe:stripe-java:23.2.0"
+//    implementation "com.stripe:stripe-java:23.2.0"
+    implementation "com.stripe:stripe-java:22.0.0"
 
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'

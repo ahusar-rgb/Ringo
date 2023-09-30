@@ -68,19 +68,15 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     @Override
     protected void prepareForSave(Organisation user) {
-//         if(user.getContacts() != null)
-// <<<<<<< payment
-//             user.getContacts().forEach(contact -> contact.setOrganisation(user));
+         if(user.getContacts() != null)
+             user.getContacts().forEach(contact -> {
+                 if(contact.getOrdinal() == null)
+                     throw new UserException("Contact ordinal is not set");
+                 contact.setOrganisation(user);
+             });
 
-//         String customerId = paymentService.createAccount(user);
-//         user.setStripeAccountId(customerId);
-// =======
-//             user.getContacts().forEach(contact -> {
-//                 if(contact.getOrdinal() == null)
-//                     throw new UserException("Contact ordinal is not set");
-//                 contact.setOrganisation(user);
-//             });
-// >>>>>>> new_payment
+         String customerId = paymentService.createAccount(user);
+         user.setStripeAccountId(customerId);
     }
 
     @Override

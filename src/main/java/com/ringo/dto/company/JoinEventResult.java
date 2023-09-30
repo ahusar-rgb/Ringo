@@ -1,5 +1,6 @@
 package com.ringo.dto.company;
 
+import com.ringo.dto.company.response.TicketDto;
 import lombok.Builder;
 import lombok.Data;
 

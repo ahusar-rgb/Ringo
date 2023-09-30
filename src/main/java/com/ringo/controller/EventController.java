@@ -1,6 +1,7 @@
 package com.ringo.controller;
 
 import com.ringo.dto.company.EventGroupDto;
+import com.ringo.dto.company.JoinEventResult;
 import com.ringo.dto.company.request.EventRequestDto;
 import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.company.response.EventSmallDto;
