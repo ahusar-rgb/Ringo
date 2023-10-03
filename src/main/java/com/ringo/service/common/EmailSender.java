@@ -30,13 +30,15 @@ public class EmailSender {
 
     private final ApplicationProperties config;
 
+    private static final String FROM = "noreply@ringo-events.com";
+
     @Value("${PATH_TO_EMAIL_TEMPLATE}")
     private String pathToEmailTemplate;
 
     public void send(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setFrom("noreply@ringo-events.com");
+        message.setFrom(FROM);
         message.setSubject(subject);
         message.setText(text);
         try {
@@ -59,6 +61,7 @@ public class EmailSender {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(ticket.getId().getParticipant().getEmail());
             helper.setSubject("Yout ticket for %s".formatted(ticket.getId().getEvent().getName()));
+            helper.setFrom(FROM);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             ImageIO.write(qr, "jpeg", stream);

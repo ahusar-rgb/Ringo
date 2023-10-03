@@ -47,6 +47,8 @@ public class StripeWebhookHandler {
             log.info("Payment {} failed", paymentIntent.getId());
 
             joiningIntentService.changeStatus(paymentIntent.getId(), JoiningIntentStatus.PAYMENT_FAILED);
+        } else {
+            log.info("Unknown event type: {}", event.getType());
         }
     }
 
@@ -60,7 +62,6 @@ public class StripeWebhookHandler {
     }
 
     private Event getEvent(Map<String, String> headers, String payload) {
-        log.info("Webhook headers: {}", headers);
         String sigHeader = headers.get("stripe-signature");
         if(sigHeader == null)
             throw new UserException("No signature header");

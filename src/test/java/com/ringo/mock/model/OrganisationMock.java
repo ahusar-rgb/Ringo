@@ -17,6 +17,7 @@ public class OrganisationMock {
                 .username("test")
                 .role(Role.ROLE_ORGANISATION)
                 .description("Test description")
+                .stripeAccountId("test")
                 .rating(null)
                 .emailVerified(false)
                 .withIdProvider(false)

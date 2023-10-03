@@ -2,15 +2,13 @@ package com.ringo.dto.company.response;
 
 import com.ringo.model.form.RegistrationForm;
 import com.ringo.model.form.RegistrationSubmission;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class TicketDto {
     private ParticipantResponseDto participant;
     private EventSmallDto event;

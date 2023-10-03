@@ -197,6 +197,38 @@ public class EventServiceTest {
     }
 
     @Test
+    void createPaidEventWithoutAccount() {
+        //given
+        Organisation organisation = OrganisationMock.getOrganisationMock();
+        organisation.setStripeAccountId(null);
+        Currency currency = CurrencyMock.getCurrencyMock();
+        List<Category> categories = List.of(
+                CategoryMock.getCategoryMock(),
+                CategoryMock.getCategoryMock(),
+                CategoryMock.getCategoryMock()
+        );
+
+        EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
+        eventRequestDto.setCategoryIds(List.of(categories.get(0).getId(), categories.get(1).getId(), categories.get(2).getId()));
+        eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
+
+        //when
+        when(organisationService.getFullActiveUser()).thenReturn(organisation);
+        eventRequestDto.getTicketTypes().forEach(ticket -> when(currencyRepository.findById(ticket.getCurrencyId())).thenReturn(Optional.of(currency)));
+        when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(0))).thenReturn(Optional.of(categories.get(0)));
+        when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(1))).thenReturn(Optional.of(categories.get(1)));
+        when(categoryRepository.findById(eventRequestDto.getCategoryIds().get(2))).thenReturn(Optional.of(categories.get(2)));
+
+        //then
+        assertThatThrownBy(() -> eventService.create(eventRequestDto))
+                .isInstanceOf(UserException.class)
+                .hasMessage("Organisation must have a stripe account to create paid events");
+
+        //verify
+        verify(eventRepository, never()).save(any());
+    }
+
+    @Test
     void updateEventChangeAllFieldsSuccess() {
         //given
         Event event = EventMock.getEventMock();

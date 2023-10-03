@@ -1,5 +1,6 @@
 package com.ringo.unit;
 
+import com.ringo.dto.company.JoinEventResult;
 import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.company.response.EventSmallDto;
 import com.ringo.dto.company.response.TicketDto;
@@ -209,23 +210,22 @@ public class EventInteractionServiceTest {
         //given
         Event event = EventMock.getEventMock();
         Participant participant = ParticipantMock.getParticipantMock();
-        JoiningIntent joiningIntent = joi.cre
+        JoiningIntent joiningIntent = new JoiningIntent();
+        TicketDto ticketDto = TicketDto.builder()
+                .event(eventMapper.toDtoSmall(event))
+                .build();
 
         //when
-        when(ticketService.issueTicket(event, event.getTicketTypes().get(0), participant, null)).thenReturn(new TicketDto());
+        when(ticketService.issueTicket(joiningIntent)).thenReturn(ticketDto);
         when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
+        when(joiningIntentService.createNoPayment(participant, event, event.getTicketTypes().get(2), null)).thenReturn(joiningIntent);
         when(participantService.getFullActiveUser()).thenReturn(participant);
 
         //then
-        TicketDto ticketDto = eventInteractionService.joinEvent(event.getId(), event.getTicketTypes().get(0).getId(), null);
-        assertThat(ticketDto.getEvent()).isEqualTo(eventMapper.toDtoSmall(event));
-
-        verify(repository, times(1)).save(eventCaptor.capture());
-
-        Event savedEvent = eventCaptor.getValue();
-        assertThat(savedEvent.getPeopleCount()).isEqualTo(1);
-        assertThat(savedEvent).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(event);
-        assertThat(savedEvent.getTicketTypes().get(0).getPeopleCount()).isEqualTo(1);
+        JoinEventResult result = eventInteractionService.joinEvent(event.getId(), event.getTicketTypes().get(2).getId(), null);
+        assertThat(result.getTicket().getEvent()).isEqualTo(eventMapper.toDtoSmall(event));
+        assertThat(result.getPaymentIntentClientSecret()).isNull();
+        assertThat(result.getOrganisationAccountId()).isNull();
     }
 
     @Test
@@ -239,21 +239,20 @@ public class EventInteractionServiceTest {
         Event event = EventMock.getEventMock();
         Participant participant = ParticipantMock.getParticipantMock();
         RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
+        JoiningIntent joiningIntent = new JoiningIntent();
+        TicketDto ticketDto = TicketDto.builder()
+                .event(eventMapper.toDtoSmall(event))
+                .build();
 
         //when
-        when(ticketService.issueTicket(event, event.getTicketTypes().get(1), participant, submission)).thenReturn(new TicketDto());
+        when(ticketService.issueTicket(joiningIntent)).thenReturn(ticketDto);
         when(repository.findActiveById(event.getId())).thenReturn(java.util.Optional.of(event));
+        when(joiningIntentService.createNoPayment(participant, event, event.getTicketTypes().get(2), submission)).thenReturn(joiningIntent);
         when(participantService.getFullActiveUser()).thenReturn(participant);
 
         //then
-        TicketDto ticketDto = eventInteractionService.joinEvent(event.getId(), event.getTicketTypes().get(1).getId(), submission);
-        assertThat(ticketDto.getEvent()).isEqualTo(eventMapper.toDtoSmall(event));
-
-        verify(repository, times(1)).save(eventCaptor.capture());
-
-        Event savedEvent = eventCaptor.getValue();
-        assertThat(savedEvent.getPeopleCount()).isEqualTo(1);
-        assertThat(savedEvent).usingRecursiveComparison().ignoringFields("peopleCount").isEqualTo(event);
+        JoinEventResult result = eventInteractionService.joinEvent(event.getId(), event.getTicketTypes().get(2).getId(), submission);
+        assertThat(result.getTicket().getEvent()).isEqualTo(eventMapper.toDtoSmall(event));
     }
 
     @Test
@@ -273,7 +272,7 @@ public class EventInteractionServiceTest {
                 .hasMessage("Invalid submission");
 
         verify(repository, never()).save(any());
-        verify(ticketService, never()).issueTicket(any(), any(), any(), any());
+        verify(ticketService, never()).issueTicket(any());
     }
 
     @Test
@@ -294,7 +293,7 @@ public class EventInteractionServiceTest {
                 .hasMessage("This ticket type is sold out");
 
         verify(repository, never()).save(any());
-        verify(ticketService, never()).issueTicket(any(), any(), any(), any());
+        verify(ticketService, never()).issueTicket(any());
     }
 
     @Test
@@ -312,7 +311,7 @@ public class EventInteractionServiceTest {
                 .hasMessage("Ticket type [id: %d] not found".formatted(100L));
 
         verify(repository, never()).save(any());
-        verify(ticketService, never()).issueTicket(any(), any(), any(), any());
+        verify(ticketService, never()).issueTicket(any());
     }
 
     @Test
@@ -331,7 +330,7 @@ public class EventInteractionServiceTest {
                 .hasMessage("This ticket type is no longer available");
 
         verify(repository, never()).save(any());
-        verify(ticketService, never()).issueTicket(any(), any(), any(), any());
+        verify(ticketService, never()).issueTicket(any());
     }
 
     @Test

@@ -74,9 +74,6 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
                      throw new UserException("Contact ordinal is not set");
                  contact.setOrganisation(user);
              });
-
-         String customerId = paymentService.createAccount(user);
-         user.setStripeAccountId(customerId);
     }
 
     @Override
@@ -106,8 +103,12 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         return signUpWithIdProvider(token, appleIdService, Role.ROLE_ORGANISATION);
     }
 
-    public String getAccountLink() {
+    public String createStripeAccount() {
         Organisation organisation = getFullUser();
+        String customerId = paymentService.createAccount(organisation);
+        organisation.setStripeAccountId(customerId);
+        organisationRepository.save(organisation);
+
         return paymentService.getAccountLink(organisation.getStripeAccountId());
     }
 
@@ -121,10 +122,7 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
     }
 
     @Override
-    protected void throwIfNotReadyForActivation(Organisation user) {
-        if(user.getStripeAccountId() == null)
-            throw new UserException("Stripe account is not set");
-    }
+    protected void throwIfNotReadyForActivation(Organisation user) {}
 
     @Override
     public void throwIfUniqueConstraintsViolated(Organisation user) {

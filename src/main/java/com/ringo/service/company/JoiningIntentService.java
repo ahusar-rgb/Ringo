@@ -33,8 +33,9 @@ public class JoiningIntentService {
                 )
         );
 
-        if(joiningIntentRepository.findByPaymentIntentId(paymentIntent.getId()).isPresent())
-            throw new RuntimeException("Payment already exists");
+        JoiningIntent found = joiningIntentRepository.findCreatedByPaymentIntentId(paymentIntent.getId()).orElse(null);
+        if(found != null)
+            return found;
 
         JoiningIntent joiningIntent = JoiningIntent.builder()
                 .participant(participant)

@@ -59,13 +59,20 @@ public class TicketService {
                 .timeOfSubmission(Time.getLocalUTC())
                 .expiryDate(event.getEndTime().plusDays(3))
                 .isValidated(false)
-                .isPaid(ticketType != null && (ticketType.getPrice() != null && compare(ticketType.getPrice(), 0f) != 0))
+                .isPaid(ticketType != null && ticketType.getPrice() != null && compare(ticketType.getPrice(), 0f) != 0)
                 .registrationSubmission(submission)
                 .ticketType(ticketType)
                 .build();
 
         TicketDto ticketDto = mapper.toDto(repository.save(ticket));
         ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
+        ticketDto.setEvent(eventMapper.toDtoSmall(event));
+
+        event.setPeopleCount(event.getPeopleCount() + 1);
+        if(ticketType != null)
+            ticketType.setPeopleCount(ticketType.getPeopleCount() + 1);
+        eventRepository.save(event);
+
 
         BufferedImage qrCode = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
 
@@ -179,8 +186,6 @@ public class TicketService {
 
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found"));
-        if(event.getRegistrationForm() != null)
-            throw new UserException("Can't issue a ticket to a user for an event with a registration form");
 
         if(notHostOfEvent(event))
             throw new UserException("Current user is not the host of this event");

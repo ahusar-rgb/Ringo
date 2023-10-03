@@ -329,6 +329,14 @@ public class EventService {
             throw new UserException("Event [id: %d] is not owned by the organisation".formatted(event.getId()));
     }
 
+    private void throwIfPaidEventWithoutAccount(Event event) {
+        Organisation organisation = organisationService.getFullActiveUser();
+        if(event.getTicketTypes() != null && organisation.getStripeAccountId() == null) {
+            if(event.getTicketTypes().stream().anyMatch(ticketType -> ticketType.getPrice() != null && ticketType.getPrice() > 0))
+                throw new UserException("Organisation must have a stripe account to create paid events");
+        }
+    }
+
     private void setUpTicketTypes(Event event, EventRequestDto eventDto) {
         Set<Currency> currencies = new HashSet<>();
         if(eventDto.getTicketTypes() != null) {
@@ -352,5 +360,7 @@ public class EventService {
                 event.getTicketTypes().add(ticketType);
             }
         }
+
+        throwIfPaidEventWithoutAccount(event);
     }
 }

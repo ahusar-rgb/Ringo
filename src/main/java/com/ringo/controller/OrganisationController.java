@@ -97,7 +97,7 @@ public class OrganisationController {
 
     @GetMapping(value = "account-link", produces = {"application/json"})
     public ResponseEntity<String> getAccountLink() {
-        return ResponseEntity.ok(organisationService.getAccountLink());
+        return ResponseEntity.ok(organisationService.createStripeAccount());
     }
 
     @DeleteMapping

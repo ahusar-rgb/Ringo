@@ -10,6 +10,7 @@ import com.ringo.mapper.company.*;
 import com.ringo.mock.model.*;
 import com.ringo.model.company.*;
 import com.ringo.model.form.RegistrationSubmission;
+import com.ringo.model.payment.JoiningIntent;
 import com.ringo.repository.company.EventRepository;
 import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketRepository;
@@ -60,6 +61,8 @@ public class TicketServiceTest {
     private JoiningIntentService joinIntentService;
     @Captor
     private ArgumentCaptor<Ticket> ticketCaptor;
+    @Captor
+    private ArgumentCaptor<Event> eventCaptor;
 
     @BeforeEach
     void init() {
@@ -93,6 +96,12 @@ public class TicketServiceTest {
         RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
         BufferedImage qrCode = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         String ticketToken = "ticketToken";
+        JoiningIntent joiningIntent = JoiningIntent.builder()
+                .participant(participant)
+                .event(event)
+                .registrationSubmission(submission)
+                .ticketType(event.getTicketTypes().get(2))
+                .build();
 
         //when
         when(repository.existsById(new TicketId(participant, event))).thenReturn(false);
@@ -100,9 +109,8 @@ public class TicketServiceTest {
         when(jwtService.generateTicketCode(ticketCaptor.capture())).thenReturn(ticketToken);
         when(qrCodeGenerator.generateQrCode(ticketToken)).thenReturn(qrCode);
 
-
         //then
-        TicketDto ticketDto = ticketService.issueTicket(joinIntentService.createNoPayment(participant, event, event.getTicketTypes().get(0), submission));
+        TicketDto ticketDto = ticketService.issueTicket(joiningIntent);
 
         assertThat(ticketCaptor.getAllValues().get(1)).isEqualTo(ticketCaptor.getAllValues().get(0));
 
@@ -118,7 +126,13 @@ public class TicketServiceTest {
         verify(emailSender, times(1)).sendTicket(ticket, qrCode);
 
         assertThat(ticketDto.getTicketCode()).isEqualTo(ticketToken);
-        assertThat(ticketDto).usingRecursiveComparison().ignoringFields("ticketCode").isEqualTo(ticketMapper.toDto(ticket));
+        assertThat(ticketDto).usingRecursiveComparison().ignoringFields("ticketCode", "event.peopleCount", "ticketType.peopleCount").isEqualTo(ticketMapper.toDto(ticket));
+
+        verify(eventRepository, times(1)).save(eventCaptor.capture());
+
+        Event saved = eventCaptor.getValue();
+        assertThat(saved.getPeopleCount()).isEqualTo(1);
+        assertThat(saved.getTicketTypes().get(2).getPeopleCount()).isEqualTo(1);
     }
 
     @Test
@@ -127,13 +141,18 @@ public class TicketServiceTest {
         Event event = EventMock.getEventMock();
         Participant participant = ParticipantMock.getParticipantMock();
         RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
+        JoiningIntent joiningIntent = JoiningIntent.builder()
+                .participant(participant)
+                .event(event)
+                .registrationSubmission(submission)
+                .build();
 
         //when
         when(repository.existsById(new TicketId(participant, event))).thenReturn(true);
 
         //then
-        assertThatThrownBy(() -> ticketService.issueTicket(joinIntentService.createNoPayment(participant, event, event.getTicketTypes().get(0), submission)))
-                .isInstanceOf(RuntimeException.class)
+        assertThatThrownBy(() -> ticketService.issueTicket(joiningIntent))
+                .isInstanceOf(UserException.class)
                 .hasMessage("The user is already registered for this event");
     }
 

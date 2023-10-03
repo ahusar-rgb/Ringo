@@ -51,7 +51,7 @@ public class StripeService implements PaymentService {
 
     @Override
     public String createAccount(Organisation organisation) {
-        log.info("Create customer for user: {}", organisation.getEmail());
+        log.info("Create payment account for user: {}", organisation.getEmail());
         try {
             Account account = Account.create(getAccountDetails(organisation));
             log.info("Account created: {}", account.getId());
@@ -84,7 +84,14 @@ public class StripeService implements PaymentService {
         return AccountCreateParams.builder()
                 .setType(AccountCreateParams.Type.STANDARD)
                 .setEmail(organisation.getEmail())
-                .build();
+                .setSettings(
+                        AccountCreateParams.Settings.builder()
+                                .setPayments(
+                                        AccountCreateParams.Settings.Payments.builder()
+                                                .setStatementDescriptor("RINGO EVENTS")
+                                                .build()
+                                ).build()
+                ).build();
     }
 
     private PaymentIntentCreateParams getPaymentIntentParams(Long amount, String currency, Long applicationFee) {

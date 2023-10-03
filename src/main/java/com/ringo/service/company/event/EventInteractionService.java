@@ -51,36 +51,31 @@ public class EventInteractionService {
         Participant participant = participantService.getFullActiveUser();
         validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
 
-        if(ticketTypeId != null && event.getTicketTypes().isEmpty())
-            throw new UserException("This event does not have tickets");
-
-        TicketDto ticketDto = null;
-        String paymentIntentSecret = null;
-        if(ticketTypeId == null) {
-            ticketDto = getFreeTicket(participant, event, null, submission);
-        } else {
-            TicketType ticketType = event.getTicketTypes().stream()
-                    .filter(t -> t.getId().equals(ticketTypeId))
-                    .findFirst()
-                    .orElseThrow(() -> new NotFoundException("Ticket type [id: %d] not found".formatted(ticketTypeId)));
-            if(ticketType.getPrice() == 0)
-                ticketDto = getFreeTicket(participant, event, ticketType, submission);
-            else {
-                JoiningIntent joiningIntent = createJoiningIntent(participant, event, ticketType, submission);
-                paymentIntentSecret = joiningIntent.getPaymentIntentClientSecret();
+        if(event.getTicketTypes().isEmpty()) {
+            if(ticketTypeId == null) {
+                return JoinEventResult.fromTicket(getFreeTicket(participant, event, null, submission));
+            } else {
+                throw new UserException("This event does not have tickets");
             }
+        } else {
+            if(ticketTypeId == null)
+                throw new UserException("Ticket type id is required");
         }
 
-        event.setPeopleCount(event.getPeopleCount() + 1);
-        repository.save(event);
+        TicketType ticketType = event.getTicketTypes().stream()
+                .filter(t -> t.getId().equals(ticketTypeId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Ticket type [id: %d] not found".formatted(ticketTypeId)));
 
-        if(ticketDto != null)
-            ticketDto.setEvent(mapper.toDtoSmall(event));
+        if(ticketType.getPrice() == 0)
+            return JoinEventResult.fromTicket(getFreeTicket(participant, event, ticketType, submission));
 
-        return JoinEventResult.builder()
-                .ticket(ticketDto)
-                .paymentIntentClientSecret(paymentIntentSecret)
-                .build();
+
+        JoiningIntent joiningIntent = createJoiningIntent(participant, event, ticketType, submission);
+        return JoinEventResult.fromPaymentIntent(
+                joiningIntent.getPaymentIntentClientSecret(),
+                event.getHost().getStripeAccountId()
+        );
     }
 
     public EventSmallDto leaveEvent(Long id) {
