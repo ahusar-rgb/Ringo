@@ -50,6 +50,19 @@ public class StripeService implements PaymentService {
     }
 
     @Override
+    public void cancelPayment(String paymentIntentId) {
+        log.info("Cancel payment: {}", paymentIntentId);
+        try {
+            PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
+            paymentIntent.cancel();
+            log.info("Payment intent canceled: {}", paymentIntentId);
+        } catch (StripeException e) {
+            log.error(e.getMessage());
+            throw new InternalException("Failed to cancel payment intent");
+        }
+    }
+
+    @Override
     public String createAccount(Organisation organisation) {
         log.info("Create payment account for user: {}", organisation.getEmail());
         try {

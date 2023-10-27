@@ -103,7 +103,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-        eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -142,7 +142,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-        eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -186,7 +186,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-        eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -249,8 +249,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -293,7 +292,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
+                
 
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
@@ -341,8 +340,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -377,8 +375,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+                
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -419,8 +416,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -465,8 +461,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -498,8 +493,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -535,8 +529,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -571,7 +564,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-        eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
+        
         eventRequestDto.getTicketTypes().get(0).setPrice(0f);
 
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
@@ -607,8 +600,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -632,8 +624,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -659,7 +650,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-        eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
+        
         eventRequestDto.getTicketTypes().get(0).setPrice(0f);
 
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
@@ -695,20 +686,18 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
         organisationTemplate.getCurrentOrganisation(organisationToken.getAccessToken());
 
         EventResponseDto event = eventTemplate.create(organisationToken.getAccessToken(), eventRequestDto);
-
         addPhotoAndActivate(organisationToken.getAccessToken(), event.getId());
 
 
         TokenDto participantToken = createParticipantActivated();
-        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
+        System.out.println(participantToken.getAccessToken());
+        eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), null, ItTestConsts.HTTP_SUCCESS);
 
         participantTemplate.delete(participantToken.getAccessToken());
 
@@ -733,8 +722,6 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -778,8 +765,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -809,8 +795,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();
@@ -843,8 +828,7 @@ public class EventIntegrationTest extends AbstractIntegrationTest {
         );
 
         EventRequestDto eventRequestDto = EventDtoMock.getEventDtoMock();
-                eventRequestDto.getTicketTypes().forEach(ticket -> ticket.setCurrencyId(currency.getId()));
-
+        
         eventRequestDto.setCategoryIds(categories.stream().map(CategoryDto::getId).toList());
 
         TokenDto organisationToken = createOrganisationActivated();

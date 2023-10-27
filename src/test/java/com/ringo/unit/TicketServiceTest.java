@@ -3,6 +3,7 @@ package com.ringo.unit;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.auth.JwtService;
+import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.TicketCode;
 import com.ringo.dto.company.response.TicketDto;
 import com.ringo.exception.UserException;
@@ -55,6 +56,8 @@ public class TicketServiceTest {
     private EmailSender emailSender;
     @Mock
     private QrCodeGenerator qrCodeGenerator;
+    @Mock
+    private ApplicationProperties config;
     @InjectMocks
     private TicketService ticketService;
     @InjectMocks
@@ -108,6 +111,7 @@ public class TicketServiceTest {
         when(repository.save(ticketCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
         when(jwtService.generateTicketCode(ticketCaptor.capture())).thenReturn(ticketToken);
         when(qrCodeGenerator.generateQrCode(ticketToken)).thenReturn(qrCode);
+        when(config.getTicketLifetimeAfterEventEndInDays()).thenReturn("3");
 
         //then
         TicketDto ticketDto = ticketService.issueTicket(joiningIntent);
@@ -127,12 +131,6 @@ public class TicketServiceTest {
 
         assertThat(ticketDto.getTicketCode()).isEqualTo(ticketToken);
         assertThat(ticketDto).usingRecursiveComparison().ignoringFields("ticketCode", "event.peopleCount", "ticketType.peopleCount").isEqualTo(ticketMapper.toDto(ticket));
-
-        verify(eventRepository, times(1)).save(eventCaptor.capture());
-
-        Event saved = eventCaptor.getValue();
-        assertThat(saved.getPeopleCount()).isEqualTo(1);
-        assertThat(saved.getTicketTypes().get(2).getPeopleCount()).isEqualTo(1);
     }
 
     @Test

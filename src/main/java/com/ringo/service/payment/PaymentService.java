@@ -7,6 +7,8 @@ public interface PaymentService {
 
     PaymentIntent initPayment(PaymentData paymentData);
 
+    void cancelPayment(String paymentIntentId);
+
     String createAccount(Organisation organisation);
 
     String getAccountLink(String accountId);

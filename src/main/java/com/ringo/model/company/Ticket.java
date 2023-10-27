@@ -34,7 +34,7 @@ public class Ticket {
     private Boolean isPaid;
 
     @OneToOne
-    @JoinColumn(name = "ticket_type_id", nullable = false)
+    @JoinColumn(name = "ticket_type_id")
     private TicketType ticketType;
 
     @JdbcTypeCode(SqlTypes.JSON)

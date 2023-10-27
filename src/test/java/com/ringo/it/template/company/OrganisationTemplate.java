@@ -78,4 +78,9 @@ public class OrganisationTemplate extends EndpointTemplate {
         Response response = httpGetWithParams(accessToken, "", ItTestConsts.HTTP_SUCCESS);
         return response.getBody().as(OrganisationResponseDto.class);
     }
+
+    public void createPaymentAccount(String token) {
+        Response response = httpPostWithParams(token, null, "payment-account", ItTestConsts.HTTP_SUCCESS);
+        assertThat(response.statusCode()).isEqualTo(ItTestConsts.HTTP_SUCCESS);
+    }
 }

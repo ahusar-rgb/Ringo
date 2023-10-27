@@ -15,7 +15,7 @@ public interface JoiningIntentRepository extends JpaRepository<JoiningIntent, Lo
     Optional<JoiningIntent> findByPaymentIntentId(String paymentIntentId);
 
     @Query("SELECT s FROM JoiningIntent s WHERE s.paymentIntentId = :paymentIntentId AND s.status = 'CREATED'")
-    Optional<JoiningIntent> findCreatedByPaymentIntentId(String paymentIntentId);
+    Optional<JoiningIntent> findActiveByPaymentIntentId(String paymentIntentId);
 
     @Query("SELECT s FROM JoiningIntent s WHERE s.participant.id = :participantId")
     List<JoiningIntent> findAllByParticipantId(Long participantId);

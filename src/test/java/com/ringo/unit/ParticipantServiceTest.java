@@ -20,7 +20,6 @@ import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketRepository;
 import com.ringo.repository.company.UserRepository;
 import com.ringo.service.common.PhotoService;
-import com.ringo.service.company.JoiningIntentService;
 import com.ringo.service.company.ParticipantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

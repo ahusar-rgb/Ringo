@@ -1,5 +1,6 @@
 package com.ringo.it.itest.company;
 
+import com.ringo.dto.company.JoinEventResult;
 import com.ringo.dto.company.request.EventRequestDto;
 import com.ringo.dto.company.request.TicketTypeRequestDto;
 import com.ringo.dto.company.response.EventResponseDto;
@@ -92,8 +93,9 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
 
         TokenDto participantToken = createParticipantActivated();
         ParticipantResponseDto participant = participantTemplate.getCurrentParticipant(participantToken.getAccessToken());
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
+        JoinEventResult result = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), ItTestConsts.HTTP_SUCCESS);
 
+        TicketDto ticket = result.getTicket();
         assertThat(ticket).isNotNull();
 
         assertThat(ticket.getEvent()).isNotNull();
@@ -131,8 +133,9 @@ public class EventInteractionIntegrationTest extends AbstractEventIntegrationTes
         TokenDto participantToken = createParticipantActivated();
         RegistrationSubmission submission = RegistrationSubmissionMock.getRegistrationSubmissionMock();
         ParticipantResponseDto participant = participantTemplate.getCurrentParticipant(participantToken.getAccessToken());
-        TicketDto ticket = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), submission, ItTestConsts.HTTP_SUCCESS);
+        JoinEventResult result = eventTemplate.joinEvent(participantToken.getAccessToken(), event.getId(), event.getTicketTypes().get(0).getId(), submission, ItTestConsts.HTTP_SUCCESS);
 
+        TicketDto ticket = result.getTicket();
         assertThat(ticket).isNotNull();
 
         assertThat(ticket.getEvent()).isNotNull();

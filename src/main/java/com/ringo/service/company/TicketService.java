@@ -3,6 +3,7 @@ package com.ringo.service.company;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ringo.auth.JwtService;
+import com.ringo.config.ApplicationProperties;
 import com.ringo.dto.common.TicketCode;
 import com.ringo.dto.company.response.TicketDto;
 import com.ringo.exception.NotFoundException;
@@ -45,6 +46,7 @@ public class TicketService {
     private final EmailSender emailSender;
     private final QrCodeGenerator qrCodeGenerator;
     private final JoiningIntentService joinIntentService;
+    private final ApplicationProperties config;
 
      public TicketDto issueTicket(JoiningIntent joiningIntent) {
          Event event = joiningIntent.getEvent();
@@ -57,7 +59,7 @@ public class TicketService {
         Ticket ticket = Ticket.builder()
                 .id(new TicketId(participant, event))
                 .timeOfSubmission(Time.getLocalUTC())
-                .expiryDate(event.getEndTime().plusDays(3))
+                .expiryDate(event.getEndTime().plusDays(Long.parseLong(config.getTicketLifetimeAfterEventEndInDays())))
                 .isValidated(false)
                 .isPaid(ticketType != null && ticketType.getPrice() != null && compare(ticketType.getPrice(), 0f) != 0)
                 .registrationSubmission(submission)
@@ -68,14 +70,7 @@ public class TicketService {
         ticketDto.setTicketCode(jwtService.generateTicketCode(ticket));
         ticketDto.setEvent(eventMapper.toDtoSmall(event));
 
-        event.setPeopleCount(event.getPeopleCount() + 1);
-        if(ticketType != null)
-            ticketType.setPeopleCount(ticketType.getPeopleCount() + 1);
-        eventRepository.save(event);
-
-
         BufferedImage qrCode = qrCodeGenerator.generateQrCode(ticketDto.getTicketCode());
-
         try {
             emailSender.sendTicket(ticket, qrCode);
         } catch (Exception e) {

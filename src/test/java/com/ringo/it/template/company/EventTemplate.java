@@ -1,9 +1,9 @@
 package com.ringo.it.template.company;
 
+import com.ringo.dto.company.JoinEventResult;
 import com.ringo.dto.company.request.EventRequestDto;
 import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.company.response.EventSmallDto;
-import com.ringo.dto.company.response.TicketDto;
 import com.ringo.dto.photo.EventPhotoDto;
 import com.ringo.it.template.common.EndpointTemplate;
 import com.ringo.it.util.ItTestConsts;
@@ -156,21 +156,21 @@ public class EventTemplate extends EndpointTemplate {
         return actual;
     }
 
-    public TicketDto joinEvent(String accessToken, Long id, Long ticketTypeId, RegistrationSubmission submission, int httpSuccess) {
+    public JoinEventResult joinEvent(String accessToken, Long id, Long ticketTypeId, RegistrationSubmission submission, int httpSuccess) {
         Response response = httpPostWithParams(
                 accessToken,
                 submission,
-                id.toString() + "/join/ticket-types/" + ticketTypeId.toString(),
+                id.toString() + "/join" +  (ticketTypeId == null ? "" : "?ticketId=" + ticketTypeId),
                 httpSuccess
         );
         if(httpSuccess != ItTestConsts.HTTP_SUCCESS)
             return null;
-        TicketDto actual = response.getBody().as(TicketDto.class);
+        JoinEventResult actual = response.getBody().as(JoinEventResult.class);
         assertThat(actual).isNotNull();
         return actual;
     }
 
-    public TicketDto joinEvent(String accessToken, Long id, Long ticketTypeId, int httpSuccess) {
+    public JoinEventResult joinEvent(String accessToken, Long id, Long ticketTypeId, int httpSuccess) {
         return joinEvent(accessToken, id, ticketTypeId,null, httpSuccess);
     }
 

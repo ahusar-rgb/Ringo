@@ -44,6 +44,9 @@ public class JoiningIntent extends AbstractEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "expires_at")
+    private LocalDateTime expiresAt;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "registration_submission", columnDefinition = "JSONB")
     private RegistrationSubmission registrationSubmission;

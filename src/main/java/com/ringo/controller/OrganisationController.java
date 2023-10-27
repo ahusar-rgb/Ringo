@@ -95,8 +95,8 @@ public class OrganisationController {
         return ResponseEntity.ok(organisationService.signUpApple(token.getIdToken()));
     }
 
-    @GetMapping(value = "account-link", produces = {"application/json"})
-    public ResponseEntity<String> getAccountLink() {
+    @PostMapping(value = "payment-account", produces = {"application/json"})
+    public ResponseEntity<String> createPaymentAccount() {
         return ResponseEntity.ok(organisationService.createStripeAccount());
     }
 

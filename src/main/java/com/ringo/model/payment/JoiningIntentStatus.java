@@ -5,5 +5,5 @@ public enum JoiningIntentStatus {
     PAYMENT_SUCCEEDED,
     PAYMENT_FAILED,
     NO_PAYMENT,
-    TIMEOUT
+    EXPIRED
 }

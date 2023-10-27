@@ -24,4 +24,6 @@ public class ApplicationProperties {
     private String stripeReturnUrl;
     private String stripeReauthUrl;
     private String noReplyPassword;
+    private String ticketLifetimeAfterEventEndInDays;
+    private String paymentTimeoutInMinutes;
 }
