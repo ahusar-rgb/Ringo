@@ -46,7 +46,7 @@ public class EventMock {
                                 .id(IdGenerator.getNewId())
                                 .title("Test 2")
                                 .description("Test description 2")
-                                .price(300.0f)
+                                .price(0.0f)
                                 .currency(CurrencyMock.getCurrencyMock())
                                 .peopleCount(0)
                                 .maxTickets(100)

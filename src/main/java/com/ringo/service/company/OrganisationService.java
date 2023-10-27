@@ -17,6 +17,7 @@ import com.ringo.repository.company.UserRepository;
 import com.ringo.service.common.AbstractUserService;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.event.EventCleanUpService;
+import com.ringo.service.payment.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,16 +38,19 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     private final OrganisationMapper mapper;
     private final OrganisationRepository organisationRepository;
+    private final PaymentService paymentService;
 
     public OrganisationService(UserRepository userRepository,
                                OrganisationRepository repository,
                                PasswordEncoder passwordEncoder,
                                OrganisationMapper mapper,
                                PhotoService photoService,
-                               AuthenticationService authenticationService){
+                               AuthenticationService authenticationService,
+                               PaymentService paymentService){
         super(userRepository, repository, passwordEncoder, mapper, photoService, authenticationService);
         this.mapper = mapper;
         this.organisationRepository = repository;
+        this.paymentService = paymentService;
     }
 
 
@@ -64,12 +68,12 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
 
     @Override
     protected void prepareForSave(Organisation user) {
-        if(user.getContacts() != null)
-            user.getContacts().forEach(contact -> {
-                if(contact.getOrdinal() == null)
-                    throw new UserException("Contact ordinal is not set");
-                contact.setOrganisation(user);
-            });
+         if(user.getContacts() != null)
+             user.getContacts().forEach(contact -> {
+                 if(contact.getOrdinal() == null)
+                     throw new UserException("Contact ordinal is not set");
+                 contact.setOrganisation(user);
+             });
     }
 
     @Override
@@ -99,6 +103,15 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         return signUpWithIdProvider(token, appleIdService, Role.ROLE_ORGANISATION);
     }
 
+    public String createStripeAccount() {
+        Organisation organisation = getFullUser();
+        String customerId = paymentService.createAccount(organisation);
+        organisation.setStripeAccountId(customerId);
+        organisationRepository.save(organisation);
+
+        return paymentService.getAccountLink(organisation.getStripeAccountId());
+    }
+
 
     @Override
     public void throwIfRequiredFieldsNotFilled(Organisation organisation) {
@@ -107,6 +120,9 @@ public class OrganisationService extends AbstractUserService<OrganisationRequest
         if(organisation.getName() == null)
             throw new UserException("Name is not set");
     }
+
+    @Override
+    protected void throwIfNotReadyForActivation(Organisation user) {}
 
     @Override
     public void throwIfUniqueConstraintsViolated(Organisation user) {

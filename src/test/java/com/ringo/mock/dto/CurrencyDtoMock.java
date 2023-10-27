@@ -15,8 +15,8 @@ public class CurrencyDtoMock {
 
         return CurrencyDto.builder()
                 .id(IdGenerator.getNewId())
-                .name("CurrencyDtoMock" + IdGenerator.getNewId())
-                .symbol('#')
+                .name("EUR")
+                .symbol('€')
                 .build();
     }
 }

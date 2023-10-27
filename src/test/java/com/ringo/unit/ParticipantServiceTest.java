@@ -15,6 +15,7 @@ import com.ringo.model.company.Organisation;
 import com.ringo.model.company.Participant;
 import com.ringo.model.photo.Photo;
 import com.ringo.model.security.Role;
+import com.ringo.repository.JoiningIntentRepository;
 import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketRepository;
 import com.ringo.repository.company.UserRepository;
@@ -54,6 +55,8 @@ public class ParticipantServiceTest {
     private PhotoService photoService;
     @Mock
     private IdProvider idProvider;
+    @Mock
+    private JoiningIntentRepository joiningIntentRepository;
 
     @Captor
     private ArgumentCaptor<Participant> participantCaptor;

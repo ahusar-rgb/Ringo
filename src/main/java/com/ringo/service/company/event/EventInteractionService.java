@@ -1,8 +1,11 @@
 package com.ringo.service.company.event;
 
+
+import com.ringo.dto.company.JoinEventResult;
 import com.ringo.dto.company.response.EventResponseDto;
 import com.ringo.dto.company.response.EventSmallDto;
 import com.ringo.dto.company.response.TicketDto;
+import com.ringo.exception.InternalException;
 import com.ringo.exception.NotFoundException;
 import com.ringo.exception.UserException;
 import com.ringo.mapper.company.EventMapper;
@@ -12,9 +15,11 @@ import com.ringo.model.company.Participant;
 import com.ringo.model.company.Ticket;
 import com.ringo.model.company.TicketType;
 import com.ringo.model.form.RegistrationSubmission;
+import com.ringo.model.payment.JoiningIntent;
 import com.ringo.repository.company.EventRepository;
 import com.ringo.repository.company.ParticipantRepository;
 import com.ringo.repository.company.TicketTypeRepository;
+import com.ringo.service.company.JoiningIntentService;
 import com.ringo.service.company.ParticipantService;
 import com.ringo.service.company.RegistrationValidator;
 import com.ringo.service.company.TicketService;
@@ -35,9 +40,10 @@ public class EventInteractionService {
     private final EventPersonalizedMapper personalizedMapper;
     private final RegistrationValidator validator;
     private final ParticipantRepository participantRepository;
+    private final JoiningIntentService joiningIntentService;
     private final TicketTypeRepository ticketTypeRepository;
 
-    public TicketDto joinEvent(Long id, Long ticketTypeId, RegistrationSubmission submission) {
+    public JoinEventResult joinEvent(Long id, Long ticketTypeId, RegistrationSubmission submission) {
         Event event = repository.findActiveById(id).orElseThrow(
                 () -> new NotFoundException("Event [id: %d] not found".formatted(id))
         );
@@ -45,37 +51,31 @@ public class EventInteractionService {
         Participant participant = participantService.getFullActiveUser();
         validator.throwIfSubmissionInvalid(event.getRegistrationForm(), submission);
 
-        if(ticketTypeId != null && event.getTicketTypes().isEmpty())
-            throw new UserException("This event does not have tickets");
-
-        TicketDto ticketDto;
         if(event.getTicketTypes().isEmpty()) {
-            //free event
-            ticketDto = ticketService.issueTicket(event, null, participantService.getFullActiveUser(), submission);
+            if(ticketTypeId == null) {
+                return JoinEventResult.fromTicket(getFreeTicket(participant, event, null, submission));
+            } else {
+                throw new UserException("This event does not have tickets");
+            }
         } else {
-            TicketType ticketType = event.getTicketTypes().stream()
-                    .filter(t -> t.getId().equals(ticketTypeId))
-                    .findFirst()
-                    .orElseThrow(() -> new NotFoundException("Ticket type [id: %d] not found".formatted(ticketTypeId)));
-
-
-            if(ticketType.getMaxTickets() != null && ticketType.getPeopleCount() >= ticketType.getMaxTickets())
-                throw new UserException("This ticket type is sold out");
-
-            if(ticketType.getSalesStopTime() != null && ticketType.getSalesStopTime().isBefore(Time.getLocalUTC()))
-                throw new UserException("This ticket type is no longer available");
-
-            ticketType.setPeopleCount(ticketType.getPeopleCount() + 1);
-            ticketDto = ticketService.issueTicket(event, ticketType, participant, submission);
-            if(ticketDto.getTicketType() != null)
-                ticketDto.getTicketType().setPeopleCount(ticketType.getPeopleCount());
+            if(ticketTypeId == null)
+                throw new UserException("Ticket type id is required");
         }
 
-        event.setPeopleCount(event.getPeopleCount() + 1);
-        repository.save(event);
+        TicketType ticketType = event.getTicketTypes().stream()
+                .filter(t -> t.getId().equals(ticketTypeId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Ticket type [id: %d] not found".formatted(ticketTypeId)));
 
-        ticketDto.setEvent(mapper.toDtoSmall(event));
-        return ticketDto;
+        if(ticketType.getPrice() == 0)
+            return JoinEventResult.fromTicket(getFreeTicket(participant, event, ticketType, submission));
+
+
+        JoiningIntent joiningIntent = createJoiningIntent(participant, event, ticketType, submission);
+        return JoinEventResult.fromPaymentIntent(
+                joiningIntent.getPaymentIntentClientSecret(),
+                event.getHost().getStripeAccountId()
+        );
     }
 
     public EventSmallDto leaveEvent(Long id) {
@@ -148,5 +148,23 @@ public class EventInteractionService {
         ticketDto.setEvent(mapper.toDtoSmall(event));
         ticketDto.setRegistrationForm(event.getRegistrationForm());
         return ticketDto;
+    }
+
+    private TicketDto getFreeTicket(Participant participant, Event event, TicketType ticketType, RegistrationSubmission submission) {
+        return ticketService.issueTicket(joiningIntentService.createNoPayment(participant, event, ticketType, submission));
+    }
+
+    private JoiningIntent createJoiningIntent(Participant participant, Event event, TicketType ticketType, RegistrationSubmission submission) {
+        if(ticketType.getMaxTickets() != null && ticketType.getPeopleCount() >= ticketType.getMaxTickets())
+            throw new UserException("This ticket type is sold out");
+
+        if(ticketType.getSalesStopTime() != null && ticketType.getSalesStopTime().isBefore(Time.getLocalUTC()))
+            throw new UserException("This ticket type is no longer available");
+
+        ticketType.setPeopleCount(ticketType.getPeopleCount() + 1);
+        if(ticketType.getPrice() == 0)
+            throw new InternalException("Ticket type price is 0");
+
+        return joiningIntentService.create(participant, event, ticketType, submission);
     }
 }

@@ -19,6 +19,7 @@ import com.ringo.repository.company.OrganisationRepository;
 import com.ringo.repository.company.UserRepository;
 import com.ringo.service.common.PhotoService;
 import com.ringo.service.company.OrganisationService;
+import com.ringo.service.payment.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +51,8 @@ public class OrganisationServiceTest {
     private PhotoService photoService;
     @Mock
     private IdProvider idProvider;
+    @Mock
+    private PaymentService paymentService;
 
     @Captor
     private ArgumentCaptor<Organisation> organisationCaptor;
@@ -130,7 +133,8 @@ public class OrganisationServiceTest {
         // assert
         Organisation saved = organisationCaptor.getAllValues().get(0);
         assertThat(saved).isNotNull();
-        assertThat(saved).usingRecursiveComparison().ignoringFields("createdAt", "id", "password").isEqualTo(organisation);
+        assertThat(saved).usingRecursiveComparison().ignoringFields("createdAt", "id", "password", "stripeAccountId").isEqualTo(organisation);
+        assertThat(saved.getStripeAccountId()).isNull();
         assertThat(saved.getPassword()).isNotNull();
         assertThat(saved.getPassword()).isNotEqualTo(organisation.getPassword());
         assertThat(saved.getCreatedAt().atZone(ZoneId.systemDefault()).getDayOfYear()).isEqualTo(LocalDate.now().getDayOfYear());
