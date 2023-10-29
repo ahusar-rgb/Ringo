@@ -1,12 +1,4 @@
-<p>
-    <img src="./images/Ringo-White.png" width=50 height=50 alt="image"/>
-    <span style="color:white;font-weight:500;font-size:40px;font-family: '.AppleSystemUIFont',serif">
-        Ringo
-    </span>
-    <sub style="color:white;font-weight:100;font-size:15px;font-family: '.AppleSystemUIFont',serif">
-        Events
-    </sub>
-</p>
+<h1><img src="./images/Ringo-White.png" width=40 alt="logo"/> Ringo</h1>
 
 ---
 ## What is Ringo?
@@ -46,45 +38,71 @@ Some of the features are:
 ## Tech stack
 
 ### Backend
-<img src="./images/java.svg" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    Java
-</span>
- &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;
-<img src="./images/spring-boot.png" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    Spring Boot
-</span> <br><br>
-<img src="./images/postgres.png" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    PostgreSQL
-</span> &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;
-<img src="./images/amazon-s3.png" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    Amazon S3
-</span>
+<table>
+    <tr>
+        <th>
+            <a href="#"><img src="./images/java.svg" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                Java
+            </span>
+        </th>
+        <th>
+            <a href="#"><img src="./images/spring-boot.png" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                Spring Boot
+            </span>
+    </tr>
+    <tr>
+        <th>
+            <a href="#"><img src="./images/postgres.png" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                PostgreSQL
+            </span>
+        </th>
+        <th>
+            <a href="#"><img src="./images/amazon-s3.png" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                Amazon S3
+            </span>
+        </th>
+    </tr>
+</table>
 
 ### Web app
-<img src="./images/javascript.png" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    JavaScript
-</span>
- &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;
-<img src="./images/vue.png" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    Vue.js
-</span>
+<table>
+    <tr>
+        <th>
+            <a href="#"><img src="./images/javascript.png" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                JavaScript
+            </span>
+        </th>
+        <th>
+            <a href="#"><img src="./images/vue.png" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                Vue.js
+            </span>
+        </th>
+    </tr>
+</table>
 
 ### Mobile app
-<img src="./images/flutter.png" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    Flutter
-</span>
- &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;
-<img src="./images/dart-logo.png" width=20 height=20 alt="vue"/>
-<span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
-    Dart
-</span>
+<table>
+    <tr>
+        <th>
+            <a href="#"><img src="./images/flutter.png" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                Flutter
+            </span>
+        </th>
+        <th>
+            <a href="#"><img src="./images/dart-logo.png" width=20 height=20 alt="vue"/></a>
+            <span style="color:white;font-weight:100;font-size:20px;font-family: '.AppleSystemUIFont',serif">
+                Dart
+            </span>
+        </th>
+    </tr>
+</table>
 
 ---
 ## Screenshots
@@ -98,8 +116,12 @@ Some of the features are:
 <img src="./images/screenshots/Ticket.png" width=400/>
 <img src="./images/screenshots/RegistrationForm.png" width=400/>
 <img src="./images/screenshots/ContactHost.png" width=400/>
+<img src="./images/screenshots/Organisation.png" width=400/>
 
 ### Web app
+<img src="./images/screenshots/WebLogin.jpg" width=800/><br>
+<img src="./images/screenshots/WebEvents.jpg" width=800/><br>
+<img src="./images/screenshots/WebProfile.jpg" width=800/><br>
 
 
 
